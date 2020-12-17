@@ -9,6 +9,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.XpensManager">
+        <activity android:name=".MainScreen.MainActivity"></activity>
         <activity
             android:name=".SplashScreen.SplashScreenActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
@@ -16,15 +17,10 @@
             android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".LoginAndSignup.LoginActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize"
-            android:label="@string/title_activity_login"
-            android:theme="@style/Theme.XpensManager.Fullscreen" />
-
     </application>
 
 </manifest>

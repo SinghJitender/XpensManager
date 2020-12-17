@@ -1,7 +1,10 @@
 package com.example.xpensmanager.SplashScreen;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import android.animation.ObjectAnimator;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -11,8 +14,15 @@ import android.view.WindowManager;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.Toast;
+
+import com.example.xpensmanager.MainScreen.MainActivity;
 import com.example.xpensmanager.R;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.royrodriguez.transitionbutton.TransitionButton;
@@ -23,10 +33,14 @@ public class SplashScreenActivity extends AppCompatActivity {
     private String LOG_TAG = "SplashScreen";
     private RotateLoading rotateLoading;
     private FirebaseAuth mAuth;
-    private Button signup;
+    private Button signup,skip;
     private TransitionButton login;
     private LinearLayout layout;
     private CircleImageView imageView;
+    private EditText username, password;
+    private int flag = 1;
+    private SharedPreferences sharedPref;
+    private SharedPreferences.Editor editor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,56 +56,159 @@ public class SplashScreenActivity extends AppCompatActivity {
         signup = findViewById(R.id.signup);
         layout = findViewById(R.id.linerLayout);
         imageView = findViewById(R.id.profile_image);
-        layout.setVisibility(View.INVISIBLE);
+        username = findViewById(R.id.username);
+        password = findViewById(R.id.password);
+        skip = findViewById(R.id.skip);
+        sharedPref = getApplicationContext().getSharedPreferences(
+                getString(R.string.preference_file_key), getApplicationContext().MODE_PRIVATE);
+        editor = sharedPref.edit();
 
+        boolean initialSetup = sharedPref.getBoolean("initialSetup",true);
+        String userId = sharedPref.getString("userId",null);
+        String userPassword = sharedPref.getString("userPassword",null);
+        boolean skipLogin = sharedPref.getBoolean("skipLogin",false);
+        boolean userLoggedIn = sharedPref.getBoolean("userLoggedIn",false);
+
+        layout.setVisibility(View.INVISIBLE);
 
         if(!rotateLoading.isStart())
             rotateLoading.start();
-        if(authCheck(mAuth) == true) {
-            // Move to Main Screen
+
+        if(initialSetup == false){
+            if(userLoggedIn == true) {
+                // check login status if true means mAuth is Null.
+                if(authCheck(mAuth) == true) {
+                    // Move to Main Screen
+                    signInWithEmailAndPassword(userId,userPassword);
+                }
+                else {
+                    // Move to Login Screen
+                    rotateLoading.stop();
+                    moveToMainActivity();
+                }
+            }
+            else if(skipLogin == true) {
+                // Move to main activity
+                moveToMainActivity();
+            }
+            else{
+                //show login/signup screen
+                rotateLoading.stop();
+                layout.setVisibility(View.VISIBLE);
+                animate();
+            }
+
+        }
+        else{
             rotateLoading.stop();
             layout.setVisibility(View.VISIBLE);
             animate();
+        }
 
-        }
-        else {
-            // Move to Login Screen
-            //rotateLoading.stop();
-        }
         login.setOnClickListener(v -> {
             // Start the loading animation when the user tap the button
             login.startAnimation();
-
             // Do your networking task or background work here.
-            final Handler handler = new Handler();
-            handler.postDelayed(() -> {
-                boolean isSuccessful = false;
-
-                // Choose a stop animation if your call was succesful or not
-                if (isSuccessful) {
-                    login.stopAnimation(TransitionButton.StopAnimationStyle.EXPAND, () -> {
-                        /*Intent intent = new Intent(getBaseContext(), NewActivity.class);
-                        intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-                        startActivity(intent);*/
-                    });
-                } else {
-                    login.stopAnimation(TransitionButton.StopAnimationStyle.SHAKE, null);
-                }
-            }, 2000);
+            signInUser(username.getText().toString(),password.getText().toString(),flag);
         });
-        //varCheck();
-        //rotateLoading.stop();
 
+        signup.setOnClickListener(v -> {
+            if(flag == 1) {
+                login.setText("Sign Up");
+                signup.setText("Already registered? Login");
+                flag = 0;
+            }else {
+                login.setText("Login");
+                signup.setText("Not registered yet? Sign up here");
+                flag = 1;
+            }
+        });
 
-        //Intent i = new Intent(this, LoginActivity.class);
-        //startActivity(i);
+        skip.setOnClickListener(v -> {
+            editor.putBoolean("skipLogin",true);
+            editor.putBoolean("initialSetup",false);
+            editor.apply();
+            moveToMainActivity();
+        });
+
     }
 
     public boolean authCheck(FirebaseAuth mAuth){
         FirebaseUser user = mAuth.getCurrentUser();
         Log.d(LOG_TAG,"User : " +user);
         return (user == null);
-        //return false;
+    }
+
+    public void signInUser(String email,String password,int flag){
+        // if flag == 1 then login with details else signup users
+        if(flag == 1) {
+            signInWithEmailAndPassword(email,password);
+        }
+        else {
+            signUpWithEmailAndPassword(email,password);
+        }
+    }
+
+    public void signInWithEmailAndPassword(String email,String password){
+        mAuth.signInWithEmailAndPassword(email, password)
+                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            // Sign in success, update UI with the signed-in user's information
+                            Log.d(LOG_TAG, "signInWithEmail:success");
+                            editor.putString("userId",email);
+                            editor.putString("userPassword",password);
+                            editor.putBoolean("userLoggedIn",true);
+                            editor.putBoolean("initialSetup",false);
+                            editor.putBoolean("skipLogin",false);
+                            editor.apply();
+                            FirebaseUser user = mAuth.getCurrentUser();
+                            login.stopAnimation(TransitionButton.StopAnimationStyle.EXPAND, () -> {
+                                moveToMainActivity();
+                            });
+                        } else {
+                            // If sign in fails, display a message to the user.
+                            Log.w(LOG_TAG, "signInWithEmail:failure", task.getException());
+                            Toast.makeText(getApplicationContext(), "Authentication failed.",
+                                    Toast.LENGTH_SHORT).show();
+                            login.stopAnimation(TransitionButton.StopAnimationStyle.SHAKE, null);
+                        }
+
+                        // ...
+                    }
+                });
+    }
+
+    public void signUpWithEmailAndPassword(String email,String password){
+        mAuth.createUserWithEmailAndPassword(email, password)
+                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            // Sign in success, update UI with the signed-in user's information
+                            Log.d(LOG_TAG, "createUserWithEmail:success");
+                            editor.putString("userId",email);
+                            editor.putString("userPassword",password);
+                            editor.putBoolean("userLoggedIn",true);
+                            editor.putBoolean("initialSetup",false);
+                            editor.putBoolean("skipLogin",false);
+                            editor.apply();
+                            FirebaseUser user = mAuth.getCurrentUser();
+                            login.stopAnimation(TransitionButton.StopAnimationStyle.EXPAND, () -> {
+                                moveToMainActivity();
+                            });
+                        } else {
+                            // If sign in fails, display a message to the user.
+                            Log.w(LOG_TAG, "createUserWithEmail:failure", task.getException());
+                            Toast.makeText(getApplicationContext(), "Authentication failed.",
+                                    Toast.LENGTH_SHORT).show();
+                            login.stopAnimation(TransitionButton.StopAnimationStyle.SHAKE, null);
+                        }
+
+                        // ...
+                    }
+                });
     }
 
     public void animate(){
@@ -110,4 +227,11 @@ public class SplashScreenActivity extends AppCompatActivity {
         signUpAnimation.setDuration(500);
         signUpAnimation.start();
     }
+
+    public void moveToMainActivity(){
+        Intent intent = new Intent(getBaseContext(), MainActivity.class);
+        startActivity(intent);
+        finish();
+    }
+
 }
