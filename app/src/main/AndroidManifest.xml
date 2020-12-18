@@ -9,7 +9,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.XpensManager">
-        <activity android:name=".MainScreen.MainActivity"></activity>
+        <activity android:name=".MainScreen.MainActivity" android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen"/>
         <activity
             android:name=".SplashScreen.SplashScreenActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
