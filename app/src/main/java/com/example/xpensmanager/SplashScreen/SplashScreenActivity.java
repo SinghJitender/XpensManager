@@ -47,9 +47,6 @@ public class SplashScreenActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-                WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_splash_screen);
 
         mAuth = FirebaseAuth.getInstance();
@@ -70,7 +67,7 @@ public class SplashScreenActivity extends AppCompatActivity {
         editor = sharedPref.edit();
 
         mydatabase = openOrCreateDatabase(getString(R.string.database_name),MODE_PRIVATE,null);
-        String query = "create table if not exists expenses(id INTEGER PRIMARY KEY AUTOINCREMENT,title VARCHAR, description VARCHAR, amount INTEGER, date VARCHAR, paidby VARCHAR, category VARCHAR, month INTEGER, year INTEGER)";
+        String query = "create table if not exists expenses(id INTEGER PRIMARY KEY AUTOINCREMENT,title VARCHAR, description VARCHAR, amount REAL, date VARCHAR, paidby VARCHAR, category VARCHAR, month INTEGER, year INTEGER)";
         mydatabase.execSQL(query);
         mydatabase.close();
         Log.d(LOG_TAG,"Database Ready!");
