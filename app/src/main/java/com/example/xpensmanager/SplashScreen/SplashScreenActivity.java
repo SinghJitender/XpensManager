@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.animation.ObjectAnimator;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -41,6 +42,7 @@ public class SplashScreenActivity extends AppCompatActivity {
     private int flag = 1;
     private SharedPreferences sharedPref;
     private SharedPreferences.Editor editor;
+    private SQLiteDatabase mydatabase;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,20 +61,28 @@ public class SplashScreenActivity extends AppCompatActivity {
         username = findViewById(R.id.username);
         password = findViewById(R.id.password);
         skip = findViewById(R.id.skip);
+
+        if(!rotateLoading.isStart())
+            rotateLoading.start();
+
         sharedPref = getApplicationContext().getSharedPreferences(
                 getString(R.string.preference_file_key), getApplicationContext().MODE_PRIVATE);
         editor = sharedPref.edit();
+
+        mydatabase = openOrCreateDatabase(getString(R.string.database_name),MODE_PRIVATE,null);
+        String query = "create table if not exists expenses(id INTEGER PRIMARY KEY AUTOINCREMENT,title VARCHAR, description VARCHAR, amount INTEGER, date VARCHAR, paidby VARCHAR, category VARCHAR, month INTEGER, year INTEGER)";
+        mydatabase.execSQL(query);
+        mydatabase.close();
+        Log.d(LOG_TAG,"Database Ready!");
 
         boolean initialSetup = sharedPref.getBoolean("initialSetup",true);
         String userId = sharedPref.getString("userId",null);
         String userPassword = sharedPref.getString("userPassword",null);
         boolean skipLogin = sharedPref.getBoolean("skipLogin",false);
         boolean userLoggedIn = sharedPref.getBoolean("userLoggedIn",false);
+        Log.d(LOG_TAG,"Shared Preference Values Fetched");
 
         layout.setVisibility(View.INVISIBLE);
-
-        if(!rotateLoading.isStart())
-            rotateLoading.start();
 
         if(initialSetup == false){
             if(userLoggedIn == true) {
