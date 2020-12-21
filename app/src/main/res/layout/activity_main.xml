@@ -27,7 +27,7 @@
         app:layout_constraintBottom_toBottomOf="@id/background"
         android:textSize="32sp" />
 
-    <ListView
+    <androidx.recyclerview.widget.RecyclerView
         app:layout_constraintTop_toBottomOf="@id/background"
         android:id="@+id/recyclerview"
         android:layout_width="0dp"
@@ -35,6 +35,6 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
-    </ListView>
+    </androidx.recyclerview.widget.RecyclerView>
 
 </androidx.constraintlayout.motion.widget.MotionLayout>
