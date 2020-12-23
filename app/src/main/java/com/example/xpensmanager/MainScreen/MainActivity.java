@@ -1,141 +1,37 @@
 package com.example.xpensmanager.MainScreen;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.os.Bundle;
-import android.view.ViewGroup;
-import android.view.Window;
-import android.view.WindowManager;
-import android.widget.Adapter;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
 
-import com.example.xpensmanager.MainScreen.Adapters.RecyclerViewAdapter;
+import com.example.xpensmanager.MainScreen.Adapters.BottomNavigationBehavior;
 import com.example.xpensmanager.R;
-
-import java.util.ArrayList;
-import java.util.List;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
+import androidx.navigation.ui.AppBarConfiguration;
+import androidx.navigation.ui.NavigationUI;
 
 public class MainActivity extends AppCompatActivity {
-RecyclerViewAdapter adapter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-                WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_main);
+        BottomNavigationView navView = findViewById(R.id.nav_view);
+        // Passing each menu ID as a set of Ids because each
+        // menu should be considered as top level destinations.
+        AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(
+                R.id.navigation_home, R.id.navigation_add, R.id.navigation_settings)
+                .build();
 
-        ArrayList<String> forecast = new ArrayList<>();
-        forecast.add("Today - Sunny - 88/63");
-        forecast.add("Tomorrow - Foggy - 70/40");
-        forecast.add("Weds - Cloudy  - 72/63");
-        forecast.add("Thurs - Asteroids - 75/65");
-        forecast.add("Fri - Heavy Rain - 65/56");
-        forecast.add("Sat - HELP TRAPPED IN WEATHERSTATION - 60/51");
-        forecast.add("Sun - Sunny - 80/68");
-        forecast.add("Today - Sunny - 88/63");
-        forecast.add("Tomorrow - Foggy - 70/40");
-        forecast.add("Weds - Cloudy  - 72/63");
-        forecast.add("Thurs - Asteroids - 75/65");
-        forecast.add("Fri - Heavy Rain - 65/56");
-        forecast.add("Sat - HELP TRAPPED IN WEATHERSTATION - 60/51");
-        forecast.add("Sun - Sunny - 80/68");
-        forecast.add("Today - Sunny - 88/63");
-        forecast.add("Tomorrow - Foggy - 70/40");
-        forecast.add("Weds - Cloudy  - 72/63");
-        forecast.add("Thurs - Asteroids - 75/65");
-        forecast.add("Fri - Heavy Rain - 65/56");
-        forecast.add("Sat - HELP TRAPPED IN WEATHERSTATION - 60/51");
-        forecast.add("Sun - Sunny - 80/68");
-        forecast.add("Today - Sunny - 88/63");
-        forecast.add("Tomorrow - Foggy - 70/40");
-        forecast.add("Weds - Cloudy  - 72/63");
-        forecast.add("Thurs - Asteroids - 75/65");
-        forecast.add("Fri - Heavy Rain - 65/56");
-        forecast.add("Sat - HELP TRAPPED IN WEATHERSTATION - 60/51");
-        forecast.add("Sun - Sunny - 80/68");
-        forecast.add("Today - Sunny - 88/63");
-        forecast.add("Tomorrow - Foggy - 70/40");
-        forecast.add("Weds - Cloudy  - 72/63");
-        forecast.add("Thurs - Asteroids - 75/65");
-        forecast.add("Fri - Heavy Rain - 65/56");
-        forecast.add("Sat - HELP TRAPPED IN WEATHERSTATION - 60/51");
-        forecast.add("Sun - Sunny - 80/68");
-        forecast.add("Today - Sunny - 88/63");
-        forecast.add("Tomorrow - Foggy - 70/40");
-        forecast.add("Weds - Cloudy  - 72/63");
-        forecast.add("Thurs - Asteroids - 75/65");
-        forecast.add("Fri - Heavy Rain - 65/56");
-        forecast.add("Sat - HELP TRAPPED IN WEATHERSTATION - 60/51");
-        forecast.add("Sun - Sunny - 80/68");
-        forecast.add("Today - Sunny - 88/63");
-        forecast.add("Tomorrow - Foggy - 70/40");
-        forecast.add("Weds - Cloudy  - 72/63");
-        forecast.add("Thurs - Asteroids - 75/65");
-        forecast.add("Fri - Heavy Rain - 65/56");
-        forecast.add("Sat - HELP TRAPPED IN WEATHERSTATION - 60/51");
-        forecast.add("Sun - Sunny - 80/68");
-        forecast.add("Today - Sunny - 88/63");
-        forecast.add("Tomorrow - Foggy - 70/40");
-        forecast.add("Weds - Cloudy  - 72/63");
-        forecast.add("Thurs - Asteroids - 75/65");
-        forecast.add("Fri - Heavy Rain - 65/56");
-        forecast.add("Sat - HELP TRAPPED IN WEATHERSTATION - 60/51");
-        forecast.add("Sun - Sunny - 80/68");
-        forecast.add("Today - Sunny - 88/63");
-        forecast.add("Tomorrow - Foggy - 70/40");
-        forecast.add("Weds - Cloudy  - 72/63");
-        forecast.add("Thurs - Asteroids - 75/65");
-        forecast.add("Fri - Heavy Rain - 65/56");
-        forecast.add("Sat - HELP TRAPPED IN WEATHERSTATION - 60/51");
-        forecast.add("Sun - Sunny - 80/68");
-        forecast.add("Today - Sunny - 88/63");
-        forecast.add("Tomorrow - Foggy - 70/40");
-        forecast.add("Weds - Cloudy  - 72/63");
-        forecast.add("Thurs - Asteroids - 75/65");
-        forecast.add("Fri - Heavy Rain - 65/56");
-        forecast.add("Sat - HELP TRAPPED IN WEATHERSTATION - 60/51");
-        forecast.add("Sun - Sunny - 80/68");
-        forecast.add("Today - Sunny - 88/63");
-        forecast.add("Tomorrow - Foggy - 70/40");
-        forecast.add("Weds - Cloudy  - 72/63");
-        forecast.add("Thurs - Asteroids - 75/65");
-        forecast.add("Fri - Heavy Rain - 65/56");
-        forecast.add("Sat - HELP TRAPPED IN WEATHERSTATION - 60/51");
-        forecast.add("Sun - Sunny - 80/68");
-        forecast.add("Today - Sunny - 88/63");
-        forecast.add("Tomorrow - Foggy - 70/40");
-        forecast.add("Weds - Cloudy  - 72/63");
-        forecast.add("Thurs - Asteroids - 75/65");
-        forecast.add("Fri - Heavy Rain - 65/56");
-        forecast.add("Sat - HELP TRAPPED IN WEATHERSTATION - 60/51");
-        forecast.add("Sun - Sunny - 80/68");
-        forecast.add("Today - Sunny - 88/63");
-        forecast.add("Tomorrow - Foggy - 70/40");
-        forecast.add("Weds - Cloudy  - 72/63");
-        forecast.add("Thurs - Asteroids - 75/65");
-        forecast.add("Fri - Heavy Rain - 65/56");
-        forecast.add("Sat - HELP TRAPPED IN WEATHERSTATION - 60/51");
-        forecast.add("Sun - Sunny - 80/68");
-        forecast.add("Today - Sunny - 88/63");
-        forecast.add("Tomorrow - Foggy - 70/40");
-        forecast.add("Weds - Cloudy  - 72/63");
-        forecast.add("Thurs - Asteroids - 75/65");
-        forecast.add("Fri - Heavy Rain - 65/56");
-        forecast.add("Sat - HELP TRAPPED IN WEATHERSTATION - 60/51");
-        forecast.add("Sun - Sunny - 80/68");
+        // attaching bottom sheet behaviour - hide / show on scroll
+        CoordinatorLayout.LayoutParams layoutParams = (CoordinatorLayout.LayoutParams) navView.getLayoutParams();
+        layoutParams.setBehavior(new BottomNavigationBehavior());
 
-
-
-        RecyclerView recyclerView = findViewById(R.id.recyclerview);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        adapter = new RecyclerViewAdapter(this,forecast);
-        recyclerView.setAdapter(adapter);
-
+        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
+        NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
+        NavigationUI.setupWithNavController(navView, navController);
     }
+
 }
