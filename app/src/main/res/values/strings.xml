@@ -15,4 +15,10 @@
     <string name="title_activity_splash_screen">FullscreenActivity</string>
     <string name="preference_file_key">XpensManager</string>
     <string name="database_name">XpensManager</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="title_activity_main">MainActivity</string>
+    <string name="title_home">Home</string>
+    <string name="title_dashboard">Add</string>
+    <string name="title_notifications">Settings</string>
 </resources>
