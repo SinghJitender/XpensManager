@@ -3,22 +3,15 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="130dp"
     app:cardCornerRadius="5dp"
     app:cardBackgroundColor="@color/white"
     app:cardElevation="5dp"
     app:cardUseCompatPadding="true">
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:weightSum="40">
-        <View
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:background="@color/theme_orange"
-            android:layout_marginRight="10dp"
-            />
         <LinearLayout
             android:layout_weight="39"
             android:orientation="vertical"
@@ -30,7 +23,7 @@
                 android:text="Bangalore Flat Mates"
                 android:gravity="left"
                 android:layout_width="match_parent"
-                android:textSize="25sp"
+                android:textSize="20sp"
                 android:textColor="@color/theme_text_color_on_white_bg"
                 android:layout_height="wrap_content"/>
             <View
@@ -44,7 +37,7 @@
                 android:id="@+id/totalSpendsThisMonth"
                 android:layout_width="match_parent"
                 android:layout_weight="1"
-                android:textSize="25sp"
+                android:textSize="18sp"
                 android:textStyle="bold"
                 android:gravity="left"
                 android:text="₹ 12456.00"
@@ -54,7 +47,7 @@
                 android:id="@+id/netSpendsThisMonth"
                 android:layout_width="match_parent"
                 android:layout_weight="1"
-                android:paddingLeft="23dp"
+                android:paddingLeft="17dp"
                 android:textSize="15sp"
                 android:gravity="left"
                 android:text="+6456.00"
@@ -62,6 +55,13 @@
                 android:layout_height="wrap_content"/>
 
         </LinearLayout>
+        <View
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@color/theme_yellow"
+            android:layout_marginLeft="10dp"
+            />
     </LinearLayout>
 
 

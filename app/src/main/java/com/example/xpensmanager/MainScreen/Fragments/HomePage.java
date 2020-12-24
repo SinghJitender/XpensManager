@@ -1,5 +1,10 @@
 package com.example.xpensmanager.MainScreen.Fragments;
 
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.RectF;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -7,13 +12,18 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.xpensmanager.MainScreen.Adapters.RecyclerViewAdapter;
+import com.example.xpensmanager.MainScreen.Adapters.SwipeController;
+import com.example.xpensmanager.MainScreen.Adapters.SwipeControllerActions;
 import com.example.xpensmanager.R;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,6 +38,9 @@ public class HomePage extends Fragment {
     private ArrayList<String> titleData;
     private ArrayList<String> amountData;
     private ArrayList<String> netData;
+    private ArrayList<Boolean> showM;
+
+    SwipeController swipeController = null;
     
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -70,7 +83,13 @@ public class HomePage extends Fragment {
         titleData = new ArrayList<>();
         amountData = new ArrayList<>();
         netData = new ArrayList<>();
+        showM = new ArrayList<>();
         
+        titleData.add("Own Expenses");
+        titleData.add("Bangalore Flat Mates");
+        titleData.add("Cricket Group");
+        titleData.add("Delhi Friends");
+        titleData.add("Trips");
         titleData.add("Own Expenses");
         titleData.add("Bangalore Flat Mates");
         titleData.add("Cricket Group");
@@ -82,16 +101,82 @@ public class HomePage extends Fragment {
         amountData.add("₹ 1244.00");
         amountData.add("₹ 76876767.72");
         amountData.add("₹ 3332.44");
-        
+        amountData.add("₹ 34700.98");
+        amountData.add("₹ 23222.77");
+        amountData.add("₹ 1244.00");
+        amountData.add("₹ 76876767.72");
+        amountData.add("₹ 3332.44");
+
         netData.add("- 9800.67");
         netData.add("+ 2333.78");
         netData.add("+ 45.11");
         netData.add("+ 234376.45");
         netData.add("- 453.00");
+        netData.add("- 9800.67");
+        netData.add("+ 2333.78");
+        netData.add("+ 45.11");
+        netData.add("+ 234376.45");
+        netData.add("- 453.00");
+
+        showM.add(false);
+        showM.add(false);
+        showM.add(false);
+        showM.add(false);
+        showM.add(false);
+        showM.add(false);
+        showM.add(false);
+        showM.add(false);
+        showM.add(false);
+        showM.add(false);
         
-        adapter = new RecyclerViewAdapter(getActivity(),titleData,amountData,netData);
+        adapter = new RecyclerViewAdapter(getActivity(),titleData,amountData,netData,showM);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.setAdapter(adapter);
+        ItemTouchHelper.SimpleCallback touchHelperCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
+            private final ColorDrawable background = new ColorDrawable(getResources().getColor(R.color.theme_light_grey));
+            private boolean swipeBack = false;
+            @Override
+            public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
+                return false;
+            }
+
+            @Override
+            public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
+                if(direction == ItemTouchHelper.LEFT)
+                     adapter.showMenu(viewHolder.getAdapterPosition());
+                if(direction == ItemTouchHelper.RIGHT)
+                    adapter.hideMenu(viewHolder.getAdapterPosition());
+            }
+
+            @Override
+            public void onChildDraw(Canvas c, RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
+                View itemView = viewHolder.itemView;
+                super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
+                background.draw(c);
+            }
+        };
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(touchHelperCallback);
+        itemTouchHelper.attachToRecyclerView(recyclerView);
+
+
+        /*swipeController = new SwipeController(new SwipeControllerActions() {
+            @Override
+            public void onRightClicked(int position) {
+                //adapter.titl.remove(position);
+                //adapter.notifyItemRemoved(position);
+                adapter.notifyItemRangeChanged(position, adapter.getItemCount());
+            }
+        },getActivity());
+        ItemTouchHelper itemTouchhelper = new ItemTouchHelper(swipeController);
+        itemTouchhelper.attachToRecyclerView(recyclerView);
+
+        recyclerView.addItemDecoration(new RecyclerView.ItemDecoration() {
+            @Override
+            public void onDraw(Canvas c, RecyclerView parent, RecyclerView.State state) {
+                swipeController.onDraw(c);
+            }
+        });*/
+
         return view;
     }
 }
