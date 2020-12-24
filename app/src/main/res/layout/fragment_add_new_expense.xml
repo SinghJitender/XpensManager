@@ -6,9 +6,94 @@
     tools:context=".MainScreen.Fragments.AddNewExpense">
 
     <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:orientation="vertical"
+        android:padding="15dp"
+        android:layout_height="match_parent">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Create New Group"
+            android:textStyle="bold"
+            android:textSize="25sp"
+            android:textColor="@color/theme_blue_variant"/>
+        <View
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="15dp"
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="@color/theme_blue_variant"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="20">
+            <ImageView
+                android:layout_width="0dp"
+                android:layout_weight="3"
+                android:layout_height="match_parent"
+                android:src="@drawable/delete"
+                android:scaleType="fitCenter"
+                android:padding="10dp"
+                android:background="@color/white" />
+            <EditText
+                android:id="@+id/title"
+                android:layout_width="0dp"
+                android:layout_weight="17"
+                android:layout_height="wrap_content"
+                android:hint="Title"
+                android:textSize="18sp"/>
+        </LinearLayout>
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="20">
+            <ImageView
+                android:layout_width="0dp"
+                android:layout_weight="3"
+                android:layout_height="match_parent"
+                android:src="@drawable/delete"
+                android:scaleType="fitCenter"
+                android:padding="10dp"
+                android:background="@color/white" />
+            <EditText
+                android:id="@+id/noofpeps"
+                android:layout_width="0dp"
+                android:layout_weight="17"
+                android:layout_height="wrap_content"
+                android:hint="Split Between (Eg - 4)"
+                android:textSize="18sp"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="20">
+            <ImageView
+                android:layout_width="0dp"
+                android:layout_weight="3"
+                android:layout_height="match_parent"
+                android:src="@drawable/delete"
+                android:scaleType="fitCenter"
+                android:padding="10dp"
+                android:background="@color/white" />
+            <EditText
+                android:id="@+id/title"
+                android:layout_width="0dp"
+                android:layout_weight="17"
+                android:layout_height="wrap_content"
+                android:hint="Title"
+                android:textSize="18sp"/>
+        </LinearLayout>
+
+
+
+
+
+
+    </LinearLayout>
 </FrameLayout>
