@@ -5,95 +5,112 @@
     android:layout_height="match_parent"
     tools:context=".MainScreen.Fragments.AddNewExpense">
 
-    <!-- TODO: Update blank fragment layout -->
-    <LinearLayout
+    <androidx.cardview.widget.CardView
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
-        android:orientation="vertical"
-        android:padding="15dp"
-        android:layout_height="match_parent">
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Create New Group"
-            android:textStyle="bold"
-            android:textSize="25sp"
-            android:textColor="@color/theme_blue_variant"/>
-        <View
-            android:layout_marginTop="5dp"
-            android:layout_marginBottom="15dp"
-            android:layout_width="match_parent"
-            android:layout_height="0.5dp"
-            android:background="@color/theme_blue_variant"/>
+        android:layout_height="match_parent"
+        app:cardCornerRadius="15dp"
+        app:cardBackgroundColor="@color/white"
+        app:cardElevation="5dp"
+        app:cardUseCompatPadding="true">
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:weightSum="20">
-            <ImageView
-                android:layout_width="0dp"
-                android:layout_weight="3"
-                android:layout_height="match_parent"
-                android:src="@drawable/delete"
-                android:scaleType="fitCenter"
-                android:padding="10dp"
-                android:background="@color/white" />
-            <EditText
-                android:id="@+id/title"
-                android:layout_width="0dp"
-                android:layout_weight="17"
+            android:orientation="vertical"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Title"
-                android:textSize="18sp"/>
+                android:orientation="horizontal"
+                android:weightSum="20">
+                <EditText
+                    android:id="@+id/title"
+                    android:layout_width="0dp"
+                    android:layout_weight="20"
+                    android:layout_height="80dp"
+                    android:hint="Title"
+                    android:textStyle="bold"
+                    android:background="@null"
+                    android:paddingLeft="20dp"
+                    android:textSize="25sp"/>
+            </LinearLayout>
+            <View
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:background="@color/theme_grey"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:weightSum="20">
+                <!--<ImageView
+                    android:layout_width="0dp"
+                    android:layout_weight="3"
+                    android:layout_height="50dp"
+                    android:src="@drawable/delete"
+                    android:scaleType="fitCenter"
+                    android:padding="10dp"
+                    android:background="@color/white" />-->
+                <EditText
+                    android:id="@+id/noofpeps"
+                    android:layout_width="0dp"
+                    android:layout_weight="20"
+                    android:background="@null"
+                    android:paddingLeft="20dp"
+                    android:layout_height="50dp"
+                    android:hint="Split Between (Eg - 4)"
+                    android:textSize="20sp"/>
+            </LinearLayout>
+            <View
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:background="@color/theme_grey"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:weightSum="20">
+             <!--   <ImageView
+                    android:layout_width="0dp"
+                    android:layout_weight="3"
+                    android:layout_height="50dp"
+                    android:src="@drawable/delete"
+                    android:scaleType="fitCenter"
+                    android:padding="10dp"
+                    android:background="@color/theme_light_grey" />-->
+                <EditText
+                    android:id="@+id/limit"
+                    android:layout_width="0dp"
+                    android:layout_weight="20"
+                    android:background="@null"
+                    android:paddingLeft="20dp"
+                    android:layout_height="50dp"
+                    android:hint="Max Limit (Optional)"
+                    android:textSize="20sp"/>
+            </LinearLayout>
+
+            <View
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="25dp"
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:background="@color/theme_grey"/>
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Save"
+                android:layout_marginRight="50dp"
+                android:layout_marginLeft="50dp"
+                />
+
         </LinearLayout>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:weightSum="20">
-            <ImageView
-                android:layout_width="0dp"
-                android:layout_weight="3"
-                android:layout_height="match_parent"
-                android:src="@drawable/delete"
-                android:scaleType="fitCenter"
-                android:padding="10dp"
-                android:background="@color/white" />
-            <EditText
-                android:id="@+id/noofpeps"
-                android:layout_width="0dp"
-                android:layout_weight="17"
-                android:layout_height="wrap_content"
-                android:hint="Split Between (Eg - 4)"
-                android:textSize="18sp"/>
-        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+    <!-- TODO: Update blank fragment layout -->
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:weightSum="20">
-            <ImageView
-                android:layout_width="0dp"
-                android:layout_weight="3"
-                android:layout_height="match_parent"
-                android:src="@drawable/delete"
-                android:scaleType="fitCenter"
-                android:padding="10dp"
-                android:background="@color/white" />
-            <EditText
-                android:id="@+id/title"
-                android:layout_width="0dp"
-                android:layout_weight="17"
-                android:layout_height="wrap_content"
-                android:hint="Title"
-                android:textSize="18sp"/>
-        </LinearLayout>
-
-
-
-
-
-
-    </LinearLayout>
 </FrameLayout>
