@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/framelayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".MainScreen.Fragments.HomePage">
 
     <RelativeLayout
+        android:id="@+id/mainrelativeview"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -16,46 +18,176 @@
             android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
+            <FrameLayout
+                android:id="@+id/framelayouttopview"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
 
-            <ImageView
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="200dp"
+                    android:background="@color/theme_blue_variant"/>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+
+                    android:layout_gravity="center">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="December"
+                        android:textColor="@color/white"
+                        android:textSize="50sp"
+                        android:textStyle="bold"
+                        android:layout_gravity="center"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:text="₹ 29455.34"
+                        android:textColor="@color/white"
+                        android:textStyle="bold"
+                        android:textSize="35sp"
+                        />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:text="+7855.78"
+                        android:textColor="@color/white"
+                        android:textSize="20sp"
+                        />
+                </LinearLayout>
+            </FrameLayout>
+
+            <androidx.cardview.widget.CardView
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                xmlns:android="http://schemas.android.com/apk/res/android"
+                android:visibility="invisible"
+                android:id="@+id/createnewgroup"
                 android:layout_width="match_parent"
                 android:layout_height="200dp"
-                android:background="@color/theme_blue_variant"/>
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
+                app:cardBackgroundColor="@color/white"
+                app:cardElevation="5dp">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:orientation="vertical"
+                    android:layout_margin="5dp"
+                    android:layout_height="match_parent">
 
-                android:layout_gravity="center">
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="December"
-                    android:textColor="@color/white"
-                    android:textSize="50sp"
-                    android:textStyle="bold"
-                    android:layout_gravity="center"/>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_marginBottom="5dp"
+                        android:weightSum="20">
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_weight="20"
+                            android:layout_marginTop="5dp"
+                            android:layout_height="wrap_content"
+                            android:text="Create New Group"
+                            android:textStyle="bold"
+                            android:textColor="@color/theme_blue_variant"
+                            android:background="@null"
+                            android:paddingLeft="20dp"
+                            android:textSize="25sp"/>
+                    </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:weightSum="20">
+                        <EditText
+                            android:id="@+id/title"
+                            android:layout_width="0dp"
+                            android:layout_weight="20"
+                            android:layout_height="wrap_content"
+                            android:hint="Title"
+                            android:singleLine="true"
+                            android:textStyle="bold"
+                            android:background="@null"
+                            android:paddingLeft="20dp"
+                            android:layout_marginTop="3dp"
+                            android:layout_marginBottom="3dp"
+                            android:textSize="22sp"/>
+                    </LinearLayout>
+                    <View
+                        android:layout_marginTop="2dp"
+                        android:layout_marginBottom="2dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="0.5dp"
+                        android:background="@color/theme_grey"/>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:weightSum="20">
+                        <!--<ImageView
+                            android:layout_width="0dp"
+                            android:layout_weight="3"
+                            android:layout_height="50dp"
+                            android:src="@drawable/delete"
+                            android:scaleType="fitCenter"
+                            android:padding="10dp"
+                            android:background="@color/white" />-->
+                        <EditText
+                            android:id="@+id/noofpeps"
+                            android:layout_width="0dp"
+                            android:layout_weight="10"
+                            android:layout_marginTop="5dp"
+                            android:layout_marginBottom="5dp"
+                            android:background="@null"
+                            android:singleLine="true"
+                            android:inputType="numberDecimal"
+                            android:layout_marginEnd="5dp"
+                            android:paddingLeft="20dp"
+                            android:layout_height="wrap_content"
+                            android:hint="No of persons"
+                            android:textSize="18sp"/>
+                        <View
+                            android:layout_width="1dp"
+                            android:layout_height="match_parent"
+                            android:background="@color/theme_grey"/>
+                        <EditText
+                            android:id="@+id/limit"
+                            android:layout_width="0dp"
+                            android:layout_weight="10"
+                            android:layout_marginTop="5dp"
+                            android:layout_marginBottom="5dp"
+                            android:background="@null"
+                            android:layout_marginEnd="5dp"
+                            android:layout_marginStart="5dp"
+                            android:paddingLeft="10dp"
+                            android:singleLine="true"
+                            android:inputType="numberDecimal"
+                            android:layout_height="wrap_content"
+                            android:hint="Max Limit (Optional)"
+                            android:textSize="18sp"/>
+                    </LinearLayout>
+                    <View
+                        android:layout_marginTop="2dp"
+                        android:layout_marginBottom="2dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="0.5dp"
+                        android:background="@color/theme_grey"/>
+                    <Button
+                        android:layout_width="250dp"
+                        android:layout_height="wrap_content"
+                        android:text="Create"
+                        android:layout_marginTop="10dp"
+                        android:backgroundTint="@color/theme_blue_variant"
+                        android:layout_gravity="center"
+                        />
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:text="₹ 29455.34"
-                    android:textColor="@color/white"
-                    android:textStyle="bold"
-                    android:textSize="35sp"
-                    />
+                </LinearLayout>
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:text="+7855.78"
-                    android:textColor="@color/white"
-                    android:textSize="20sp"
-                    />
-            </LinearLayout>
-        </androidx.cardview.widget.CardView>
+            </androidx.cardview.widget.CardView>
+            </androidx.cardview.widget.CardView>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerView"
