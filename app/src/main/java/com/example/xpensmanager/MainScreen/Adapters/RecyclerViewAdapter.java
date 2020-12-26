@@ -4,31 +4,35 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.xpensmanager.Database.GroupDB;
 import com.example.xpensmanager.R;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Hashtable;
 import java.util.List;
 
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    private List<String> titleData;
-    private List<String> amountData;
-    private List<String> netData;
-    private List<Boolean> showM;
+    ArrayList<Hashtable<String,String>> results;
     private LayoutInflater mInflater;
     private ItemClickListener mClickListener;
-
+    private Context context;
+    GroupDB groups;
     private final int SHOW_MENU = 1;
     private final int HIDE_MENU = 2;
 
     // data is passed into the constructor
-    public RecyclerViewAdapter(Context context, ArrayList<String> titleData,ArrayList<String> totalAmount,ArrayList<String> netAmount, ArrayList<Boolean> showM) {
+    public RecyclerViewAdapter(Context context, ArrayList<Hashtable<String,String>> results) {
         this.mInflater = LayoutInflater.from(context);
-        this.titleData = titleData;
-        this.amountData = totalAmount;
-        this.netData = netAmount;
-        this.showM = showM;
+        this.results = results;
+        this.context = context;
     }
 
     // inflates the row layout from xml when needed
@@ -45,29 +49,45 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         //return new ViewHolder(view);
     }
 
-    public class MenuViewHolder extends RecyclerView.ViewHolder{
-        MenuViewHolder(View view){
-            super(view);
-        }
-    }
-
     // binds the data to the TextView in each row
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         if( holder instanceof ViewHolder) {
-            ((ViewHolder) holder).title.setText(titleData.get(position));
-            ((ViewHolder) holder).totalAmount.setText(amountData.get(position));
-            ((ViewHolder) holder).netAmount.setText(netData.get(position));
+            ((ViewHolder) holder).title.setText(results.get(position).get("title"));
+            ((ViewHolder) holder).totalAmount.setText("₹ "+results.get(position).get("totalAmount"));
+
+            double net_amount = Double.parseDouble(results.get(position).get("netAmount"));
+            if(net_amount>=0){
+                ((ViewHolder) holder).netAmount.setTextColor(context.getResources().getColor(R.color.theme_green));
+                ((ViewHolder) holder).netAmount.setText("+"+net_amount);
+            }else {
+                ((ViewHolder) holder).netAmount.setTextColor(context.getResources().getColor(R.color.theme_red));
+                ((ViewHolder) holder).netAmount.setText("+"+net_amount);
+            }
         }
         if(holder instanceof MenuViewHolder){
+            ((MenuViewHolder) holder).add.setOnClickListener((v)->{
+                Toast.makeText(context,"Clicked on add button",Toast.LENGTH_SHORT).show();
+            });
 
+            ((MenuViewHolder) holder).edit.setOnClickListener((v)->{
+                Toast.makeText(context,"Clicked on edit button",Toast.LENGTH_SHORT).show();
+            });
+
+            ((MenuViewHolder) holder).settle.setOnClickListener((v)->{
+                Toast.makeText(context,"Clicked on settle button",Toast.LENGTH_SHORT).show();
+            });
+
+            ((MenuViewHolder) holder).delete.setOnClickListener((v)->{
+                Toast.makeText(context,"Clicked on delete button",Toast.LENGTH_SHORT).show();
+            });
         }
     }
 
     // total number of rows
     @Override
     public int getItemCount() {
-        return titleData.size();
+        return results.size();
     }
 
 
@@ -89,10 +109,17 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         }
     }
 
-    // convenience method for getting data at click position
-    String getItem(int id) {
-        return titleData.get(id);
+    public class MenuViewHolder extends RecyclerView.ViewHolder{
+        ImageButton add,edit,settle,delete;
+        MenuViewHolder(View view){
+            super(view);
+            add = itemView.findViewById(R.id.addXpens);
+            edit = itemView.findViewById(R.id.editXpens);
+            settle = itemView.findViewById(R.id.settleXpens);
+            delete = itemView.findViewById(R.id.deleteXpens);
+        }
     }
+
 
     // allows clicks events to be caught
     void setClickListener(ItemClickListener itemClickListener) {
@@ -106,38 +133,20 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
     @Override
     public int getItemViewType(int position) {
-        if(showM.get(position)){
+        if(results.get(position).get("showMenu").equals("true")){
             return SHOW_MENU;
         }else{
             return HIDE_MENU;
         }
     }
 
-
     public void showMenu(int position) {
-        showM.set(position,true);
+        results.get(position).put("showMenu","true");
         notifyDataSetChanged();
     }
 
     public void hideMenu(int position) {
-        showM.set(position,false);
+        results.get(position).put("showMenu","false");
         notifyDataSetChanged();
     }
-
-
-   /* public boolean isMenuShown() {
-        for(int i=0; i<showM.size(); i++){
-            if(showM.get(i)){
-                return true;
-            }
-        }
-        return false;
-    }
-
-    public void closeMenu() {
-        for(int i=0; i<showM.size(); i++){
-            showM.add(i,false);
-        }
-        notifyDataSetChanged();
-    }*/
 }

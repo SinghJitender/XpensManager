@@ -24,10 +24,11 @@
             android:weightSum="40">
 
             <ImageButton
+                android:id="@+id/addXpens"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="10"
-                android:text="Delete"
+                android:text="Add"
                 android:padding="15dp"
                 android:src="@drawable/plus"
                 android:scaleType="fitCenter"
@@ -35,6 +36,7 @@
                 android:layout_marginRight="20dp"/>
 
             <ImageButton
+                android:id="@+id/editXpens"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="10"
@@ -46,6 +48,7 @@
                 android:layout_marginRight="20dp"/>
 
             <ImageButton
+                android:id="@+id/settleXpens"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="10"
@@ -57,6 +60,7 @@
                 android:layout_marginRight="20dp"/>
 
             <ImageButton
+                android:id="@+id/deleteXpens"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="10"

@@ -29,9 +29,12 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.Toast;
 
+import com.example.xpensmanager.Database.GroupDB;
 import com.example.xpensmanager.MainScreen.Adapters.RecyclerViewAdapter;
 import com.example.xpensmanager.MainScreen.Adapters.SwipeController;
 import com.example.xpensmanager.MainScreen.Adapters.SwipeControllerActions;
@@ -39,21 +42,23 @@ import com.example.xpensmanager.R;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Hashtable;
 import java.util.List;
 
 public class HomePage extends Fragment {
 
     private RecyclerViewAdapter adapter;
-    private ArrayList<String> titleData;
-    private ArrayList<String> amountData;
-    private ArrayList<String> netData;
-    private ArrayList<Boolean> showM;
     private CardView createNewExpense, topCardView;
+    private EditText newGroupTitle, newGroupNoOfPersons, newGroupLimit;
+    private Button createNewGroup;
     private FrameLayout frameLayout, framelayoutTopView;
+    ArrayList<Hashtable<String,String>> results;
 
     private boolean toggle = true;
 
     SwipeController swipeController = null;
+
+    GroupDB groups;
 
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
@@ -94,57 +99,65 @@ public class HomePage extends Fragment {
         topCardView = view.findViewById(R.id.cardview);
         frameLayout = view.findViewById(R.id.framelayout);
         framelayoutTopView = view.findViewById(R.id.framelayouttopview);
+        newGroupTitle = view.findViewById(R.id.title);
+        newGroupNoOfPersons = view.findViewById(R.id.noofpeps);
+        newGroupLimit = view.findViewById(R.id.limit);
+        createNewGroup = view.findViewById(R.id.create);
 
-        titleData = new ArrayList<>();
-        amountData = new ArrayList<>();
-        netData = new ArrayList<>();
-        showM = new ArrayList<>();
+        groups = new GroupDB(getActivity());
+        results = new ArrayList<>();
+        results.addAll(groups.findAll());
 
-        titleData.add("Own Expenses");
-        titleData.add("Bangalore Flat Mates");
-        titleData.add("Cricket Group");
-        titleData.add("Delhi Friends");
-        titleData.add("Trips");
-        titleData.add("Own Expenses");
-        titleData.add("Bangalore Flat Mates");
-        titleData.add("Cricket Group");
-        titleData.add("Delhi Friends");
-        titleData.add("Trips");
+        createNewGroup.setOnClickListener((v)-> {
+            String titleValue = newGroupTitle.getText().toString();
+            String noOfPersons = newGroupNoOfPersons.getText().toString();
+            String limit = newGroupLimit.getText().toString();
+            if(titleValue == null || titleValue.equalsIgnoreCase("")) {
+                newGroupTitle.setError("Field Cannot be blank");
+            } else{
+                if(noOfPersons == null || noOfPersons.equalsIgnoreCase("")){
+                    newGroupNoOfPersons.setError("Field Cannot be blank");
+                } else{
+                    if(Integer.parseInt(noOfPersons)<=0){
+                        newGroupNoOfPersons.setError("Cannot be 0 or less");
+                    }
+                    else {
+                        if (limit == null || limit.equalsIgnoreCase("")) {
+                            //Optional Field
+                            //All Checks Completed
+                            String result = groups.insertNewGroup(titleValue,Integer.parseInt(noOfPersons),-999);
+                            Toast.makeText(getActivity(), result, Toast.LENGTH_SHORT).show();
+                            if(result.contains("Created")) {
+                                newGroupTitle.setText("");
+                                newGroupLimit.setText("");
+                                newGroupNoOfPersons.setText("");
+                                results.clear();
+                                results.addAll(groups.findAll());
+                                adapter.notifyDataSetChanged();
+                            }
+                        } else {
+                            if(Double.parseDouble(limit)<=0.0){
+                                newGroupLimit.setError("Cannot be 0 or less");
+                            }else {
+                                //All Checks Completed
+                                String result = groups.insertNewGroup(titleValue,Integer.parseInt(noOfPersons),Double.parseDouble(limit));
+                                Toast.makeText(getActivity(), result, Toast.LENGTH_SHORT).show();
+                                if(result.contains("Created")) {
+                                    newGroupTitle.setText("");
+                                    newGroupLimit.setText("");
+                                    newGroupNoOfPersons.setText("");
+                                    results.clear();
+                                    results.addAll(groups.findAll());
+                                    adapter.notifyDataSetChanged();
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        });
 
-        amountData.add("₹ 34700.98");
-        amountData.add("₹ 23222.77");
-        amountData.add("₹ 1244.00");
-        amountData.add("₹ 76876767.72");
-        amountData.add("₹ 3332.44");
-        amountData.add("₹ 34700.98");
-        amountData.add("₹ 23222.77");
-        amountData.add("₹ 1244.00");
-        amountData.add("₹ 76876767.72");
-        amountData.add("₹ 3332.44");
-
-        netData.add("- 9800.67");
-        netData.add("+ 2333.78");
-        netData.add("+ 45.11");
-        netData.add("+ 234376.45");
-        netData.add("- 453.00");
-        netData.add("- 9800.67");
-        netData.add("+ 2333.78");
-        netData.add("+ 45.11");
-        netData.add("+ 234376.45");
-        netData.add("- 453.00");
-
-        showM.add(false);
-        showM.add(false);
-        showM.add(false);
-        showM.add(false);
-        showM.add(false);
-        showM.add(false);
-        showM.add(false);
-        showM.add(false);
-        showM.add(false);
-        showM.add(false);
-
-        adapter = new RecyclerViewAdapter(getActivity(), titleData, amountData, netData, showM);
+        adapter = new RecyclerViewAdapter(getActivity(), results);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.setAdapter(adapter);
         ItemTouchHelper.SimpleCallback touchHelperCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {

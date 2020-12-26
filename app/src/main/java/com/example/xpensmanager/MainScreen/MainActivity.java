@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.example.xpensmanager.Database.GroupDB;
 import com.example.xpensmanager.MainScreen.Adapters.BottomNavigationBehavior;
 import com.example.xpensmanager.R;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -19,7 +20,6 @@ import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
 public class MainActivity extends AppCompatActivity {
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
