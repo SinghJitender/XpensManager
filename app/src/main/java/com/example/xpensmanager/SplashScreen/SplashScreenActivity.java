@@ -16,6 +16,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import com.example.xpensmanager.Database.GroupDB;
 import com.example.xpensmanager.MainScreen.MainActivity;
 import com.example.xpensmanager.R;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -41,6 +42,8 @@ public class SplashScreenActivity extends AppCompatActivity {
     private SharedPreferences.Editor editor;
     private SQLiteDatabase mydatabase;
 
+    GroupDB groups;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,6 +58,8 @@ public class SplashScreenActivity extends AppCompatActivity {
         username = findViewById(R.id.username);
         password = findViewById(R.id.password);
         skip = findViewById(R.id.skip);
+
+        groups = new GroupDB(this);
 
         if(!rotateLoading.isStart())
             rotateLoading.start();
