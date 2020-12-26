@@ -21,4 +21,5 @@
     <string name="title_home">Home</string>
     <string name="title_dashboard">Add</string>
     <string name="title_notifications">Settings</string>
+    <string name="add_own_expense"><u>Add Own Expense</u></string>
 </resources>

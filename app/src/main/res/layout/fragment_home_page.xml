@@ -22,6 +22,7 @@
             <FrameLayout
                 android:id="@+id/framelayouttopview"
                 android:layout_width="match_parent"
+                android:visibility="invisible"
                 android:layout_height="wrap_content">
 
                 <ImageView
@@ -33,14 +34,13 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-
                     android:layout_gravity="center">
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="December"
                         android:textColor="@color/white"
-                        android:textSize="50sp"
+                        android:textSize="40sp"
                         android:textStyle="bold"
                         android:layout_gravity="center"/>
 
@@ -51,7 +51,7 @@
                         android:text="₹ 29455.34"
                         android:textColor="@color/white"
                         android:textStyle="bold"
-                        android:textSize="35sp"
+                        android:textSize="30sp"
                         />
 
                     <TextView
@@ -61,6 +61,18 @@
                         android:text="+7855.78"
                         android:textColor="@color/white"
                         android:textSize="20sp"
+                        />
+
+                    <TextView
+                        android:id="@+id/addOwnExpense"
+                        android:clickable="true"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginTop="10dp"
+                        android:text="@string/add_own_expense"
+                        android:textColor="@color/white"
+                        android:textSize="18sp"
                         />
                 </LinearLayout>
 
@@ -110,6 +122,8 @@
                             android:layout_weight="20"
                             android:layout_height="wrap_content"
                             android:hint="Title"
+                            android:focusedByDefault="true"
+                            android:nextFocusForward="@id/noofpeps"
                             android:singleLine="true"
                             android:textStyle="bold"
                             android:background="@null"
@@ -144,8 +158,9 @@
                             android:layout_marginTop="5dp"
                             android:layout_marginBottom="5dp"
                             android:background="@null"
+                            android:nextFocusForward="@id/limit"
                             android:singleLine="true"
-                            android:inputType="numberDecimal"
+                            android:inputType="number"
                             android:layout_marginEnd="5dp"
                             android:paddingLeft="20dp"
                             android:layout_height="wrap_content"
@@ -157,6 +172,7 @@
                             android:background="@color/theme_grey"/>
                         <EditText
                             android:id="@+id/limit"
+                            android:nextFocusForward="@id/createnewgroup"
                             android:layout_width="0dp"
                             android:layout_weight="10"
                             android:layout_marginTop="5dp"
@@ -186,6 +202,188 @@
                         android:backgroundTint="@color/theme_blue_variant"
                         android:layout_gravity="center"
                         />
+
+                </LinearLayout>
+
+            </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                xmlns:android="http://schemas.android.com/apk/res/android"
+                android:visibility="visible"
+                android:id="@+id/addNewExpenseView"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                app:cardBackgroundColor="@color/white"
+                app:cardElevation="5dp">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:orientation="vertical"
+                    android:layout_gravity="center"
+                    android:layout_margin="5dp"
+                    android:layout_height="match_parent">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_marginBottom="5dp"
+                        android:weightSum="30">
+                        <TextView
+                            android:id="@+id/addExpenseTitle"
+                            android:layout_width="0dp"
+                            android:layout_weight="20"
+                            android:layout_marginTop="2dp"
+                            android:layout_height="wrap_content"
+                            android:text="Add Your Expense"
+                            android:textStyle="bold"
+                            android:textColor="@color/theme_blue_variant"
+                            android:background="@null"
+                            android:paddingLeft="20dp"
+                            android:textSize="22sp"/>
+
+                        <TextView
+                            android:id="@+id/newExpenseDate"
+                            android:layout_width="0dp"
+                            android:layout_marginTop="2dp"
+                            android:layout_weight="10"
+                            android:layout_height="wrap_content"
+                            android:singleLine="true"
+                            android:text="20/12/2020"
+                            android:gravity="center_vertical"
+                            android:textStyle="bold"
+                            android:background="@null"
+                            android:paddingLeft="10dp"
+                            android:textSize="20sp"/>
+                    </LinearLayout>
+
+                    <View
+                        android:layout_marginTop="1dp"
+                        android:layout_marginBottom="1dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="0.5dp"
+                        android:background="@color/theme_grey"/>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:weightSum="30">
+                        <EditText
+                            android:id="@+id/newExpenseTotalAmount"
+                            android:layout_width="0dp"
+                            android:layout_weight="17"
+                            android:background="@null"
+                            android:singleLine="true"
+                            android:inputType="numberDecimal"
+                            android:paddingLeft="20dp"
+                            android:paddingTop="5dp"
+                            android:paddingBottom="5dp"
+                            android:layout_gravity="center_vertical"
+                            android:textStyle="bold"
+                            android:layout_height="wrap_content"
+                            android:hint="₹ Amount"
+                            android:textSize="25sp"/>
+                        <View
+                            android:layout_marginTop="1dp"
+                            android:layout_marginBottom="1dp"
+                            android:layout_width="1dp"
+                            android:layout_height="match_parent"
+                            android:background="@color/theme_grey"/>
+                        <CheckBox
+                            android:id="@+id/newExpensePaidBy"
+                            android:layout_width="0dp"
+                            android:gravity="center_vertical"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="13"
+                            android:text="Paid By Me"
+                            />
+
+                    </LinearLayout>
+
+                    <View
+                        android:layout_marginTop="1dp"
+                        android:layout_marginBottom="1dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="0.5dp"
+                        android:background="@color/theme_grey"/>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:weightSum="30">
+                        <EditText
+                            android:id="@+id/newExpenseDescription"
+                            android:layout_width="0dp"
+                            android:layout_weight="17"
+                            android:layout_marginTop="5dp"
+                            android:layout_marginBottom="5dp"
+                            android:background="@null"
+                            android:paddingStart="20dp"
+                            android:layout_gravity="center_vertical"
+                            android:singleLine="true"
+                            android:inputType="text"
+                            android:layout_height="wrap_content"
+                            android:hint="Description"
+                            android:textSize="20sp"/>
+                        <View
+                            android:layout_marginTop="1dp"
+                            android:layout_marginBottom="1dp"
+                            android:layout_width="1dp"
+                            android:layout_height="match_parent"
+                            android:background="@color/theme_grey"/>
+                        <AutoCompleteTextView
+                            android:id="@+id/newExpenseselectCategory"
+                            android:layout_width="0dp"
+                            android:layout_weight="13"
+                            android:layout_height="wrap_content"
+                            android:singleLine="true"
+                            android:layout_marginTop="5dp"
+                            android:layout_marginBottom="5dp"
+                            android:paddingStart="10dp"
+                            android:layout_gravity="center_vertical"
+                            android:hint="Category"
+                            android:textSize="20sp"
+                            android:background="@null"/>
+
+                    </LinearLayout>
+
+                    <View
+                        android:layout_marginTop="2dp"
+                        android:layout_marginBottom="2dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="0.5dp"
+                        android:background="@color/theme_grey"/>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:weightSum="20">
+                        <Button
+                            android:id="@+id/newExpenseAdd"
+                            android:layout_width="0dp"
+                            android:layout_weight="17"
+                            android:layout_gravity="center_vertical"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="10dp"
+                            android:layout_marginEnd="10dp"
+                            android:text="Add"
+                            android:backgroundTint="@color/theme_green"
+                            />
+                        <ImageButton
+                            android:id="@+id/newExpenseCancel"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="3"
+                            android:text="Delete"
+                            android:padding="5dp"
+                            android:src="@drawable/close_red"
+                            android:scaleType="fitCenter"
+                            android:background="@color/white"/>
+
+                    </LinearLayout>
 
                 </LinearLayout>
 

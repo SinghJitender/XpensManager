@@ -29,9 +29,12 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
+import android.widget.ImageButton;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.xpensmanager.Database.GroupDB;
@@ -48,13 +51,16 @@ import java.util.List;
 public class HomePage extends Fragment {
 
     private RecyclerViewAdapter adapter;
-    private CardView createNewExpense, topCardView;
+    private CardView createNewExpense, topCardView,addNewExpenseView;
     private EditText newGroupTitle, newGroupNoOfPersons, newGroupLimit;
     private Button createNewGroup;
     private FrameLayout frameLayout, framelayoutTopView;
+    private TextView addOwnExpense;
+    ImageButton newExpenseCancel;
     ArrayList<Hashtable<String,String>> results;
 
     private boolean toggle = true;
+    private boolean toggleNewExpense = true;
 
     SwipeController swipeController = null;
 
@@ -103,6 +109,9 @@ public class HomePage extends Fragment {
         newGroupNoOfPersons = view.findViewById(R.id.noofpeps);
         newGroupLimit = view.findViewById(R.id.limit);
         createNewGroup = view.findViewById(R.id.create);
+        addOwnExpense = view.findViewById(R.id.addOwnExpense);
+        addNewExpenseView = view.findViewById(R.id.addNewExpenseView);
+        newExpenseCancel = view.findViewById(R.id.newExpenseCancel);
 
         groups = new GroupDB(getActivity());
         results = new ArrayList<>();
@@ -156,6 +165,14 @@ public class HomePage extends Fragment {
                 }
             }
         });
+
+        addOwnExpense.setOnClickListener((v) -> {
+            mainLayoutToAddExpenseTransition();
+        });
+
+        newExpenseCancel.setOnClickListener((v -> {
+            mainLayoutToAddExpenseTransition();
+        }));
 
         adapter = new RecyclerViewAdapter(getActivity(), results);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -214,4 +231,13 @@ public class HomePage extends Fragment {
         return super.onOptionsItemSelected(item);
     }
 
+    private void mainLayoutToAddExpenseTransition(){
+        Transition transition = new Slide(Gravity.RIGHT);
+        transition.setDuration(200);
+        transition.addTarget(addNewExpenseView).addTarget(framelayoutTopView);
+        TransitionManager.beginDelayedTransition(frameLayout, transition);
+        addNewExpenseView.setVisibility(toggleNewExpense ? View.VISIBLE : View.GONE);
+        framelayoutTopView.setVisibility(!toggleNewExpense ? View.VISIBLE : View.GONE);
+        toggleNewExpense = !toggleNewExpense;
+    }
 }
