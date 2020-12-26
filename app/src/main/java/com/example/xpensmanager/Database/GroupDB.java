@@ -5,10 +5,18 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.DatabaseUtils;
+import android.database.sqlite.SQLiteConstraintException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 import com.example.xpensmanager.R;
+
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.Hashtable;
 
 import static android.content.Context.MODE_PRIVATE;
 
@@ -29,8 +37,10 @@ public class GroupDB extends SQLiteOpenHelper {
         super(context,context.getString(R.string.database_name),null,1);
     }
 
+    @Override
     public void onCreate(SQLiteDatabase db) {
-        db.execSQL( "CREATE TABLE IF NOT EXISTS groups " +
+        Log.d("GroupDB","Creating DB");
+        db.execSQL( "CREATE TABLE groups " +
                 "(id INTEGER PRIMARY KEY AUTOINCREMENT, title VARCHAR UNIQUE, noOfPersons INTEGER, maxLimit REAL, createdOn VARCHAR, netAmount REAL, totalAmount REAL, modifiedOn VARCHAR)");
     }
 
@@ -41,18 +51,35 @@ public class GroupDB extends SQLiteOpenHelper {
         onCreate(db);
     }
 
-    public boolean insertNewGroup(String title, int noOfPersons, double maxLimit, String createdOn, String modifiedOn, double netAmount, double totalAmount) {
+    public String insertNewGroup(String title, int noOfPersons, double maxLimit) {
+
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
+        DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+        Date date = new Date();
+
+        String createdOn = dateFormat.format(date);
+        String modifiedOn = dateFormat.format(date);
+
         contentValues.put("title", title);
         contentValues.put("noOfPersons", noOfPersons);
         contentValues.put("maxLimit", maxLimit);
         contentValues.put("createdOn", createdOn);
-        contentValues.put("netAmount", netAmount);
-        contentValues.put("totalAmount", totalAmount);
+        contentValues.put("netAmount", 0.0);
+        contentValues.put("totalAmount", 0.0);
         contentValues.put("modifiedOn", modifiedOn);
-        db.insert("groups", null, contentValues);
-        return true;
+        try {
+            db.insertOrThrow("groups", null, contentValues);
+            Log.d("GroupDB","Inserted into groups: Values -" + contentValues.toString());
+            return "Created";
+        }catch (SQLiteConstraintException e){
+            Log.d("GroupDB","Exception Occured : "+e);
+            if(e.toString().contains("UNIQUE constraint failed: groups.title")) {
+                Log.d("GroupDB","Title Not Unique");
+                return "Please use different title";
+            }
+            return "Some error occurred. Try again!";
+        }
     }
 
     public int numberOfRows(){
@@ -99,6 +126,26 @@ public class GroupDB extends SQLiteOpenHelper {
         return db.delete("groups",
                 "id = ? ",
                 new String[] { Integer.toString(id) });
+    }
+
+    public ArrayList<Hashtable<String,String>> findAll(){
+        ArrayList<Hashtable<String,String>> results = new ArrayList<>();
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor =  db.rawQuery( "select * from groups", null );
+        while (cursor.moveToNext()){
+            Hashtable<String,String> temp = new Hashtable<>();
+            temp.put("id",cursor.getString(cursor.getColumnIndex(groupdb_id)));
+            temp.put("title",cursor.getString(cursor.getColumnIndex(groupdb_title)));
+            temp.put("noOfPersons",cursor.getString(cursor.getColumnIndex(groupdb_noOfPersons)));
+            temp.put("maxLimit",cursor.getString(cursor.getColumnIndex(groupdb_maxLimit)));
+            temp.put("netAmount",cursor.getString(cursor.getColumnIndex(groupdb_netAmount)));
+            temp.put("totalAmount",cursor.getString(cursor.getColumnIndex(groupdb_totalAmount)));
+            temp.put("modifiedOn",cursor.getString(cursor.getColumnIndex(groupdb_modifiedOn)));
+            temp.put("createdOn",cursor.getString(cursor.getColumnIndex(groupdb_createdOn)));
+            temp.put("showMenu","false");
+            results.add(temp);
+        }
+        return results;
     }
 
     public Cursor executeQuery(String query){
