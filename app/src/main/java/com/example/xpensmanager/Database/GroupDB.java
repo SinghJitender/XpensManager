@@ -61,7 +61,7 @@ public class GroupDB extends SQLiteOpenHelper {
         return numRows;
     }
 
-    public boolean updateGroup(String title, int noOfPersons, double maxLimit, String modifiedOn, double netAmount, double totalAmount) {
+    public boolean updateGroupByTitle(String title, int noOfPersons, double maxLimit, String modifiedOn, double netAmount, double totalAmount) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put("title", title);
@@ -74,11 +74,37 @@ public class GroupDB extends SQLiteOpenHelper {
         return true;
     }
 
-    public Integer deleteGroup(String title) {
+    public boolean updateGroupById(int id,String title, int noOfPersons, double maxLimit, String modifiedOn, double netAmount, double totalAmount) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put("title", title);
+        contentValues.put("noOfPersons", noOfPersons);
+        contentValues.put("maxLimit", maxLimit);
+        contentValues.put("netAmount", netAmount);
+        contentValues.put("totalAmount", totalAmount);
+        contentValues.put("modifiedOn", modifiedOn);
+        db.update("groups", contentValues, "id = ? ", new String[] { Integer.toString(id) } );
+        return true;
+    }
+
+    public Integer deleteGroupByTitle(String title) {
         SQLiteDatabase db = this.getWritableDatabase();
         return db.delete("groups",
                 "title = ? ",
                 new String[] { title });
+    }
+
+    public Integer deleteGroupById(int id) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        return db.delete("groups",
+                "id = ? ",
+                new String[] { Integer.toString(id) });
+    }
+
+    public Cursor executeQuery(String query){
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor res = db.rawQuery(query,null);
+        return res;
     }
 
 }
