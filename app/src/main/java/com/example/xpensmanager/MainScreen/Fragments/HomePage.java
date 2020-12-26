@@ -170,9 +170,9 @@ public class HomePage extends Fragment {
             mainLayoutToAddExpenseTransition();
         });
 
-        newExpenseCancel.setOnClickListener((v -> {
+        newExpenseCancel.setOnClickListener((v) -> {
             mainLayoutToAddExpenseTransition();
-        }));
+        });
 
         adapter = new RecyclerViewAdapter(getActivity(), results);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));

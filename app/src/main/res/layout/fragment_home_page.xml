@@ -22,7 +22,7 @@
             <FrameLayout
                 android:id="@+id/framelayouttopview"
                 android:layout_width="match_parent"
-                android:visibility="invisible"
+                android:visibility="visible"
                 android:layout_height="wrap_content">
 
                 <ImageView
@@ -72,7 +72,7 @@
                         android:layout_marginTop="10dp"
                         android:text="@string/add_own_expense"
                         android:textColor="@color/white"
-                        android:textSize="18sp"
+                        android:textSize="20sp"
                         />
                 </LinearLayout>
 
@@ -210,7 +210,7 @@
             <androidx.cardview.widget.CardView
                 xmlns:app="http://schemas.android.com/apk/res-auto"
                 xmlns:android="http://schemas.android.com/apk/res/android"
-                android:visibility="visible"
+                android:visibility="invisible"
                 android:id="@+id/addNewExpenseView"
                 android:layout_width="match_parent"
                 android:layout_height="200dp"
