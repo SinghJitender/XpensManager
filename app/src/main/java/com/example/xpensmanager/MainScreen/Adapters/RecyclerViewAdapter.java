@@ -1,6 +1,7 @@
 package com.example.xpensmanager.MainScreen.Adapters;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +13,7 @@ import android.widget.Toast;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.xpensmanager.Database.GroupDB;
+import com.example.xpensmanager.MainScreen.Fragments.HomePage;
 import com.example.xpensmanager.R;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -68,6 +70,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         if(holder instanceof MenuViewHolder){
             ((MenuViewHolder) holder).add.setOnClickListener((v)->{
                 Toast.makeText(context,"Clicked on add button",Toast.LENGTH_SHORT).show();
+                HomePage.update_add_new_expense_title(results.get(position).get("title"));
             });
 
             ((MenuViewHolder) holder).edit.setOnClickListener((v)->{
@@ -149,4 +152,5 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         results.get(position).put("showMenu","false");
         notifyDataSetChanged();
     }
+
 }

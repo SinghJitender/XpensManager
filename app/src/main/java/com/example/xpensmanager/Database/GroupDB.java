@@ -32,6 +32,7 @@ public class GroupDB extends SQLiteOpenHelper {
     public static String groupdb_netAmount = "netAmount";
     public static String groupdb_totalAmount = "totalAmount";
     public static String groupdb_modifiedOn = "modifiedOn";
+    public static String groupdb_tableName = "tableName";
 
     public GroupDB(Context context) {
         super(context,context.getString(R.string.database_name),null,1);
@@ -41,7 +42,7 @@ public class GroupDB extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         Log.d("GroupDB","Creating DB");
         db.execSQL( "CREATE TABLE groups " +
-                "(id INTEGER PRIMARY KEY AUTOINCREMENT, title VARCHAR UNIQUE, noOfPersons INTEGER, maxLimit REAL, createdOn VARCHAR, netAmount REAL, totalAmount REAL, modifiedOn VARCHAR)");
+                "(id INTEGER PRIMARY KEY AUTOINCREMENT, title VARCHAR UNIQUE, noOfPersons INTEGER, maxLimit REAL, createdOn VARCHAR, netAmount REAL, totalAmount REAL, modifiedOn VARCHAR, tableName VARCHAR)");
     }
 
     @Override
@@ -55,11 +56,10 @@ public class GroupDB extends SQLiteOpenHelper {
 
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
-        DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-        Date date = new Date();
 
-        String createdOn = dateFormat.format(date);
-        String modifiedOn = dateFormat.format(date);
+        String createdOn = getDate();
+        String modifiedOn = getDate();
+        String tableName = title.replaceAll(" ","_").toLowerCase();
 
         contentValues.put("title", title);
         contentValues.put("noOfPersons", noOfPersons);
@@ -68,8 +68,14 @@ public class GroupDB extends SQLiteOpenHelper {
         contentValues.put("netAmount", 0.0);
         contentValues.put("totalAmount", 0.0);
         contentValues.put("modifiedOn", modifiedOn);
+        contentValues.put("tableName",tableName);
         try {
             db.insertOrThrow("groups", null, contentValues);
+
+            db.execSQL( "CREATE TABLE "+ tableName +
+                    "(id INTEGER PRIMARY KEY AUTOINCREMENT, date VARCHAR, dayOfWeek VARCHAR, dayOfMonth INTEGER, month VARCHAR, year INTEGER," +
+                    "amount REAL, description VARCHAR, paidBy VARCHAR, category VARCHAR, deleted INTEGER, splitAmount REAL)");
+
             Log.d("GroupDB","Inserted into groups: Values -" + contentValues.toString());
             return "Created";
         }catch (SQLiteConstraintException e){
@@ -88,8 +94,9 @@ public class GroupDB extends SQLiteOpenHelper {
         return numRows;
     }
 
-    public boolean updateGroupByTitle(String title, int noOfPersons, double maxLimit, String modifiedOn, double netAmount, double totalAmount) {
+    public boolean updateGroupByTitle(String title, int noOfPersons, double maxLimit, double netAmount, double totalAmount) {
         SQLiteDatabase db = this.getWritableDatabase();
+        String modifiedOn = getDate();
         ContentValues contentValues = new ContentValues();
         contentValues.put("title", title);
         contentValues.put("noOfPersons", noOfPersons);
@@ -101,8 +108,9 @@ public class GroupDB extends SQLiteOpenHelper {
         return true;
     }
 
-    public boolean updateGroupById(int id,String title, int noOfPersons, double maxLimit, String modifiedOn, double netAmount, double totalAmount) {
+    public boolean updateGroupById(int id,String title, int noOfPersons, double maxLimit, double netAmount, double totalAmount) {
         SQLiteDatabase db = this.getWritableDatabase();
+        String modifiedOn = getDate();
         ContentValues contentValues = new ContentValues();
         contentValues.put("title", title);
         contentValues.put("noOfPersons", noOfPersons);
@@ -142,6 +150,7 @@ public class GroupDB extends SQLiteOpenHelper {
             temp.put("totalAmount",cursor.getString(cursor.getColumnIndex(groupdb_totalAmount)));
             temp.put("modifiedOn",cursor.getString(cursor.getColumnIndex(groupdb_modifiedOn)));
             temp.put("createdOn",cursor.getString(cursor.getColumnIndex(groupdb_createdOn)));
+            temp.put("tableName",cursor.getString(cursor.getColumnIndex(groupdb_tableName)));
             temp.put("showMenu","false");
             results.add(temp);
         }
@@ -152,6 +161,12 @@ public class GroupDB extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor res = db.rawQuery(query,null);
         return res;
+    }
+
+    public String getDate(){
+        DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+        Date date = new Date();
+        return dateFormat.format(date);
     }
 
 }

@@ -1,6 +1,7 @@
 package com.example.xpensmanager.MainScreen.Fragments;
 
 import android.annotation.SuppressLint;
+import android.app.MediaRouteButton;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -57,7 +58,9 @@ public class HomePage extends Fragment {
     private EditText newGroupTitle, newGroupNoOfPersons, newGroupLimit,newExpenseTotalAmount,newExpenseDescription;
     private Button createNewGroup,newExpenseAdd;
     private FrameLayout frameLayout, framelayoutTopView;
-    private TextView addOwnExpense,expenseTitle,newExpenseDate;
+    private static TextView addOwnExpense;
+    private static TextView expenseTitle;
+    private TextView newExpenseDate;
     private CheckBox newExpensePaidBy;
     private AutoCompleteTextView newExpenseSelectCategory;
     private ImageButton newExpenseCancel;
@@ -118,7 +121,7 @@ public class HomePage extends Fragment {
         newExpenseCancel = view.findViewById(R.id.newExpenseCancel);
 
         //Add New Expense Widgets
-        expenseTitle= view.findViewById(R.id.expenseTitle);
+        expenseTitle= view.findViewById(R.id.addExpenseTitle);
         newExpenseDate = view.findViewById(R.id.newExpenseDate);
         newExpensePaidBy = view.findViewById(R.id.newExpensePaidBy);
         newExpenseSelectCategory =  view.findViewById(R.id.newExpenseSelectCategory);
@@ -252,5 +255,11 @@ public class HomePage extends Fragment {
         addNewExpenseView.setVisibility(toggleNewExpense ? View.VISIBLE : View.GONE);
         framelayoutTopView.setVisibility(!toggleNewExpense ? View.VISIBLE : View.GONE);
         toggleNewExpense = !toggleNewExpense;
+    }
+
+
+    public static void update_add_new_expense_title(String text){
+        expenseTitle.setText(text);
+        addOwnExpense.performClick();
     }
 }

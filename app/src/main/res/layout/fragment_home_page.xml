@@ -210,7 +210,7 @@
             <androidx.cardview.widget.CardView
                 xmlns:app="http://schemas.android.com/apk/res-auto"
                 xmlns:android="http://schemas.android.com/apk/res/android"
-                android:visibility="visible"
+                android:visibility="invisible"
                 android:id="@+id/addNewExpenseView"
                 android:layout_width="match_parent"
                 android:layout_height="200dp"
