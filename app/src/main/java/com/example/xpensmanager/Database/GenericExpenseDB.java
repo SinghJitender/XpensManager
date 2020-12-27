@@ -77,14 +77,17 @@ public class GenericExpenseDB extends SQLiteOpenHelper {
         contentValues.put(expensepaidBy,paidBy);
         contentValues.put(expensecategory,category);
         contentValues.put(expensedeleted,1); // 0 - true, 1 - false
-        try {
+
+        Log.d(tableName+" DB : ","Content Values -" + contentValues.toString());
+        /*try {
             db.insertOrThrow(tableName, null, contentValues);
             Log.d(tableName+" DB : ","Inserted into "+tableName+": Values -" + contentValues.toString());
             return "Created";
         }catch (Exception e){
             Log.d(tableName+" DB : ","Exception Occured : "+e);
             return "Some error occurred. Try again!";
-        }
+        }*/
+        return "NULL";
     }
 
     public static String getDayOfWeek(Date date, Locale locale) {
