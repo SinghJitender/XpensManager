@@ -210,7 +210,7 @@
             <androidx.cardview.widget.CardView
                 xmlns:app="http://schemas.android.com/apk/res-auto"
                 xmlns:android="http://schemas.android.com/apk/res/android"
-                android:visibility="invisible"
+                android:visibility="visible"
                 android:id="@+id/addNewExpenseView"
                 android:layout_width="match_parent"
                 android:layout_height="200dp"
@@ -250,6 +250,7 @@
                             android:layout_height="wrap_content"
                             android:singleLine="true"
                             android:text="20/12/2020"
+                            android:clickable="true"
                             android:gravity="center_vertical"
                             android:textStyle="bold"
                             android:background="@null"
@@ -334,7 +335,7 @@
                             android:layout_height="match_parent"
                             android:background="@color/theme_grey"/>
                         <AutoCompleteTextView
-                            android:id="@+id/newExpenseselectCategory"
+                            android:id="@+id/newExpenseSelectCategory"
                             android:layout_width="0dp"
                             android:layout_weight="13"
                             android:layout_height="wrap_content"

@@ -30,7 +30,9 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
@@ -52,11 +54,13 @@ public class HomePage extends Fragment {
 
     private RecyclerViewAdapter adapter;
     private CardView createNewExpense, topCardView,addNewExpenseView;
-    private EditText newGroupTitle, newGroupNoOfPersons, newGroupLimit;
-    private Button createNewGroup;
+    private EditText newGroupTitle, newGroupNoOfPersons, newGroupLimit,newExpenseTotalAmount,newExpenseDescription;
+    private Button createNewGroup,newExpenseAdd;
     private FrameLayout frameLayout, framelayoutTopView;
-    private TextView addOwnExpense;
-    ImageButton newExpenseCancel;
+    private TextView addOwnExpense,expenseTitle,newExpenseDate;
+    private CheckBox newExpensePaidBy;
+    private AutoCompleteTextView newExpenseSelectCategory;
+    private ImageButton newExpenseCancel;
     ArrayList<Hashtable<String,String>> results;
 
     private boolean toggle = true;
@@ -112,6 +116,15 @@ public class HomePage extends Fragment {
         addOwnExpense = view.findViewById(R.id.addOwnExpense);
         addNewExpenseView = view.findViewById(R.id.addNewExpenseView);
         newExpenseCancel = view.findViewById(R.id.newExpenseCancel);
+
+        //Add New Expense Widgets
+        expenseTitle= view.findViewById(R.id.expenseTitle);
+        newExpenseDate = view.findViewById(R.id.newExpenseDate);
+        newExpensePaidBy = view.findViewById(R.id.newExpensePaidBy);
+        newExpenseSelectCategory =  view.findViewById(R.id.newExpenseSelectCategory);
+        newExpenseTotalAmount= view.findViewById(R.id.newExpenseTotalAmount);
+        newExpenseDescription= view.findViewById(R.id.newExpenseDescription);
+        newExpenseAdd = view.findViewById(R.id.newExpenseAdd);
 
         groups = new GroupDB(getActivity());
         results = new ArrayList<>();
