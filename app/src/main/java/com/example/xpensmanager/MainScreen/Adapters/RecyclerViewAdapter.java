@@ -70,7 +70,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         if(holder instanceof MenuViewHolder){
             ((MenuViewHolder) holder).add.setOnClickListener((v)->{
                 Toast.makeText(context,"Clicked on add button",Toast.LENGTH_SHORT).show();
-                HomePage.update_add_new_expense_title(results.get(position).get("title"));
+                HomePage.update_add_new_expense_title(results.get(position).get("title"),true);
             });
 
             ((MenuViewHolder) holder).edit.setOnClickListener((v)->{

@@ -38,7 +38,7 @@ public class GenericExpenseDB extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        Log.d("GroupDB","Creating DB");
+        Log.d(tableName+" DB ","Creating DB");
         db.execSQL( "CREATE TABLE "+ tableName +
                 "(id INTEGER PRIMARY KEY AUTOINCREMENT, date VARCHAR, dayOfWeek VARCHAR, textMonth INTEGER, month VARCHAR, year INTEGER," +
                 "amount REAL, description VARCHAR, paidBy VARCHAR, category VARCHAR, deleted INTEGER, splitAmount REAL)");
@@ -51,7 +51,7 @@ public class GenericExpenseDB extends SQLiteOpenHelper {
         onCreate(db);
     }
 
-    public String insertNewExpense(String tableName, Date date, double amount, String description, String category, String paidBy, int splitBetween) {
+    public String insertNewExpense(Date date, double amount, String description, String category, String paidBy, int splitBetween) {
 
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
@@ -78,16 +78,16 @@ public class GenericExpenseDB extends SQLiteOpenHelper {
         contentValues.put(expensecategory,category);
         contentValues.put(expensedeleted,1); // 0 - true, 1 - false
 
-        Log.d(tableName+" DB : ","Content Values -" + contentValues.toString());
-        /*try {
+        //Log.d(tableName+" DB : ","Content Values -" + contentValues.toString());
+        try {
             db.insertOrThrow(tableName, null, contentValues);
             Log.d(tableName+" DB : ","Inserted into "+tableName+": Values -" + contentValues.toString());
             return "Created";
         }catch (Exception e){
             Log.d(tableName+" DB : ","Exception Occured : "+e);
             return "Some error occurred. Try again!";
-        }*/
-        return "NULL";
+        }
+        //return "NULL";
     }
 
     public static String getDayOfWeek(Date date, Locale locale) {

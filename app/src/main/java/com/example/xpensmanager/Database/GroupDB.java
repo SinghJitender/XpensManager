@@ -72,6 +72,10 @@ public class GroupDB extends SQLiteOpenHelper {
         try {
             db.insertOrThrow("groups", null, contentValues);
             Log.d("GroupDB","Inserted into groups: Values -" + contentValues.toString());
+            db.execSQL( "CREATE TABLE "+ tableName +
+                    "(id INTEGER PRIMARY KEY AUTOINCREMENT, date VARCHAR, dayOfWeek VARCHAR, textMonth INTEGER, month VARCHAR, year INTEGER," +
+                    "amount REAL, description VARCHAR, paidBy VARCHAR, category VARCHAR, deleted INTEGER, splitAmount REAL)");
+            Log.d("GroupDB",tableName + " Table Created");
             return "Created";
         }catch (SQLiteConstraintException e){
             Log.d("GroupDB","Exception Occured : "+e);

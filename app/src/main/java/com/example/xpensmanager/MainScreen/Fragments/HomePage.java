@@ -40,6 +40,7 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.xpensmanager.Database.GenericExpenseDB;
 import com.example.xpensmanager.Database.GroupDB;
 import com.example.xpensmanager.MainScreen.Adapters.RecyclerViewAdapter;
 import com.example.xpensmanager.MainScreen.Adapters.SwipeController;
@@ -48,16 +49,20 @@ import com.example.xpensmanager.R;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Hashtable;
 import java.util.List;
 
 public class HomePage extends Fragment {
 
     private RecyclerViewAdapter adapter;
-    private CardView createNewExpense, topCardView,addNewExpenseView;
+    private CardView createNewExpense;
+    private CardView topCardView;
+    private static CardView addNewExpenseView;
     private EditText newGroupTitle, newGroupNoOfPersons, newGroupLimit,newExpenseTotalAmount,newExpenseDescription;
     private Button createNewGroup,newExpenseAdd;
-    private FrameLayout frameLayout, framelayoutTopView;
+    private static FrameLayout frameLayout;
+    private static FrameLayout framelayoutTopView;
     private static TextView addOwnExpense;
     private static TextView expenseTitle;
     private TextView newExpenseDate;
@@ -67,11 +72,12 @@ public class HomePage extends Fragment {
     ArrayList<Hashtable<String,String>> results;
 
     private boolean toggle = true;
-    private boolean toggleNewExpense = true;
+    private static boolean toggleNewExpense = true;
 
     SwipeController swipeController = null;
 
     GroupDB groups;
+    GenericExpenseDB genericExpenseDB;
 
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
@@ -184,11 +190,20 @@ public class HomePage extends Fragment {
 
         addOwnExpense.setOnClickListener((v) -> {
             mainLayoutToAddExpenseTransition();
+            update_add_new_expense_title("Self Expense",false);
         });
 
         newExpenseCancel.setOnClickListener((v) -> {
             mainLayoutToAddExpenseTransition();
         });
+
+        newExpenseAdd.setOnClickListener((v) -> {
+            Toast.makeText(getActivity(),expenseTitle.getText().toString(),Toast.LENGTH_SHORT).show();
+            String tableName = expenseTitle.getText().toString().replaceAll(" ","_").toLowerCase();
+            genericExpenseDB = new GenericExpenseDB(getActivity(),tableName);
+            genericExpenseDB.insertNewExpense(new Date(),2000.98,"Internet Bill","Bills","Self",1);
+        });
+
 
         adapter = new RecyclerViewAdapter(getActivity(), results);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -247,7 +262,7 @@ public class HomePage extends Fragment {
         return super.onOptionsItemSelected(item);
     }
 
-    private void mainLayoutToAddExpenseTransition(){
+    private static void mainLayoutToAddExpenseTransition(){
         Transition transition = new Slide(Gravity.RIGHT);
         transition.setDuration(200);
         transition.addTarget(addNewExpenseView).addTarget(framelayoutTopView);
@@ -258,8 +273,10 @@ public class HomePage extends Fragment {
     }
 
 
-    public static void update_add_new_expense_title(String text){
+    public static void update_add_new_expense_title(String text,boolean comingFromAdapterView){
         expenseTitle.setText(text);
-        addOwnExpense.performClick();
+        if(comingFromAdapterView){
+            mainLayoutToAddExpenseTransition();
+        }
     }
 }
