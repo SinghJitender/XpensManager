@@ -1,6 +1,7 @@
 package com.example.xpensmanager.MainScreen.Fragments;
 
 import android.annotation.SuppressLint;
+import android.app.DatePickerDialog;
 import android.app.MediaRouteButton;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -31,9 +32,11 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
@@ -48,15 +51,21 @@ import com.example.xpensmanager.MainScreen.Adapters.SwipeControllerActions;
 import com.example.xpensmanager.R;
 
 import java.lang.reflect.Array;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.List;
+import java.util.Locale;
 
 public class HomePage extends Fragment {
 
     private RecyclerViewAdapter adapter;
-    private CardView createNewExpense;
+    private static CardView createNewExpense;
     private CardView topCardView;
     private static CardView addNewExpenseView;
     private EditText newGroupTitle, newGroupNoOfPersons, newGroupLimit,newExpenseTotalAmount,newExpenseDescription;
@@ -70,8 +79,10 @@ public class HomePage extends Fragment {
     private AutoCompleteTextView newExpenseSelectCategory;
     private ImageButton newExpenseCancel;
     ArrayList<Hashtable<String,String>> results;
+    private ArrayList<String> category;
+    private Calendar myCalendar;
 
-    private boolean toggle = true;
+    private static boolean toggle = true;
     private static boolean toggleNewExpense = true;
 
     SwipeController swipeController = null;
@@ -135,9 +146,21 @@ public class HomePage extends Fragment {
         newExpenseDescription= view.findViewById(R.id.newExpenseDescription);
         newExpenseAdd = view.findViewById(R.id.newExpenseAdd);
 
+        category = new ArrayList<>();
         groups = new GroupDB(getActivity());
         results = new ArrayList<>();
         results.addAll(groups.findAll());
+        myCalendar = Calendar.getInstance();
+
+        category.add("DMART"); category.add("GROCERY"); category.add("BILLS"); category.add("INTERNET"); category.add("SHOPPING"); category.add("ESSENTIALS");
+        category.add("BIG BAZAAR"); category.add("FOOD"); category.add("TRAVEL"); category.add("FUEL"); category.add("MOVIE"); category.add("DAIRY"); category.add("THIS IS A BIG SUGGESTION");
+        category.add("DIG BAZAAR"); category.add("DOOD"); category.add("DRAVEL"); category.add("DUEL"); category.add("DOVIE"); category.add("DAIRY"); category.add("DHIS IS A BIG SUGGESTION");
+
+        newExpenseDate.setText(new SimpleDateFormat("dd/MM/yyyy").format(new Date()));
+
+        ArrayAdapter autoCompleteTextViewAdapter = new ArrayAdapter(getActivity(), android.R.layout.select_dialog_item, category);
+        newExpenseSelectCategory.setThreshold(1);//will start working from first character
+        newExpenseSelectCategory.setAdapter(autoCompleteTextViewAdapter);//setting the adapter data into the AutoCompleteTextView
 
         createNewGroup.setOnClickListener((v)-> {
             String titleValue = newGroupTitle.getText().toString();
@@ -198,12 +221,67 @@ public class HomePage extends Fragment {
         });
 
         newExpenseAdd.setOnClickListener((v) -> {
-            Toast.makeText(getActivity(),expenseTitle.getText().toString(),Toast.LENGTH_SHORT).show();
+            //Toast.makeText(getActivity(),expenseTitle.getText().toString(),Toast.LENGTH_SHORT).show();
             String tableName = expenseTitle.getText().toString().replaceAll(" ","_").toLowerCase();
-            genericExpenseDB = new GenericExpenseDB(getActivity(),tableName);
-            genericExpenseDB.insertNewExpense(new Date(),2000.98,"Internet Bill","Bills","Self",1);
+            String paidBy = "others";
+            if(newExpenseTotalAmount.getText().toString().equalsIgnoreCase("") || newExpenseTotalAmount.getText() == null) {
+                newExpenseTotalAmount.setError("Amount cannot be blank");
+            }else{
+                if(Double.parseDouble(newExpenseTotalAmount.getText().toString()) <= 0) {
+                    newExpenseTotalAmount.setError("Amount cannot be 0 or less");
+                }else{
+                    if(newExpenseDescription.getText().toString().equalsIgnoreCase("") || newExpenseDescription.getText() == null){
+                        newExpenseDescription.setError("Description cannot be blank");
+                    }else {
+                        if(newExpenseSelectCategory.getText().toString().equalsIgnoreCase("") || newExpenseSelectCategory.getText() == null) {
+                            newExpenseSelectCategory.setError("Category cannot be blank");
+                        }else{
+                            if(!category.contains(newExpenseSelectCategory.getText().toString().toUpperCase().trim()) ){
+                                newExpenseSelectCategory.setError("Category must be from dropdown-list");
+                            }else{
+                                //All Checks Done
+                                if(newExpensePaidBy.isChecked()){
+                                    paidBy = "self";
+                                }
+                                try {
+                                    Date date = new SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH).parse(newExpenseDate.getText().toString());
+                                    genericExpenseDB = new GenericExpenseDB(getActivity(),tableName);
+                                    genericExpenseDB.insertNewExpense(date,Double.parseDouble(newExpenseTotalAmount.getText().toString()),newExpenseDescription.getText().toString(),newExpenseSelectCategory.getText().toString().toUpperCase().trim(),paidBy,1);
+                                    newExpenseTotalAmount.setText("");
+                                    newExpenseSelectCategory.setText("");
+                                    newExpenseDescription.setText("");
+                                    newExpenseTotalAmount.requestFocus();
+                                } catch (ParseException e) {
+                                    Toast.makeText(getActivity(),"Error in parsing date",Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+
         });
 
+        DatePickerDialog.OnDateSetListener datePickerDialogue = (view1, year, monthOfYear, dayOfMonth) -> {
+            // TODO Auto-generated method stub
+            myCalendar.set(Calendar.YEAR, year);
+            myCalendar.set(Calendar.MONTH, monthOfYear);
+            myCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+            updateLabel();
+        };
+        newExpenseDate.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                // TODO Auto-generated method stub
+                DatePickerDialog mDatePickerDialogue = new DatePickerDialog(getActivity(), datePickerDialogue, myCalendar
+                        .get(Calendar.YEAR), myCalendar.get(Calendar.MONTH),
+                        myCalendar.get(Calendar.DAY_OF_MONTH));
+                mDatePickerDialogue.getDatePicker().setMaxDate(System.currentTimeMillis());
+                mDatePickerDialogue.show();
+            }
+        });
 
         adapter = new RecyclerViewAdapter(getActivity(), results);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -275,8 +353,14 @@ public class HomePage extends Fragment {
 
     public static void update_add_new_expense_title(String text,boolean comingFromAdapterView){
         expenseTitle.setText(text);
-        if(comingFromAdapterView){
+        if(comingFromAdapterView && toggleNewExpense){
             mainLayoutToAddExpenseTransition();
         }
+    }
+
+    void updateLabel(){
+        String myFormat = "dd/MM/yyyy"; //In which you need put here
+        SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.ENGLISH);
+        newExpenseDate.setText(sdf.format(myCalendar.getTime()));
     }
 }

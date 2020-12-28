@@ -69,8 +69,9 @@ public class SplashScreenActivity extends AppCompatActivity {
         editor = sharedPref.edit();
 
         mydatabase = openOrCreateDatabase(getString(R.string.database_name),MODE_PRIVATE,null);
-        String query = "create table if not exists expenses(id INTEGER PRIMARY KEY AUTOINCREMENT,title VARCHAR, description VARCHAR, amount REAL, date VARCHAR, paidby VARCHAR, category VARCHAR, month INTEGER, year INTEGER)";
-        mydatabase.execSQL(query);
+        mydatabase.execSQL( "CREATE TABLE IF NOT EXISTS self_expense"+
+                "(id INTEGER PRIMARY KEY AUTOINCREMENT, date VARCHAR, dayOfWeek VARCHAR, textMonth INTEGER, month VARCHAR, year INTEGER," +
+                "amount REAL, description VARCHAR, paidBy VARCHAR, category VARCHAR, deleted INTEGER, splitAmount REAL)");
         mydatabase.close();
         Log.d(LOG_TAG,"Database Ready!");
 
