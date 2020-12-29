@@ -36,6 +36,7 @@
                     android:orientation="vertical"
                     android:layout_gravity="center">
                     <TextView
+                        android:id="@+id/currentMonthName"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="December"
@@ -45,6 +46,7 @@
                         android:layout_gravity="center"/>
 
                     <TextView
+                        android:id="@+id/currentMonthTotalSpends"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
@@ -55,6 +57,7 @@
                         />
 
                     <TextView
+                        android:id="@+id/currentMonthNetAmount"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
@@ -74,6 +77,12 @@
                         android:textColor="@color/white"
                         android:textSize="20sp"
                         />
+                    <Button
+                        android:layout_gravity="center"
+                        android:id="@+id/showOwnExpense"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Click"/>
                 </LinearLayout>
 
             </FrameLayout>

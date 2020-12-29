@@ -3,6 +3,7 @@ package com.example.xpensmanager.MainScreen.Fragments;
 import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
 import android.app.MediaRouteButton;
+import android.content.Intent;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -45,9 +46,11 @@ import android.widget.Toast;
 
 import com.example.xpensmanager.Database.GenericExpenseDB;
 import com.example.xpensmanager.Database.GroupDB;
+import com.example.xpensmanager.ExpenseScreen.Expense;
 import com.example.xpensmanager.MainScreen.Adapters.RecyclerViewAdapter;
 import com.example.xpensmanager.MainScreen.Adapters.SwipeController;
 import com.example.xpensmanager.MainScreen.Adapters.SwipeControllerActions;
+import com.example.xpensmanager.MainScreen.MainActivity;
 import com.example.xpensmanager.R;
 
 import java.lang.reflect.Array;
@@ -69,18 +72,19 @@ public class HomePage extends Fragment {
     private CardView topCardView;
     private static CardView addNewExpenseView;
     private EditText newGroupTitle, newGroupNoOfPersons, newGroupLimit,newExpenseTotalAmount,newExpenseDescription;
-    private Button createNewGroup,newExpenseAdd;
+    private Button createNewGroup,newExpenseAdd,showOwnExpense;
     private static FrameLayout frameLayout;
     private static FrameLayout framelayoutTopView;
     private static TextView addOwnExpense;
     private static TextView expenseTitle;
-    private TextView newExpenseDate;
+    private TextView newExpenseDate,currentMonthName,currentMonthTotalSpends,currentMonthNetAmount;
     private CheckBox newExpensePaidBy;
     private AutoCompleteTextView newExpenseSelectCategory;
     private ImageButton newExpenseCancel;
     ArrayList<Hashtable<String,String>> results;
     private ArrayList<String> category;
     private Calendar myCalendar;
+    private double totalSpentThisMonth;
 
     private static boolean toggle = true;
     private static boolean toggleNewExpense = true;
@@ -136,6 +140,10 @@ public class HomePage extends Fragment {
         addOwnExpense = view.findViewById(R.id.addOwnExpense);
         addNewExpenseView = view.findViewById(R.id.addNewExpenseView);
         newExpenseCancel = view.findViewById(R.id.newExpenseCancel);
+        showOwnExpense = view.findViewById(R.id.showOwnExpense);
+        currentMonthName = view.findViewById(R.id.currentMonthName);
+        currentMonthTotalSpends = view.findViewById(R.id.currentMonthTotalSpends);
+        currentMonthNetAmount = view.findViewById(R.id.currentMonthNetAmount);
 
         //Add New Expense Widgets
         expenseTitle= view.findViewById(R.id.addExpenseTitle);
@@ -152,6 +160,9 @@ public class HomePage extends Fragment {
         results.addAll(groups.findAll());
         myCalendar = Calendar.getInstance();
 
+        totalSpentThisMonth = new GenericExpenseDB(getActivity(),"self_expense").getMonthlyExpenseSum(GenericExpenseDB.getMonthFromDate(new Date()),GenericExpenseDB.getYearFromDate(new Date()));
+        currentMonthName.setText(GenericExpenseDB.getDayOfMonth(new Date(),Locale.ENGLISH));
+        currentMonthTotalSpends.setText("₹ "+totalSpentThisMonth);
         category.add("DMART"); category.add("GROCERY"); category.add("BILLS"); category.add("INTERNET"); category.add("SHOPPING"); category.add("ESSENTIALS");
         category.add("BIG BAZAAR"); category.add("FOOD"); category.add("TRAVEL"); category.add("FUEL"); category.add("MOVIE"); category.add("DAIRY"); category.add("THIS IS A BIG SUGGESTION");
         category.add("DIG BAZAAR"); category.add("DOOD"); category.add("DRAVEL"); category.add("DUEL"); category.add("DOVIE"); category.add("DAIRY"); category.add("DHIS IS A BIG SUGGESTION");
@@ -261,6 +272,12 @@ public class HomePage extends Fragment {
             }
 
 
+        });
+
+        showOwnExpense.setOnClickListener((v) -> {
+            Intent intent = new Intent(getActivity(), Expense.class);
+            intent.putExtra("tableName","self_expense");
+            startActivity(intent);
         });
 
         DatePickerDialog.OnDateSetListener datePickerDialogue = (view1, year, monthOfYear, dayOfMonth) -> {
