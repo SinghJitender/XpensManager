@@ -38,9 +38,20 @@ public class ExpenseViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         ((ViewHolder) holder).splitamount.setText("₹ "+list.get(position).getSplitAmount());
         if(viewType == ViewType.MONTHLY){
             ((ViewHolder) holder).date.setVisibility(View.GONE);
+        }else if (viewType == ViewType.YEARLY){
+            ((ViewHolder) holder).date.setVisibility(View.VISIBLE);
+            ((ViewHolder) holder).date.setText(list.get(position).getDate());
         }
-        ((ViewHolder) holder).date.setText(list.get(position).getDate());
-        ((ViewHolder) holder).amount.setText("₹ "+list.get(position).getAmount());
+        else {
+            ((ViewHolder) holder).date.setVisibility(View.VISIBLE);
+            ((ViewHolder) holder).date.setText(list.get(position).getTextMonth());
+        }
+        if(list.get(position).getGroup().equalsIgnoreCase("OWN")) {
+            ((ViewHolder) holder).amount.setText("₹ "+list.get(position).getAmount() + " paid by "+list.get(position).getPaidBy());
+        }
+        else{
+            ((ViewHolder) holder).amount.setText("₹ "+list.get(position).getAmount()+ " split with "+list.get(position).getGroup()+ " paid by "+list.get(position).getPaidBy());
+        }
         ((ViewHolder) holder).category.setText(list.get(position).getCategory());
     }
 

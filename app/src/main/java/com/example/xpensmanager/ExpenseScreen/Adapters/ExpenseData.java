@@ -7,12 +7,14 @@ public class ExpenseData {
     private String textMonth;
     private int month;
     private int year;
+    private int day;
     private double amount;
     private String description;
     private String paidBy;
     private String category;
     private int deleted;
     private double splitAmount;
+    private String group;
 
     public int getId() {
         return id;
@@ -108,6 +110,22 @@ public class ExpenseData {
 
     public void setSplitAmount(double splitAmount) {
         this.splitAmount = splitAmount;
+    }
+
+    public int getDay() {
+        return day;
+    }
+
+    public void setDay(int day) {
+        this.day = day;
+    }
+
+    public String getGroup() {
+        return group;
+    }
+
+    public void setGroup(String group) {
+        this.group = group;
     }
 
     @Override
