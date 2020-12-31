@@ -16,6 +16,8 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import com.example.xpensmanager.Database.CategoryDB;
+import com.example.xpensmanager.Database.GenericExpenseDB;
 import com.example.xpensmanager.Database.GroupDB;
 import com.example.xpensmanager.MainScreen.MainActivity;
 import com.example.xpensmanager.R;
@@ -42,8 +44,6 @@ public class SplashScreenActivity extends AppCompatActivity {
     private SharedPreferences.Editor editor;
     private SQLiteDatabase mydatabase;
 
-    GroupDB groups;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,7 +59,6 @@ public class SplashScreenActivity extends AppCompatActivity {
         password = findViewById(R.id.password);
         skip = findViewById(R.id.skip);
 
-        groups = new GroupDB(this);
 
         if(!rotateLoading.isStart())
             rotateLoading.start();
@@ -70,8 +69,12 @@ public class SplashScreenActivity extends AppCompatActivity {
 
         mydatabase = openOrCreateDatabase(getString(R.string.database_name),MODE_PRIVATE,null);
         mydatabase.execSQL( "CREATE TABLE IF NOT EXISTS self_expense"+
-                "(id INTEGER PRIMARY KEY AUTOINCREMENT, date VARCHAR, dayOfWeek VARCHAR, textMonth INTEGER, month VARCHAR, year INTEGER," +
-                "amount REAL, description VARCHAR, paidBy VARCHAR, category VARCHAR, deleted INTEGER, splitAmount REAL)");
+                "(id INTEGER PRIMARY KEY AUTOINCREMENT, date VARCHAR, dayOfWeek VARCHAR, textMonth INTEGER, month VARCHAR, year INTEGER, day INTEGER," +
+                "amount REAL, description VARCHAR, paidBy VARCHAR, category VARCHAR, deleted INTEGER, splitAmount REAL, groupedWith VARCHAR)");
+        mydatabase.execSQL( "CREATE TABLE IF NOT EXISTS groups " +
+                "(id INTEGER PRIMARY KEY AUTOINCREMENT, title VARCHAR UNIQUE, noOfPersons INTEGER, maxLimit REAL, netAmount REAL, totalAmount REAL)");
+        mydatabase.execSQL( "CREATE TABLE IF NOT EXISTS category"+
+                "(id INTEGER PRIMARY KEY AUTOINCREMENT, categoryname VARCHAR UNIQUE)");
         mydatabase.close();
         Log.d(LOG_TAG,"Database Ready!");
 

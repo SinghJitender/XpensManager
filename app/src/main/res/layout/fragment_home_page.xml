@@ -17,7 +17,7 @@
             android:elevation="2dp"
             android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="200dp">
 
             <FrameLayout
                 android:id="@+id/framelayouttopview"
@@ -31,10 +31,11 @@
                     android:background="@color/theme_blue_variant"/>
 
                 <LinearLayout
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:layout_gravity="center">
+                    android:layout_gravity="center"
+                    android:gravity="center">
                     <TextView
                         android:id="@+id/currentMonthName"
                         android:layout_width="wrap_content"
@@ -65,351 +66,56 @@
                         android:textColor="@color/white"
                         android:textSize="20sp"
                         />
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:weightSum="2">
+                        <Button
+                            android:layout_marginRight="15dp"
+                            android:layout_marginLeft="30dp"
+                            android:backgroundTint="@color/white"
+                            android:textColor="@color/theme_blue_variant"
+                            android:layout_weight="1"
+                            android:layout_gravity="center"
+                            android:id="@+id/yearlyView"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:text="Yearly View"/>
 
-                    <TextView
-                        android:id="@+id/addOwnExpense"
-                        android:clickable="true"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:layout_marginTop="10dp"
-                        android:text="@string/add_own_expense"
-                        android:textColor="@color/white"
-                        android:textSize="20sp"
-                        />
-                    <Button
-                        android:layout_gravity="center"
-                        android:id="@+id/showOwnExpense"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Click"/>
+                        <Button
+                            android:layout_marginRight="30dp"
+                            android:layout_marginLeft="15dp"
+                            android:backgroundTint="@color/white"
+                            android:textColor="@color/theme_blue_variant"
+                            android:layout_weight="1"
+                            android:layout_gravity="center"
+                            android:id="@+id/viewAll"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:text="View All"/>
+                    </LinearLayout>
                 </LinearLayout>
 
             </FrameLayout>
 
-            <androidx.cardview.widget.CardView
-                xmlns:app="http://schemas.android.com/apk/res-auto"
-                xmlns:android="http://schemas.android.com/apk/res/android"
-                android:visibility="invisible"
-                android:id="@+id/createnewgroup"
-                android:layout_width="match_parent"
-                android:layout_height="200dp"
-                app:cardBackgroundColor="@color/white"
-                app:cardElevation="5dp">
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:orientation="vertical"
-                    android:layout_margin="5dp"
-                    android:layout_height="match_parent">
+        </androidx.cardview.widget.CardView>
 
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:layout_marginBottom="5dp"
-                        android:weightSum="20">
-                        <TextView
-                            android:layout_width="0dp"
-                            android:layout_weight="20"
-                            android:layout_marginTop="5dp"
-                            android:layout_height="wrap_content"
-                            android:text="Create New Group"
-                            android:textStyle="bold"
-                            android:textColor="@color/theme_blue_variant"
-                            android:background="@null"
-                            android:paddingLeft="20dp"
-                            android:textSize="25sp"/>
-                    </LinearLayout>
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:weightSum="20">
-                        <EditText
-                            android:id="@+id/title"
-                            android:layout_width="0dp"
-                            android:layout_weight="20"
-                            android:layout_height="wrap_content"
-                            android:hint="Title"
-                            android:focusedByDefault="true"
-                            android:nextFocusForward="@id/noofpeps"
-                            android:singleLine="true"
-                            android:textStyle="bold"
-                            android:background="@null"
-                            android:paddingLeft="20dp"
-                            android:layout_marginTop="3dp"
-                            android:layout_marginBottom="3dp"
-                            android:textSize="22sp"/>
-                    </LinearLayout>
-                    <View
-                        android:layout_marginTop="2dp"
-                        android:layout_marginBottom="2dp"
-                        android:layout_width="match_parent"
-                        android:layout_height="0.5dp"
-                        android:background="@color/theme_grey"/>
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:weightSum="20">
-                        <!--<ImageView
-                            android:layout_width="0dp"
-                            android:layout_weight="3"
-                            android:layout_height="50dp"
-                            android:src="@drawable/delete"
-                            android:scaleType="fitCenter"
-                            android:padding="10dp"
-                            android:background="@color/white" />-->
-                        <EditText
-                            android:id="@+id/noofpeps"
-                            android:layout_width="0dp"
-                            android:layout_weight="10"
-                            android:layout_marginTop="5dp"
-                            android:layout_marginBottom="5dp"
-                            android:background="@null"
-                            android:nextFocusForward="@id/limit"
-                            android:singleLine="true"
-                            android:inputType="number"
-                            android:layout_marginEnd="5dp"
-                            android:paddingLeft="20dp"
-                            android:layout_height="wrap_content"
-                            android:hint="No of persons"
-                            android:textSize="18sp"/>
-                        <View
-                            android:layout_width="1dp"
-                            android:layout_height="match_parent"
-                            android:background="@color/theme_grey"/>
-                        <EditText
-                            android:id="@+id/limit"
-                            android:nextFocusForward="@id/createnewgroup"
-                            android:layout_width="0dp"
-                            android:layout_weight="10"
-                            android:layout_marginTop="5dp"
-                            android:layout_marginBottom="5dp"
-                            android:background="@null"
-                            android:layout_marginEnd="5dp"
-                            android:layout_marginStart="5dp"
-                            android:paddingLeft="10dp"
-                            android:singleLine="true"
-                            android:inputType="numberDecimal"
-                            android:layout_height="wrap_content"
-                            android:hint="Max Limit (Optional)"
-                            android:textSize="18sp"/>
-                    </LinearLayout>
-                    <View
-                        android:layout_marginTop="2dp"
-                        android:layout_marginBottom="2dp"
-                        android:layout_width="match_parent"
-                        android:layout_height="0.5dp"
-                        android:background="@color/theme_grey"/>
-                    <Button
-                        android:id="@+id/create"
-                        android:layout_width="250dp"
-                        android:layout_height="wrap_content"
-                        android:text="Create"
-                        android:layout_marginTop="10dp"
-                        android:backgroundTint="@color/theme_blue_variant"
-                        android:layout_gravity="center"
-                        />
-
-                </LinearLayout>
-
-            </androidx.cardview.widget.CardView>
-
-            <androidx.cardview.widget.CardView
-                xmlns:app="http://schemas.android.com/apk/res-auto"
-                xmlns:android="http://schemas.android.com/apk/res/android"
-                android:visibility="invisible"
-                android:id="@+id/addNewExpenseView"
-                android:layout_width="match_parent"
-                android:layout_height="200dp"
-                app:cardBackgroundColor="@color/white"
-                app:cardElevation="5dp">
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:orientation="vertical"
-                    android:layout_gravity="center"
-                    android:layout_margin="5dp"
-                    android:layout_height="match_parent">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:layout_marginBottom="5dp"
-                        android:weightSum="30">
-                        <TextView
-                            android:id="@+id/addExpenseTitle"
-                            android:layout_width="0dp"
-                            android:layout_weight="20"
-                            android:layout_marginTop="2dp"
-                            android:layout_height="wrap_content"
-                            android:text="Add Your Expense"
-                            android:textStyle="bold"
-                            android:textColor="@color/theme_blue_variant"
-                            android:background="@null"
-                            android:paddingLeft="20dp"
-                            android:textSize="22sp"/>
-
-                        <TextView
-                            android:id="@+id/newExpenseDate"
-                            android:layout_width="0dp"
-                            android:layout_marginTop="2dp"
-                            android:layout_weight="10"
-                            android:layout_height="wrap_content"
-                            android:singleLine="true"
-                            android:text="20/12/2020"
-                            android:clickable="true"
-                            android:gravity="center_vertical"
-                            android:textStyle="bold"
-                            android:background="@null"
-                            android:paddingLeft="10dp"
-                            android:textSize="20sp"/>
-                    </LinearLayout>
-
-                    <View
-                        android:layout_marginTop="1dp"
-                        android:layout_marginBottom="1dp"
-                        android:layout_width="match_parent"
-                        android:layout_height="0.5dp"
-                        android:background="@color/theme_grey"/>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:weightSum="30">
-                        <EditText
-                            android:id="@+id/newExpenseTotalAmount"
-                            android:layout_width="0dp"
-                            android:layout_weight="17"
-                            android:background="@null"
-                            android:singleLine="true"
-                            android:inputType="numberDecimal"
-                            android:paddingLeft="20dp"
-                            android:paddingTop="5dp"
-                            android:paddingBottom="5dp"
-                            android:layout_gravity="center_vertical"
-                            android:textStyle="bold"
-                            android:layout_height="wrap_content"
-                            android:hint="₹ Amount"
-                            android:textSize="25sp"/>
-                        <View
-                            android:layout_marginTop="1dp"
-                            android:layout_marginBottom="1dp"
-                            android:layout_width="1dp"
-                            android:layout_height="match_parent"
-                            android:background="@color/theme_grey"/>
-                        <CheckBox
-                            android:id="@+id/newExpensePaidBy"
-                            android:layout_width="0dp"
-                            android:gravity="center_vertical"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="13"
-                            android:text="Paid By Me"
-                            android:checked="true"
-                            />
-
-                    </LinearLayout>
-
-                    <View
-                        android:layout_marginTop="1dp"
-                        android:layout_marginBottom="1dp"
-                        android:layout_width="match_parent"
-                        android:layout_height="0.5dp"
-                        android:background="@color/theme_grey"/>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:weightSum="30">
-                        <EditText
-                            android:id="@+id/newExpenseDescription"
-                            android:layout_width="0dp"
-                            android:layout_weight="17"
-                            android:layout_marginTop="5dp"
-                            android:layout_marginBottom="5dp"
-                            android:background="@null"
-                            android:paddingStart="20dp"
-                            android:layout_gravity="center_vertical"
-                            android:singleLine="true"
-                            android:inputType="text"
-                            android:layout_height="wrap_content"
-                            android:hint="Description"
-                            android:textSize="20sp"/>
-                        <View
-                            android:layout_marginTop="1dp"
-                            android:layout_marginBottom="1dp"
-                            android:layout_width="1dp"
-                            android:layout_height="match_parent"
-                            android:background="@color/theme_grey"/>
-                        <AutoCompleteTextView
-                            android:id="@+id/newExpenseSelectCategory"
-                            android:layout_width="0dp"
-                            android:layout_weight="13"
-                            android:layout_height="wrap_content"
-                            android:singleLine="true"
-                            android:layout_marginTop="5dp"
-                            android:layout_marginBottom="5dp"
-                            android:paddingStart="10dp"
-                            android:layout_gravity="center_vertical"
-                            android:hint="Category"
-                            android:textSize="20sp"
-                            android:background="@null"/>
-
-                    </LinearLayout>
-
-                    <View
-                        android:layout_marginTop="2dp"
-                        android:layout_marginBottom="2dp"
-                        android:layout_width="match_parent"
-                        android:layout_height="0.5dp"
-                        android:background="@color/theme_grey"/>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:weightSum="20">
-                        <Button
-                            android:id="@+id/newExpenseAdd"
-                            android:layout_width="0dp"
-                            android:layout_weight="17"
-                            android:layout_gravity="center_vertical"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="10dp"
-                            android:layout_marginEnd="10dp"
-                            android:text="Add"
-                            android:backgroundTint="@color/theme_green"
-                            />
-                        <ImageButton
-                            android:id="@+id/newExpenseCancel"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="3"
-                            android:text="Delete"
-                            android:padding="5dp"
-                            android:src="@drawable/close_red"
-                            android:scaleType="fitCenter"
-                            android:background="@color/white"/>
-
-                    </LinearLayout>
-
-                </LinearLayout>
-
-            </androidx.cardview.widget.CardView>
-
-            </androidx.cardview.widget.CardView>
-
-        <androidx.recyclerview.widget.RecyclerView
+        <xyz.sangcomz.stickytimelineview.TimeLineRecyclerView
             android:id="@+id/recyclerView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_below="@id/cardview"
+            app:sectionBackgroundColor="@color/theme_light_grey"
+            app:sectionTitleTextColor="@color/black"
+            app:timeLineWidth="1.5dp"
+            app:sectionTitleTextSize="18sp"
+            app:sectionSubTitleTextSize="15sp"
+            app:sectionSubTitleTextColor="@color/black"
+            app:timeLineColor="@color/theme_blue_variant"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"
             />
+
     </RelativeLayout>
-
-
 
 </FrameLayout>
