@@ -24,25 +24,26 @@ import static android.content.Context.MODE_PRIVATE;
 public class GroupDB extends SQLiteOpenHelper {
 
     public static String groupdb_table = "groups";
+
     public static String groupdb_id = "id";
     public static String groupdb_title = "title";
     public static String groupdb_noOfPersons = "noOfPersons";
     public static String groupdb_maxLimit = "maxLimit";
-    public static String groupdb_createdOn = "createdOn";
     public static String groupdb_netAmount = "netAmount";
     public static String groupdb_totalAmount = "totalAmount";
-    public static String groupdb_modifiedOn = "modifiedOn";
-    public static String groupdb_tableName = "tableName";
+
+    private GenericExpenseDB genericExpenseDB;
 
     public GroupDB(Context context) {
         super(context,context.getString(R.string.database_name),null,1);
+        genericExpenseDB = new GenericExpenseDB(context);
     }
 
     @Override
     public void onCreate(SQLiteDatabase db) {
         Log.d("GroupDB","Creating DB");
-        db.execSQL( "CREATE TABLE groups " +
-                "(id INTEGER PRIMARY KEY AUTOINCREMENT, title VARCHAR UNIQUE, noOfPersons INTEGER, maxLimit REAL, createdOn VARCHAR, netAmount REAL, totalAmount REAL, modifiedOn VARCHAR, tableName VARCHAR)");
+        db.execSQL( "CREATE TABLE IF NOT EXISTS groups " +
+                "(id INTEGER PRIMARY KEY AUTOINCREMENT, title VARCHAR UNIQUE, noOfPersons INTEGER, maxLimit REAL, netAmount REAL, totalAmount REAL)");
     }
 
     @Override
@@ -57,25 +58,14 @@ public class GroupDB extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
 
-        String createdOn = getDate();
-        String modifiedOn = getDate();
-        String tableName = title.replaceAll(" ","_").toLowerCase();
-
         contentValues.put("title", title);
         contentValues.put("noOfPersons", noOfPersons);
         contentValues.put("maxLimit", maxLimit);
-        contentValues.put("createdOn", createdOn);
         contentValues.put("netAmount", 0.0);
         contentValues.put("totalAmount", 0.0);
-        contentValues.put("modifiedOn", modifiedOn);
-        contentValues.put("tableName",tableName);
         try {
             db.insertOrThrow("groups", null, contentValues);
             Log.d("GroupDB","Inserted into groups: Values -" + contentValues.toString());
-            db.execSQL( "CREATE TABLE "+ tableName +
-                    "(id INTEGER PRIMARY KEY AUTOINCREMENT, date VARCHAR, dayOfWeek VARCHAR, textMonth VARCHAR, month INTEGER, year INTEGER," +
-                    "amount REAL, description VARCHAR, paidBy VARCHAR, category VARCHAR, deleted INTEGER, splitAmount REAL)");
-            Log.d("GroupDB",tableName + " Table Created");
             return "Created";
         }catch (SQLiteConstraintException e){
             Log.d("GroupDB","Exception Occured : "+e);
@@ -102,7 +92,6 @@ public class GroupDB extends SQLiteOpenHelper {
         contentValues.put("maxLimit", maxLimit);
         contentValues.put("netAmount", netAmount);
         contentValues.put("totalAmount", totalAmount);
-        contentValues.put("modifiedOn", modifiedOn);
         db.update("groups", contentValues, "title = ? ", new String[] { title } );
         return true;
     }
@@ -116,9 +105,32 @@ public class GroupDB extends SQLiteOpenHelper {
         contentValues.put("maxLimit", maxLimit);
         contentValues.put("netAmount", netAmount);
         contentValues.put("totalAmount", totalAmount);
-        contentValues.put("modifiedOn", modifiedOn);
         db.update("groups", contentValues, "id = ? ", new String[] { Integer.toString(id) } );
         return true;
+    }
+
+    public boolean updateGroupAmountByTitle(String title, double netAmount, double totalAmount) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        String modifiedOn = getDate();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put("title", title);
+        contentValues.put("netAmount", netAmount);
+        contentValues.put("totalAmount", totalAmount);
+        db.update("groups", contentValues, "title = ? ", new String[] { title } );
+        return true;
+    }
+
+    public double getNetAmountByTitle(String grouptitle){
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor =  db.rawQuery( "select "+groupdb_netAmount+" from groups where "+groupdb_title+" = '"+grouptitle+"'", null );
+        cursor.moveToNext();
+        return cursor.getDouble(cursor.getColumnIndex(groupdb_netAmount));
+    }
+    public double getTotalAmountByTitle(String grouptitle){
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor =  db.rawQuery( "select "+groupdb_totalAmount+" from groups where "+groupdb_title+" = '"+grouptitle+"'", null );
+        cursor.moveToNext();
+        return cursor.getDouble(cursor.getColumnIndex(groupdb_totalAmount));
     }
 
     public Integer deleteGroupByTitle(String title) {
@@ -147,13 +159,27 @@ public class GroupDB extends SQLiteOpenHelper {
             temp.put("maxLimit",cursor.getString(cursor.getColumnIndex(groupdb_maxLimit)));
             temp.put("netAmount",cursor.getString(cursor.getColumnIndex(groupdb_netAmount)));
             temp.put("totalAmount",cursor.getString(cursor.getColumnIndex(groupdb_totalAmount)));
-            temp.put("modifiedOn",cursor.getString(cursor.getColumnIndex(groupdb_modifiedOn)));
-            temp.put("createdOn",cursor.getString(cursor.getColumnIndex(groupdb_createdOn)));
-            temp.put("tableName",cursor.getString(cursor.getColumnIndex(groupdb_tableName)));
-            temp.put("showMenu","false");
+            temp.put("currentMonthTotal",genericExpenseDB.getMonthTotalForGroup(cursor.getString(cursor.getColumnIndex(groupdb_title)),GenericExpenseDB.getMonthFromDate(new Date()),GenericExpenseDB.getYearFromDate(new Date()))+"");
             results.add(temp);
         }
         return results;
+    }
+
+    public ArrayList<String> findAllGroups(){
+        ArrayList<String> results = new ArrayList<>();
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor =  db.rawQuery( "select "+groupdb_title+" from groups", null );
+        while (cursor.moveToNext()){
+            results.add(cursor.getString(cursor.getColumnIndex(groupdb_title)));
+        }
+        return results;
+    }
+
+    public int findSplitBetween(String grouptitle){
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor =  db.rawQuery( "select "+groupdb_noOfPersons+" from groups where "+groupdb_title+" = '"+grouptitle+"'", null );
+        cursor.moveToNext();
+        return cursor.getInt(cursor.getColumnIndex(groupdb_noOfPersons));
     }
 
     public Cursor executeQuery(String query){
