@@ -6,25 +6,510 @@
     android:layout_height="match_parent"
     android:background="@color/theme_light_grey">
 
-    <com.google.android.material.bottomnavigation.BottomNavigationView
-        android:id="@+id/nav_view"
+    <androidx.cardview.widget.CardView
+        android:id="@+id/addView"
+        android:clickable="true"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:backgroundTint="#80000000"
+        android:visibility="invisible">
+
+        <androidx.cardview.widget.CardView
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/createnewcategory"
+            android:layout_width="match_parent"
+            android:layout_height="280dp"
+            android:visibility="invisible"
+            app:cardBackgroundColor="@color/white">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:layout_margin="5dp"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="5dp"
+                    android:orientation="horizontal"
+                    android:weightSum="20">
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="5dp"
+                        android:layout_weight="20"
+                        android:background="@null"
+                        android:paddingLeft="20dp"
+                        android:text="Add New Category"
+                        android:textColor="@color/theme_blue_variant"
+                        android:textSize="25sp"
+                        android:textStyle="bold"/>
+                </LinearLayout>
+                <TextView
+                    android:id="@+id/categoryText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="3dp"
+                    android:layout_marginBottom="3dp"
+                    android:background="@null"
+                    android:focusedByDefault="true"
+                    android:text="This will help you analyze where you spend the most. \nNote : Category should be unique "
+                    android:paddingLeft="20dp"
+                    android:textSize="16sp"/>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="5dp"
+                    android:weightSum="20">
+                    <EditText
+                        android:id="@+id/categoryName"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="3dp"
+                        android:layout_marginBottom="3dp"
+                        android:layout_weight="20"
+                        android:background="@null"
+                        android:focusedByDefault="true"
+                        android:hint="Category"
+                        android:paddingLeft="20dp"
+                        android:singleLine="true"
+                        android:textSize="22sp"
+                        android:textStyle="bold"/>
+                </LinearLayout>
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.5dp"
+                    android:layout_marginTop="2dp"
+                    android:layout_marginBottom="2dp"
+                    android:background="@color/theme_grey"/>
+                <Button
+                    android:id="@+id/createCategory"
+                    android:layout_width="250dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="10dp"
+                    android:backgroundTint="@color/theme_blue_variant"
+                    android:text="Save"
+                    />
+
+            </LinearLayout>
+
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/createnewgroup"
+            android:layout_width="match_parent"
+            android:layout_height="280dp"
+            android:visibility="invisible"
+            app:cardBackgroundColor="@color/white">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="5dp"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="2dp"
+                    android:orientation="horizontal"
+                    android:weightSum="20">
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="20"
+                        android:background="@null"
+                        android:paddingLeft="20dp"
+                        android:text="Create New Group"
+                        android:textColor="@color/theme_blue_variant"
+                        android:textSize="25sp"
+                        android:textStyle="bold"/>
+                </LinearLayout>
+                <TextView
+                    android:id="@+id/groupText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="3dp"
+                    android:background="@null"
+                    android:focusedByDefault="true"
+                    android:text="If you share your expenses, Sepcifying a group will help in segregating them \nNote : Group Name should be unique  "
+                    android:paddingLeft="20dp"
+                    android:textSize="16sp"/>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:weightSum="20">
+                    <EditText
+                        android:id="@+id/title"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="3dp"
+                        android:layout_marginBottom="3dp"
+                        android:layout_weight="20"
+                        android:background="@null"
+                        android:focusedByDefault="true"
+                        android:hint="Group Name"
+                        android:nextFocusForward="@id/noofpeps"
+                        android:paddingLeft="20dp"
+                        android:singleLine="true"
+                        android:textSize="22sp"
+                        android:textStyle="bold"/>
+                </LinearLayout>
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.5dp"
+                    android:layout_marginTop="2dp"
+                    android:layout_marginBottom="2dp"
+                    android:background="@color/theme_grey"/>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:weightSum="20">
+                    <EditText
+                        android:id="@+id/noofpeps"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginEnd="5dp"
+                        android:layout_marginBottom="5dp"
+                        android:layout_weight="10"
+                        android:background="@null"
+                        android:hint="No of persons"
+                        android:inputType="number"
+                        android:nextFocusForward="@id/limit"
+                        android:paddingLeft="20dp"
+                        android:singleLine="true"
+                        android:textSize="18sp"/>
+                    <View
+                        android:layout_width="1dp"
+                        android:layout_height="match_parent"
+                        android:background="@color/theme_grey"/>
+                    <EditText
+                        android:id="@+id/limit"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="5dp"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginEnd="5dp"
+                        android:layout_marginBottom="5dp"
+                        android:layout_weight="10"
+                        android:background="@null"
+                        android:hint="Spend Limit"
+                        android:inputType="numberDecimal"
+                        android:nextFocusForward="@id/createnewgroup"
+                        android:paddingLeft="10dp"
+                        android:singleLine="true"
+                        android:textSize="18sp"/>
+                </LinearLayout>
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.5dp"
+                    android:layout_marginTop="2dp"
+                    android:layout_marginBottom="2dp"
+                    android:background="@color/theme_grey"/>
+                <Button
+                    android:id="@+id/create"
+                    android:layout_width="250dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="3dp"
+                    android:backgroundTint="@color/theme_blue_variant"
+                    android:text="Create"
+                    />
+
+            </LinearLayout>
+
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/addNewExpenseView"
+            android:layout_width="match_parent"
+            android:layout_height="280dp"
+            android:visibility="invisible"
+            app:cardBackgroundColor="@color/white"
+            app:cardElevation="5dp">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:layout_margin="5dp"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="5dp"
+                    android:orientation="horizontal"
+                    android:weightSum="30">
+                    <TextView
+                        android:id="@+id/addExpenseTitle"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="20"
+                        android:background="@null"
+                        android:paddingLeft="20dp"
+                        android:text="Add New Expense"
+                        android:textColor="@color/theme_blue_variant"
+                        android:textSize="25sp"
+                        android:textStyle="bold"/>
+
+                    <TextView
+                        android:id="@+id/newExpenseDate"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="10"
+                        android:background="@null"
+                        android:clickable="true"
+                        android:gravity="center_vertical"
+                        android:paddingLeft="10dp"
+                        android:singleLine="true"
+                        android:text="20/12/2020"
+                        android:textSize="20sp"
+                        android:textStyle="bold"/>
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:weightSum="30">
+                    <EditText
+                        android:id="@+id/newExpenseTotalAmount"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_weight="20"
+                        android:background="@null"
+                        android:hint="₹ Amount"
+                        android:inputType="numberDecimal"
+                        android:paddingLeft="20dp"
+                        android:paddingTop="2dp"
+                        android:focusedByDefault="true"
+                        android:nextFocusForward="@id/newExpenseDescription"
+                        android:paddingBottom="5dp"
+                        android:singleLine="true"
+                        android:textSize="25sp"
+                        android:textStyle="bold"/>
+                    <CheckBox
+                        android:id="@+id/newExpensePaidBy"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="10"
+                        android:checked="true"
+                        android:gravity="center_vertical"
+                        android:text="Paid By Me"
+                        />
+
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.5dp"
+                    android:background="@color/theme_grey"/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:weightSum="30">
+                    <EditText
+                        android:id="@+id/newExpenseDescription"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginTop="3dp"
+                        android:layout_marginBottom="3dp"
+                        android:layout_weight="30"
+                        android:background="@null"
+                        android:nextFocusForward="@id/newExpenseSelectCategory"
+                        android:hint="Description"
+                        android:inputType="text"
+                        android:paddingStart="20dp"
+                        android:singleLine="true"
+                        android:textSize="20sp"/>
+
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.5dp"
+                    android:layout_marginTop="1dp"
+                    android:layout_marginBottom="1dp"
+                    android:background="@color/theme_grey"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:weightSum="30">
+                <AutoCompleteTextView
+                    android:id="@+id/newExpenseSelectCategory"
+                    android:layout_width="0dp"
+                    android:layout_weight="15"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginTop="3dp"
+                    android:layout_marginBottom="3dp"
+                    android:background="@null"
+                    android:hint="Category"
+                    android:nextFocusForward="@id/newExpenseSelectGroup"
+                    android:paddingStart="20dp"
+                    android:singleLine="true"
+                    android:textSize="18sp"/>
+
+                <View
+                    android:layout_width="1dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="1dp"
+                    android:layout_marginBottom="1dp"
+                    android:background="@color/theme_grey"/>
+
+                <AutoCompleteTextView
+                    android:id="@+id/newExpenseSelectGroup"
+                    android:layout_width="0dp"
+                    android:layout_weight="15"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginTop="3dp"
+                    android:layout_marginBottom="3dp"
+                    android:background="@null"
+                    android:nextFocusForward="@id/newExpenseAdd"
+                    android:hint="Group"
+                    android:paddingStart="20dp"
+                    android:singleLine="true"
+                    android:textSize="18sp"/>
+            </LinearLayout>
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.5dp"
+                    android:layout_marginTop="1dp"
+                    android:layout_marginBottom="5dp"
+                    android:background="@color/theme_grey"/>
+
+                <Button
+                    android:id="@+id/newExpenseAdd"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginStart="60dp"
+                    android:layout_marginEnd="60dp"
+                    android:backgroundTint="@color/theme_green"
+                    android:text="Add"
+                    />
+
+
+            </LinearLayout>
+
+        </androidx.cardview.widget.CardView>
+
+    </androidx.cardview.widget.CardView>
+
+    <com.google.android.material.bottomappbar.BottomAppBar
+        android:id="@+id/bottomBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
-        android:layout_marginEnd="10dp"
-        android:layout_marginBottom="10dp"
-        android:elevation="10dp"
-        android:background="?android:attr/windowBackground"
         android:layout_gravity="bottom"
-        app:menu="@menu/bottom_nav_menu"/>
+        app:backgroundTint="?attr/colorPrimary"
+        app:contentInsetEnd="100dp"
+        app:contentInsetStart="0dp"
+        app:fabAlignmentMode="end">
+
+        <com.google.android.material.bottomnavigation.BottomNavigationView
+            android:id="@+id/nav_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginEnd="0dp"
+            app:backgroundTint="@android:color/transparent"
+            app:elevation="0dp"
+            app:itemIconTint="@android:color/white"
+            app:itemRippleColor="@android:color/white"
+            app:itemTextColor="@android:color/white"
+            app:menu="@menu/bottom_nav_menu" />
+
+    </com.google.android.material.bottomappbar.BottomAppBar>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/theme_blue_variant"
+        android:src="@drawable/menu"
+        app:borderWidth="0dp"
+        app:layout_anchor="@id/bottomBar"
+        app:rippleColor="@color/white"/>
+
+    <LinearLayout
+        android:id="@+id/fabHolder"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_marginRight="10dp"
+        android:layout_marginBottom="?attr/actionBarSize"
+        android:elevation="5dp"
+        android:orientation="vertical"
+        android:paddingBottom="30dp">
+
+        <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+            android:id="@+id/group"
+            android:layout_width="160dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginBottom="5dp"
+            android:backgroundTint="@color/theme_blue_variant"
+            android:text="Group"
+            android:visibility="invisible"
+            app:borderWidth="0dp"
+            app:icon="@drawable/plus"
+            app:rippleColor="@color/white"/>
+
+        <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+            android:id="@+id/category"
+            android:layout_width="160dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginBottom="5dp"
+            android:backgroundTint="@color/theme_blue_variant"
+            android:src="@drawable/fab"
+            android:text="Category"
+            android:visibility="invisible"
+            app:borderWidth="0dp"
+            app:icon="@drawable/plus"
+            app:rippleColor="@color/white"/>
+
+        <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+            android:id="@+id/expense"
+            android:layout_width="160dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginBottom="5dp"
+            android:backgroundTint="@color/theme_blue_variant"
+            android:src="@drawable/fab"
+            android:text="Expense"
+            android:visibility="invisible"
+            app:borderWidth="0dp"
+            app:icon="@drawable/plus"
+            app:rippleColor="@color/white"/>
+
+    </LinearLayout>
 
     <fragment
         android:id="@+id/nav_host_fragment"
         android:name="androidx.navigation.fragment.NavHostFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_marginBottom="?attr/actionBarSize"
         app:defaultNavHost="true"
-        app:layout_constraintBottom_toTopOf="@id/nav_view"
+        app:layout_constraintBottom_toTopOf="@id/bottomBar"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"

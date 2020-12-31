@@ -12,10 +12,16 @@
         tools:layout="@layout/fragment_home_page" />
 
     <fragment
-        android:id="@+id/navigation_add"
-        android:name="com.example.xpensmanager.MainScreen.Fragments.AddNewExpense"
-        android:label="@string/title_dashboard"
-        tools:layout="@layout/fragment_add_new_expense" />
+        android:id="@+id/navigation_group"
+        android:name="com.example.xpensmanager.MainScreen.Fragments.GroupsView"
+        android:label="@string/title_group"
+        tools:layout="@layout/fragment_group_all_expense" />
+
+    <fragment
+        android:id="@+id/navigation_stats"
+        android:name="com.example.xpensmanager.MainScreen.Fragments.Stats"
+        android:label="@string/title_stats"
+        tools:layout="@layout/fragment_stats" />
 
     <fragment
         android:id="@+id/navigation_settings"
