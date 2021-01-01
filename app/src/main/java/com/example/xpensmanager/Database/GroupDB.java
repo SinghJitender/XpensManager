@@ -85,9 +85,7 @@ public class GroupDB extends SQLiteOpenHelper {
 
     public boolean updateGroupByTitle(String title, int noOfPersons, double maxLimit, double netAmount, double totalAmount) {
         SQLiteDatabase db = this.getWritableDatabase();
-        String modifiedOn = getDate();
         ContentValues contentValues = new ContentValues();
-        contentValues.put("title", title);
         contentValues.put("noOfPersons", noOfPersons);
         contentValues.put("maxLimit", maxLimit);
         contentValues.put("netAmount", netAmount);
@@ -96,9 +94,16 @@ public class GroupDB extends SQLiteOpenHelper {
         return true;
     }
 
+    public boolean updateNetAmountByTitle(String title) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put("netAmount", 0.00);
+        db.update("groups", contentValues, "title = ? ", new String[] { title } );
+        return true;
+    }
+
     public boolean updateGroupById(int id,String title, int noOfPersons, double maxLimit, double netAmount, double totalAmount) {
         SQLiteDatabase db = this.getWritableDatabase();
-        String modifiedOn = getDate();
         ContentValues contentValues = new ContentValues();
         contentValues.put("title", title);
         contentValues.put("noOfPersons", noOfPersons);
@@ -111,14 +116,22 @@ public class GroupDB extends SQLiteOpenHelper {
 
     public boolean updateGroupAmountByTitle(String title, double netAmount, double totalAmount) {
         SQLiteDatabase db = this.getWritableDatabase();
-        String modifiedOn = getDate();
         ContentValues contentValues = new ContentValues();
-        contentValues.put("title", title);
         contentValues.put("netAmount", netAmount);
         contentValues.put("totalAmount", totalAmount);
         db.update("groups", contentValues, "title = ? ", new String[] { title } );
         return true;
     }
+
+    public boolean updateGroupLimitAndPersons(String title, int noOfPersons, double maxLimit) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put("noOfPersons", noOfPersons);
+        contentValues.put("maxLimit", maxLimit);
+        db.update("groups", contentValues, "title = ? ", new String[] { title } );
+        return true;
+    }
+
 
     public double getNetAmountByTitle(String grouptitle){
         SQLiteDatabase db = this.getReadableDatabase();

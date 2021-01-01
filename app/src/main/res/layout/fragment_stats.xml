@@ -3,12 +3,216 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/theme_grey"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".MainScreen.Fragments.Stats">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:scrollbars="none">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:orientation="vertical"
+            android:padding="10dp"
+            android:layout_height="match_parent">
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="300dp"
+                android:elevation="5dp"
+                app:cardCornerRadius="5dp"
+                app:cardUseCompatPadding="true">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="18dp"
+                    android:paddingTop="5dp"
+                    android:paddingBottom="5dp"
+                    android:text="Week View"
+                    android:textSize="18sp" />
+
+                <com.hadiidbouk.charts.ChartProgressBar
+                    android:id="@+id/ChartProgressBar"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:gravity="center"
+                    app:hdBarCanBeClick="true"
+                    app:hdBarHeight="190dp"
+                    app:hdBarRadius="10dp"
+                    app:hdBarTitleColor="@color/bar_title_color"
+                    app:hdBarTitleMarginTop="9dp"
+                    app:hdBarTitleSelectedColor="@color/theme_blue"
+                    app:hdBarTitleTxtSize="12sp"
+                    app:hdBarWidth="20dp"
+                    app:hdEmptyColor="@color/theme_grey"
+                    app:hdMaxValue="40"
+                    app:hdPinBackgroundColor="@color/theme_blue_variant"
+                    app:hdPinDrawable="@drawable/ic_pin"
+                    app:hdPinMarginBottom="30dp"
+                    app:hdPinMarginEnd="22dp"
+                    app:hdPinMarginTop="1dp"
+                    app:hdPinPaddingBottom="5dp"
+                    app:hdPinTextColor="@color/white"
+                    app:hdPinTxtSize="12sp"
+                    app:hdProgressClickColor="@color/theme_blue"
+                    app:hdProgressColor="@color/theme_blue_variant"
+                    app:hdProgressDisableColor="@color/progress_disable" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom|end"
+                    android:layout_marginRight="18dp"
+                    android:layout_marginBottom="5dp"
+                    android:gravity="bottom"
+                    android:paddingTop="8dp"
+                    android:text="Spends for last 7 days"
+                    android:textSize="10sp" />
+            </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                app:cardUseCompatPadding="true"
+                android:elevation="5dp"
+                app:cardCornerRadius="5dp"
+                android:layout_height="210dp">
+            <HorizontalScrollView
+                android:scrollbars="none"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+                    <LinearLayout
+                        android:background="@color/theme_light_grey"
+                        android:orientation="horizontal"
+                        android:layout_width="match_parent"
+                        android:padding="10dp"
+                        android:layout_height="wrap_content">
+
+                    <androidx.cardview.widget.CardView
+                        android:layout_width="300dp"
+                        android:layout_height="180dp"
+                        android:elevation="5dp"
+                        app:cardBackgroundColor="@color/white"
+                        app:cardCornerRadius="5dp"
+                        app:cardUseCompatPadding="true">
+                    </androidx.cardview.widget.CardView>
+
+                    <androidx.cardview.widget.CardView
+                        android:layout_width="300dp"
+                        app:cardUseCompatPadding="true"
+                        android:elevation="5dp"
+                        app:cardCornerRadius="5dp"
+                        app:cardBackgroundColor="@color/theme_grey"
+                        android:layout_height="180dp"/>
+                    <androidx.cardview.widget.CardView
+                        android:layout_width="300dp"
+                        app:cardUseCompatPadding="true"
+                        android:elevation="5dp"
+                        app:cardCornerRadius="5dp"
+                        app:cardBackgroundColor="@color/theme_grey"
+                        android:layout_height="180dp"/>
+                    <androidx.cardview.widget.CardView
+                        android:layout_width="300dp"
+                        app:cardUseCompatPadding="true"
+                        android:elevation="5dp"
+                        app:cardCornerRadius="5dp"
+                        app:cardBackgroundColor="@color/theme_grey"
+                        android:layout_height="180dp"/>
+                </LinearLayout>
+            </HorizontalScrollView>
+
+            </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                app:cardUseCompatPadding="true"
+                android:elevation="5dp"
+                app:cardCornerRadius="5dp"
+                android:layout_height="400dp">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="18dp"
+                    android:paddingTop="5dp"
+                    android:paddingBottom="5dp"
+                    android:text="One Year View"
+                    android:textSize="18sp" />
+                <HorizontalScrollView
+                    android:layout_gravity="center"
+                    android:scrollbars="none"
+                    android:paddingRight="10dp"
+                    android:layout_height="wrap_content"
+                    android:layout_width="match_parent">
+                <view
+                    android:layout_width="match_parent"
+                    android:layout_height="300dp"
+                    class="im.dacer.androidcharts.BarView"
+                    android:id="@+id/bar_view" />
+                </HorizontalScrollView>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom|end"
+                    android:layout_marginRight="18dp"
+                    android:layout_marginBottom="5dp"
+                    android:gravity="bottom"
+                    android:paddingTop="8dp"
+                    android:text="Spends for last 1 year"
+                    android:textSize="10sp" />
+            </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                app:cardUseCompatPadding="true"
+                android:elevation="5dp"
+                app:cardCornerRadius="5dp"
+                android:layout_height="350dp">
+
+                <HorizontalScrollView
+                    android:layout_gravity="center"
+                    android:scrollbars="none"
+                    android:paddingRight="10dp"
+                    android:layout_height="wrap_content"
+                    android:layout_width="match_parent">
+                    <view
+                        android:layout_width="match_parent"
+                        android:layout_height="300dp"
+                        class="im.dacer.androidcharts.LineView"
+                        android:id="@+id/line_view" />
+                </HorizontalScrollView>
+
+            </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                app:cardUseCompatPadding="true"
+                android:elevation="5dp"
+                app:cardCornerRadius="5dp"
+                android:layout_height="300dp">
+                <com.github.mikephil.charting.charts.PieChart
+                    android:id="@+id/chart1"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"/>
+            </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                app:cardUseCompatPadding="true"
+                android:elevation="5dp"
+                app:cardCornerRadius="5dp"
+                android:layout_height="500dp">
+                <com.github.mikephil.charting.charts.HorizontalBarChart
+                    android:id="@+id/chart2"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@android:color/white"
+                    android:layout_above="@+id/seekBar1" />
+            </androidx.cardview.widget.CardView>
+
+        </LinearLayout>
+
+    </ScrollView>
 
 </FrameLayout>

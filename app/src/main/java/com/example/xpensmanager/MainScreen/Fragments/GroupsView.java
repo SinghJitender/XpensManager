@@ -5,14 +5,14 @@ import android.os.Bundle;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.recyclerview.widget.SimpleItemAnimator;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.example.xpensmanager.Database.GroupDB;
-import com.example.xpensmanager.MainScreen.Adapters.RecyclerViewAdapter;
+import com.example.xpensmanager.MainScreen.Adapters.GroupViewAdapter;
 import com.example.xpensmanager.R;
 
 import java.util.ArrayList;
@@ -20,9 +20,11 @@ import java.util.Hashtable;
 
 public class GroupsView extends Fragment {
     private RecyclerView recyclerView;
-    private RecyclerViewAdapter adapter;
+    private GroupViewAdapter adapter;
     private GroupDB groupDB;
+    private TextView emptyView;
     ArrayList<Hashtable<String,String>> results;
+
     public GroupsView() {
         // Required empty public constructor
     }
@@ -47,16 +49,25 @@ public class GroupsView extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_group_all_expense, container, false);
         recyclerView = view.findViewById(R.id.recyclerView);
+        emptyView = view.findViewById(R.id.emptyView);
 
         groupDB = new GroupDB(getActivity());
         results = new ArrayList<>();
         results.addAll(groupDB.findAll());
+
+
+        if(results.size() == 0) {
+            emptyView.setVisibility(View.VISIBLE);
+        }else{
+            emptyView.setVisibility(View.GONE);
+        }
+
         ArrayList<Boolean> list = new ArrayList<>();
         for(int i=0;i<results.size();i++){
             list.add(false);
         }
         //((SimpleItemAnimator) recyclerView.getItemAnimator()).setSupportsChangeAnimations(false);
-        adapter = new RecyclerViewAdapter(getActivity(), results,list);
+        adapter = new GroupViewAdapter(getActivity(), results,list);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.setAdapter(adapter);
         return view;

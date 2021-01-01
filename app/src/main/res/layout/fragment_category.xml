@@ -3,14 +3,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainScreen.Fragments.GroupsView">
+    tools:context=".MainScreen.Fragments.Category">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         />
-
     <TextView
         android:id="@+id/emptyView"
         android:layout_width="match_parent"
@@ -20,7 +19,7 @@
         android:gravity="center"
         android:visibility="gone"
         android:textColor="@color/theme_blue_variant"
-        android:text="Nothing to display\nAdd a group"
+        android:text="Nothing to display\nLooks like you need to add a few categories"
         />
 
 </FrameLayout>
