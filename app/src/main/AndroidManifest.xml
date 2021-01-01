@@ -9,10 +9,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.XpensManager">
-        <activity android:name=".ExpenseScreen.Expense"></activity>
+        <activity android:name=".ExpenseScreen.Expense" />
         <activity
             android:name=".MainScreen.MainActivity"
-            android:label="@string/title_activity_main"/>
+            android:label="@string/title_activity_main" />
         <activity
             android:name=".SplashScreen.SplashScreenActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
