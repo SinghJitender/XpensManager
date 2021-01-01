@@ -4,12 +4,10 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.SQLException;
-import android.database.sqlite.SQLiteConstraintException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
-import com.example.xpensmanager.ExpenseScreen.Adapters.ExpenseData;
 import com.example.xpensmanager.R;
 
 import java.text.DateFormat;
@@ -149,6 +147,32 @@ public class GenericExpenseDB extends SQLiteOpenHelper {
         return list;
     }
 
+
+    public ArrayList<ExpenseData> findAllByCategory(String category){
+        ArrayList<ExpenseData> list = new ArrayList<>();
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor =  db.rawQuery( "select * from "+tableName+" where category = '"+category+"' order by "+expenseyear+" DESC, "+expensemonth+" DESC, "+expenseday+" DESC, "+expenseid+" DESC", null );
+        while(cursor.moveToNext()){
+            ExpenseData data = new ExpenseData();
+            data.setId(cursor.getInt(cursor.getColumnIndex(expenseid)));
+            data.setDate(cursor.getString(cursor.getColumnIndex(expensedate)));
+            data.setDayOfWeek(cursor.getString(cursor.getColumnIndex(expensedayOfWeek)));
+            data.setTextMonth(cursor.getString(cursor.getColumnIndex(expensetextMonth)));
+            data.setMonth(cursor.getInt(cursor.getColumnIndex(expensemonth)));
+            data.setYear(cursor.getInt(cursor.getColumnIndex(expenseyear)));
+            data.setAmount(cursor.getDouble(cursor.getColumnIndex(expenseamount)));
+            data.setDescription(cursor.getString(cursor.getColumnIndex(expensedescription)));
+            data.setPaidBy(cursor.getString(cursor.getColumnIndex(expensepaidBy)));
+            data.setCategory(cursor.getString(cursor.getColumnIndex(expensecategory)));
+            data.setDay(cursor.getInt(cursor.getColumnIndex(expenseday)));
+            data.setDeleted(cursor.getInt(cursor.getColumnIndex(expensedeleted)));
+            data.setSplitAmount(cursor.getDouble(cursor.getColumnIndex(expensesplitAmount)));
+            data.setGroup(cursor.getString(cursor.getColumnIndex(expensegroup)));
+            list.add(data);
+        }
+        return list;
+    }
+
     public ArrayList<ExpenseData> findByYear(int year){
         ArrayList<ExpenseData> list = new ArrayList<>();
         SQLiteDatabase db = this.getReadableDatabase();
@@ -198,6 +222,33 @@ public class GenericExpenseDB extends SQLiteOpenHelper {
         }
         return list;
     }
+
+    public ArrayList<ExpenseData> findByYearAndCategory(String category, int year){
+        ArrayList<ExpenseData> list = new ArrayList<>();
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor =  db.rawQuery( "select * from "+tableName+" where year = "+year+" and category = '"+category+"' order by "+expensemonth+" DESC, "+expenseday+" DESC, "+expenseid+" DESC", null );
+        while(cursor.moveToNext()){
+            ExpenseData data = new ExpenseData();
+            data.setId(cursor.getInt(cursor.getColumnIndex(expenseid)));
+            data.setDate(cursor.getString(cursor.getColumnIndex(expensedate)));
+            data.setDayOfWeek(cursor.getString(cursor.getColumnIndex(expensedayOfWeek)));
+            data.setTextMonth(cursor.getString(cursor.getColumnIndex(expensetextMonth)));
+            data.setMonth(cursor.getInt(cursor.getColumnIndex(expensemonth)));
+            data.setYear(cursor.getInt(cursor.getColumnIndex(expenseyear)));
+            data.setDay(cursor.getInt(cursor.getColumnIndex(expenseday)));
+            data.setAmount(cursor.getDouble(cursor.getColumnIndex(expenseamount)));
+            data.setDescription(cursor.getString(cursor.getColumnIndex(expensedescription)));
+            data.setPaidBy(cursor.getString(cursor.getColumnIndex(expensepaidBy)));
+            data.setCategory(cursor.getString(cursor.getColumnIndex(expensecategory)));
+            data.setDeleted(cursor.getInt(cursor.getColumnIndex(expensedeleted)));
+            data.setSplitAmount(cursor.getDouble(cursor.getColumnIndex(expensesplitAmount)));
+            data.setGroup(cursor.getString(cursor.getColumnIndex(expensegroup)));
+            list.add(data);
+        }
+        return list;
+    }
+
+
 
     public ArrayList<ExpenseData> findByMonth(int month){
         ArrayList<ExpenseData> list = new ArrayList<>();
@@ -249,6 +300,33 @@ public class GenericExpenseDB extends SQLiteOpenHelper {
         return list;
     }
 
+    public ArrayList<ExpenseData> findByMonthAndCategory(String category, int month){
+        ArrayList<ExpenseData> list = new ArrayList<>();
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor =  db.rawQuery( "select * from "+tableName+" where month = "+month+" and category = '"+category+"' order by "+expenseday+" DESC, "+expenseid+" DESC", null );
+        while(cursor.moveToNext()){
+            ExpenseData data = new ExpenseData();
+            data.setId(cursor.getInt(cursor.getColumnIndex(expenseid)));
+            data.setDate(cursor.getString(cursor.getColumnIndex(expensedate)));
+            data.setDayOfWeek(cursor.getString(cursor.getColumnIndex(expensedayOfWeek)));
+            data.setTextMonth(cursor.getString(cursor.getColumnIndex(expensetextMonth)));
+            data.setMonth(cursor.getInt(cursor.getColumnIndex(expensemonth)));
+            data.setYear(cursor.getInt(cursor.getColumnIndex(expenseyear)));
+            data.setDay(cursor.getInt(cursor.getColumnIndex(expenseday)));
+            data.setAmount(cursor.getDouble(cursor.getColumnIndex(expenseamount)));
+            data.setDescription(cursor.getString(cursor.getColumnIndex(expensedescription)));
+            data.setPaidBy(cursor.getString(cursor.getColumnIndex(expensepaidBy)));
+            data.setCategory(cursor.getString(cursor.getColumnIndex(expensecategory)));
+            data.setDeleted(cursor.getInt(cursor.getColumnIndex(expensedeleted)));
+            data.setSplitAmount(cursor.getDouble(cursor.getColumnIndex(expensesplitAmount)));
+            data.setGroup(cursor.getString(cursor.getColumnIndex(expensegroup)));
+            list.add(data);
+        }
+        return list;
+    }
+
+
+
     public double getMonthlyExpenseSum(int month, int year){
         SQLiteDatabase db = this.getReadableDatabase();
         try {
@@ -265,6 +343,18 @@ public class GenericExpenseDB extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getReadableDatabase();
         try {
             Cursor cursor = db.rawQuery("select sum(splitAmount) from " + tableName + " where (" + expensemonth + " = " + month + " and " + expenseyear + " = " + year +" and " + expensegroup + " = '" + groupName + "');", null);
+            cursor.moveToNext();
+            return cursor.getDouble(0);
+        }catch (SQLException e){
+            Log.d("GenericExpenseDB","Exception : "+e.toString());
+            return 0.0;
+        }
+    }
+
+    public double getMonthTotalForCategory(String category, int month, int year){
+        SQLiteDatabase db = this.getReadableDatabase();
+        try {
+            Cursor cursor = db.rawQuery("select sum(splitAmount) from " + tableName + " where (" + expensemonth + " = " + month + " and " + expenseyear + " = " + year +" and " + expensecategory + " = '" + category + "');", null);
             cursor.moveToNext();
             return cursor.getDouble(0);
         }catch (SQLException e){
