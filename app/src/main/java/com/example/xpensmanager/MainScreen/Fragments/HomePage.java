@@ -1,34 +1,31 @@
 package com.example.xpensmanager.MainScreen.Fragments;
 
 import android.content.Intent;
-import android.graphics.Canvas;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.content.res.AppCompatResources;
-import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.FrameLayout;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.example.xpensmanager.Database.GenericExpenseDB;
 import com.example.xpensmanager.Database.GroupDB;
 import com.example.xpensmanager.Enums.ViewType;
-import com.example.xpensmanager.ExpenseScreen.Adapters.ExpenseData;
+import com.example.xpensmanager.Database.ExpenseData;
 import com.example.xpensmanager.ExpenseScreen.Adapters.ExpenseViewAdapter;
 import com.example.xpensmanager.ExpenseScreen.Expense;
 import com.example.xpensmanager.MainScreen.Adapters.SwipeController;
+import com.example.xpensmanager.MainScreen.MainActivity;
 import com.example.xpensmanager.R;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Hashtable;
@@ -41,7 +38,7 @@ import xyz.sangcomz.stickytimelineview.model.SectionInfo;
 
 public class HomePage extends Fragment {
 
-    private Button viewAllButtom,yearlyViewButton;
+    private ImageButton viewAllButtom;
     private TextView currentMonthName,currentMonthTotalSpends,currentMonthNetAmount;
 
     ArrayList<Hashtable<String,String>> results;
@@ -78,9 +75,9 @@ public class HomePage extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_home_page, container, false);
+        ((MainActivity)getActivity()).getSupportActionBar().setTitle(GenericExpenseDB.getDayOfMonth(new Date(),Locale.ENGLISH));
         TimeLineRecyclerView recyclerView = view.findViewById(R.id.recyclerView);
         viewAllButtom = view.findViewById(R.id.viewAll);
-        yearlyViewButton = view.findViewById(R.id.yearlyView);
         currentMonthName = view.findViewById(R.id.currentMonthName);
         currentMonthTotalSpends = view.findViewById(R.id.currentMonthTotalSpends);
         currentMonthNetAmount = view.findViewById(R.id.currentMonthNetAmount);
@@ -92,21 +89,13 @@ public class HomePage extends Fragment {
         results.addAll(groups.findAll());
 
         totalSpentThisMonth = new GenericExpenseDB(getActivity()).getMonthlyExpenseSum(GenericExpenseDB.getMonthFromDate(new Date()),GenericExpenseDB.getYearFromDate(new Date()));
-        currentMonthName.setText(GenericExpenseDB.getDayOfMonth(new Date(),Locale.ENGLISH));
-        currentMonthTotalSpends.setText("₹ "+totalSpentThisMonth);
+        //currentMonthName.setText(GenericExpenseDB.getDayOfMonth(new Date(),Locale.ENGLISH));
+        currentMonthTotalSpends.setText("₹ "+ new DecimalFormat("00.00").format(totalSpentThisMonth));
+        //currentMonthNetAmount.setText("");
         viewAllButtom.setOnClickListener((v) -> {
             Intent intent = new Intent(getActivity(), Expense.class);
-            intent.putExtra("viewType",ViewType.ALL);
             intent.putExtra("groupBy","None");
-            intent.putExtra("filterValue",0);
-            startActivity(intent);
-        });
-
-        yearlyViewButton.setOnClickListener((v) -> {
-            Intent intent = new Intent(getActivity(), Expense.class);
-            intent.putExtra("viewType",ViewType.YEARLY);
-            intent.putExtra("groupBy","None");
-            intent.putExtra("filterValue",GenericExpenseDB.getYearFromDate(new Date()));
+            intent.putExtra("filterType","None");
             startActivity(intent);
         });
 
@@ -116,7 +105,7 @@ public class HomePage extends Fragment {
                 RecyclerView.VERTICAL,
                 false));
 
-        ArrayList<ExpenseData> expenseData = genericExpenseDB.findByMonth(12);
+        ArrayList<ExpenseData> expenseData = genericExpenseDB.findByMonth(GenericExpenseDB.getMonthFromDate(new Date()));
         recyclerView.addItemDecoration(getSectionCallback(expenseData));
         recyclerView.setAdapter(new ExpenseViewAdapter(expenseData,getActivity(), ViewType.MONTHLY));
 

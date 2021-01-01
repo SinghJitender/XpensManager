@@ -40,6 +40,14 @@
                         android:layout_height="0.1dp"
                         android:background="@color/theme_blue"
                         />
+                    <TextView
+                        android:id="@+id/monthTotalTitle"
+                        android:text="Current Month's Total"
+                        android:gravity="left"
+                        android:layout_width="match_parent"
+                        android:textSize="10sp"
+                        android:textColor="@color/theme_text_color_on_white_bg"
+                        android:layout_height="wrap_content"/>
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -65,7 +73,14 @@
                             android:textColor="@color/theme_red"
                             android:layout_height="wrap_content"/>
                     </LinearLayout>
-
+                    <TextView
+                        android:id="@+id/lifeTimeSpendTitle"
+                        android:text="Lifetime Group Total"
+                        android:gravity="left"
+                        android:layout_width="match_parent"
+                        android:textSize="8sp"
+                        android:textColor="@color/theme_text_color_on_white_bg"
+                        android:layout_height="wrap_content"/>
                     <TextView
                         android:id="@+id/lifeTimeSpend"
                         android:text="Lifetime - 189078.00"
@@ -74,7 +89,56 @@
                         android:textSize="14sp"
                         android:textColor="@color/theme_text_color_on_white_bg"
                         android:layout_height="wrap_content"/>
-
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+                        <ImageView
+                            android:padding="3dp"
+                            android:id="@+id/splitIcon"
+                            android:layout_width="20dp"
+                            android:src="@drawable/group_black"
+                            android:scaleType="fitCenter"
+                            android:textColor="@color/theme_text_color_on_white_bg"
+                            android:layout_height="20dp"/>
+                        <TextView
+                            android:id="@+id/splitBetween"
+                            android:layout_width="wrap_content"
+                            android:paddingLeft="5dp"
+                            android:textSize="12sp"
+                            android:layout_gravity="center"
+                            android:gravity=""
+                            android:text="3 Persons"
+                            android:textColor="@color/theme_text_color_on_white_bg"
+                            android:layout_height="wrap_content"/>
+                        <TextView
+                            android:id="@+id/limitUsed"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_weight="6"
+                            android:text="12022/234442"
+                            android:layout_gravity="right"
+                            android:textSize="12sp"
+                            android:gravity="right|bottom"
+                            />
+                    </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:weightSum="20"
+                        android:orientation="horizontal">
+                            <ProgressBar
+                                style="?android:attr/progressBarStyleHorizontal"
+                                android:layout_width="0dp"
+                                android:layout_weight="20"
+                                android:layout_height="match_parent"
+                                android:id="@+id/progress"
+                                android:layout_centerHorizontal="true"
+                                android:layout_centerVertical="true"
+                                android:max="100"
+                                android:progressTint="@color/theme_red"
+                                android:progress="45"/>
+                    </LinearLayout>
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -103,7 +167,7 @@
 
         <LinearLayout
             android:id="@+id/linearLayout"
-            android:visibility="visible"
+            android:visibility="gone"
             android:background="@color/theme_blue"
             app:layout_constraintTop_toBottomOf="@+id/infoCardView"
             android:layout_width="match_parent"
@@ -196,7 +260,7 @@
                     android:gravity="center|top"
                     android:textColor="@color/white"
                     android:layout_marginRight="20dp"
-                    android:text="Edit"/>
+                    android:text="Update"/>
 
                 <TextView
                     android:layout_width="0dp"
@@ -223,7 +287,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingLeft="10dp"
-                android:background="@color/theme_blue_variant"
+                android:background="@color/theme_red"
                 android:paddingTop="2dp"
                 android:paddingBottom="2dp"
                 android:orientation="horizontal">
