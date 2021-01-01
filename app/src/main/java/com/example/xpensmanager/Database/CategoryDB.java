@@ -16,7 +16,8 @@ public class CategoryDB extends SQLiteOpenHelper {
     public static String categorydb_table = "category";
     public static String categorydb_id = "id";
     public static String categorydb_categoryname = "categoryname";
-
+    public static String categorydb_categorylimit = "categorylimit";
+    public static String categorydb_totalcategoryspend = "totalcategoryspend";
 
     public CategoryDB(Context context) {
         super(context,context.getString(R.string.database_name),null,1);
@@ -26,7 +27,7 @@ public class CategoryDB extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         Log.d("GroupDB","Creating DB");
         db.execSQL( "CREATE TABLE IF NOT EXISTS "+categorydb_table+
-                "(id INTEGER PRIMARY KEY AUTOINCREMENT, categoryname VARCHAR UNIQUE)");
+                "(id INTEGER PRIMARY KEY AUTOINCREMENT, categoryname VARCHAR UNIQUE,categorylimit REAL,totalcategoryspend REAL)");
     }
 
     @Override
@@ -36,12 +37,14 @@ public class CategoryDB extends SQLiteOpenHelper {
         onCreate(db);
     }
 
-    public String insertNewCategory(String categoryname) {
+    public String insertNewCategory(String categoryname, double categorylimit) {
 
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
 
         contentValues.put("categoryname", categoryname);
+        contentValues.put("categorylimit",categorylimit);
+        contentValues.put("totalcategoryspend",0.0);
         try {
             db.insertOrThrow(categorydb_table, null, contentValues);
             Log.d(categorydb_table,"Inserted into category: Values -" + contentValues.toString());
@@ -76,7 +79,21 @@ public class CategoryDB extends SQLiteOpenHelper {
                 new String[] { Integer.toString(id) });
     }
 
-    public ArrayList<String> findAll(){
+    public ArrayList<CategoryData> findAll(){
+        ArrayList<CategoryData> results = new ArrayList<>();
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor =  db.rawQuery( "select * from "+categorydb_table, null );
+        while (cursor.moveToNext()){
+            CategoryData data = new CategoryData(cursor.getInt(cursor.getColumnIndex(categorydb_id)),
+                    cursor.getString(cursor.getColumnIndex(categorydb_categoryname)),
+                    cursor.getDouble(cursor.getColumnIndex(categorydb_categorylimit)),
+                    cursor.getDouble(cursor.getColumnIndex(categorydb_totalcategoryspend)));
+            results.add(data);
+        }
+        return results;
+    }
+
+    public ArrayList<String> findAllCategories(){
         ArrayList<String> results = new ArrayList<>();
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor =  db.rawQuery( "select * from "+categorydb_table, null );
@@ -84,6 +101,30 @@ public class CategoryDB extends SQLiteOpenHelper {
             results.add(cursor.getString(cursor.getColumnIndex(categorydb_categoryname)));
         }
         return results;
+    }
+
+    public boolean updateCategoryLimitByCategoryName(String title, double maxLimit) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(categorydb_categoryname, title);
+        contentValues.put(categorydb_categorylimit, maxLimit);
+        db.update(categorydb_table, contentValues, "categoryname = ? ", new String[] { title } );
+        return true;
+    }
+
+    public boolean updateCategoryAmountByTitle(String title, double totalAmount) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(categorydb_totalcategoryspend, totalAmount);
+        db.update(categorydb_table, contentValues, "categoryname = ? ", new String[] { title } );
+        return true;
+    }
+
+    public double getTotalAmountByTitle(String categoryName){
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor =  db.rawQuery( "select "+categorydb_totalcategoryspend+" from "+categorydb_table +" where "+categorydb_categoryname+" = '"+categoryName+"'", null );
+        cursor.moveToNext();
+        return cursor.getDouble(cursor.getColumnIndex(categorydb_totalcategoryspend));
     }
 
 }
