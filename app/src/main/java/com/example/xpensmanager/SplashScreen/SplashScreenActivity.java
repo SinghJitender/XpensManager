@@ -74,7 +74,7 @@ public class SplashScreenActivity extends AppCompatActivity {
         mydatabase.execSQL( "CREATE TABLE IF NOT EXISTS groups " +
                 "(id INTEGER PRIMARY KEY AUTOINCREMENT, title VARCHAR UNIQUE, noOfPersons INTEGER, maxLimit REAL, netAmount REAL, totalAmount REAL)");
         mydatabase.execSQL( "CREATE TABLE IF NOT EXISTS category"+
-                "(id INTEGER PRIMARY KEY AUTOINCREMENT, categoryname VARCHAR UNIQUE)");
+                "(id INTEGER PRIMARY KEY AUTOINCREMENT, categoryname VARCHAR UNIQUE, categorylimit REAL,totalcategoryspend REAL)");
         mydatabase.close();
         Log.d(LOG_TAG,"Database Ready!");
 
