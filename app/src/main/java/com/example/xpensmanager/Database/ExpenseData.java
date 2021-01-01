@@ -1,4 +1,4 @@
-package com.example.xpensmanager.ExpenseScreen.Adapters;
+package com.example.xpensmanager.Database;
 
 public class ExpenseData {
     private int id;

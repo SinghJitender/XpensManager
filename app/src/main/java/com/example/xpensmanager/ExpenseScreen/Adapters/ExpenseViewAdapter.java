@@ -8,6 +8,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.xpensmanager.Database.ExpenseData;
 import com.example.xpensmanager.Enums.ViewType;
 import com.example.xpensmanager.R;
 

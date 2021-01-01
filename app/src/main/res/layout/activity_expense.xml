@@ -1,22 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:id="@+id/container"
     android:background="@color/theme_light_grey"
     tools:context=".ExpenseScreen.Expense">
 
-    <xyz.sangcomz.stickytimelineview.TimeLineRecyclerView
-        android:id="@+id/recycler_view"
+    <include
+        layout="@layout/fragment_monthly_view"
         android:layout_width="match_parent"
-        app:sectionBackgroundColor="@color/theme_light_grey"
-        app:sectionTitleTextColor="@color/black"
-        app:timeLineWidth="1.5dp"
-        app:sectionTitleTextSize="18sp"
-        app:sectionSubTitleTextSize="15sp"
-        app:sectionSubTitleTextColor="@color/black"
-        app:timeLineColor="@color/theme_blue_variant"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent"
+        android:layout_marginBottom="?attr/actionBarSize"/>
 
-</RelativeLayout>
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/navigation"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:layout_marginEnd="0dp"
+        android:layout_marginStart="0dp"
+        android:layout_gravity="bottom"
+        android:background="@color/white"
+        android:backgroundTint="@color/white"
+        app:elevation="5dp"
+        app:itemIconSize="15dp"
+        app:itemBackground="@color/white"
+        app:itemRippleColor="@color/theme_blue"
+        app:itemTextColor="@color/theme_blue_variant"
+        app:menu="@menu/expense_view_bottom_menu" />
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

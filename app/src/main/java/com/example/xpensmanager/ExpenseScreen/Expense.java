@@ -1,105 +1,82 @@
 package com.example.xpensmanager.ExpenseScreen;
 
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.content.res.AppCompatResources;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.view.View;
 
 import com.example.xpensmanager.Database.GenericExpenseDB;
-import com.example.xpensmanager.Enums.ViewType;
-import com.example.xpensmanager.ExpenseScreen.Adapters.ExpenseData;
-import com.example.xpensmanager.ExpenseScreen.Adapters.ExpenseViewAdapter;
+import com.example.xpensmanager.ExpenseScreen.Fragments.AllViewFragment;
+import com.example.xpensmanager.ExpenseScreen.Fragments.MonthlyViewFragment;
+import com.example.xpensmanager.ExpenseScreen.Fragments.YearlyViewFragment;
 import com.example.xpensmanager.R;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Date;
 
-import xyz.sangcomz.stickytimelineview.TimeLineRecyclerView;
-import xyz.sangcomz.stickytimelineview.callback.SectionCallback;
-import xyz.sangcomz.stickytimelineview.model.SectionInfo;
-
-public class Expense extends AppCompatActivity {
-    private GenericExpenseDB genericExpenseDB;
-    private String tableName,groupBy;
-    private int filterValue;
-    private ViewType viewType;
-    private ArrayList<ExpenseData> expenseData;
+public class Expense extends AppCompatActivity{
+    private String groupBy,filterType;
+    Fragment fragment1,fragment2,fragment3;
+    FragmentManager fm;
+    Fragment active;
+    BottomNavigationView bottomNavView;
+    Bundle monthlyView, yearlyView, allView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_expense);
+        bottomNavView = findViewById(R.id.navigation);
 
-        TimeLineRecyclerView recyclerView = findViewById(R.id.recycler_view);
-        viewType = (ViewType) getIntent().getExtras().getSerializable("viewType");
         groupBy = getIntent().getExtras().getString("groupBy");
-        filterValue = getIntent().getExtras().getInt("filterValue");
+        filterType = getIntent().getExtras().getString("filterType");
 
-        genericExpenseDB = new GenericExpenseDB(getApplicationContext());
+        fragment1 = new MonthlyViewFragment();
+        fragment2 = new YearlyViewFragment();
+        fragment3 = new AllViewFragment();
+        fm = getSupportFragmentManager();
+        active = fragment1;
 
-        recyclerView.setLayoutManager(new LinearLayoutManager(this,
-                RecyclerView.VERTICAL,
-                false));
+        monthlyView = new Bundle();
+        monthlyView.putString("groupBy",groupBy);
+        monthlyView.putString("filterType",filterType);
+        monthlyView.putInt("filterValue",GenericExpenseDB.getMonthFromDate(new Date()));
+        fragment1.setArguments(monthlyView);
 
-        if(viewType == ViewType.MONTHLY) {
-            if(groupBy.equalsIgnoreCase("None"))
-                expenseData = genericExpenseDB.findByMonth(filterValue);
-            else
-                expenseData = genericExpenseDB.findByMonthAndGroup(groupBy,filterValue);
-        }
-        else if(viewType == ViewType.YEARLY){
-            if(groupBy.equalsIgnoreCase("None"))
-                expenseData = genericExpenseDB.findByYear(filterValue);
-            else
-                expenseData = genericExpenseDB.findByYearAndGroup(groupBy,filterValue);
-        }
-        else{
-            if(groupBy.equalsIgnoreCase("None"))
-                expenseData = genericExpenseDB.findAll();
-            else
-                expenseData = genericExpenseDB.findAllByGroup(groupBy);
-        }
+        yearlyView = new Bundle();
+        yearlyView.putString("groupBy",groupBy);
+        yearlyView.putString("filterType",filterType);
+        yearlyView.putInt("filterValue",GenericExpenseDB.getYearFromDate(new Date()));
+        fragment2.setArguments(yearlyView);
 
-        recyclerView.addItemDecoration(getSectionCallback(expenseData,viewType,groupBy));
-        recyclerView.setAdapter(new ExpenseViewAdapter(expenseData,getApplicationContext(), viewType));
+        allView = new Bundle();
+        allView.putString("groupBy",groupBy);
+        allView.putString("filterType",filterType);
+        fragment3.setArguments(allView);
 
-    }
+        fm.beginTransaction().add(R.id.monthly_container, fragment3, "3").hide(fragment3).commit();
+        fm.beginTransaction().add(R.id.monthly_container, fragment2, "2").hide(fragment2).commit();
+        fm.beginTransaction().add(R.id.monthly_container,fragment1, "1").commit();
 
-    private SectionCallback getSectionCallback(final List<ExpenseData> expenseData, ViewType viewType, String groupBy) {
-        return new SectionCallback() {
+        bottomNavView.setOnNavigationItemSelectedListener((item) -> {
+            switch (item.getItemId()) {
+                case R.id.month:
+                    fm.beginTransaction().hide(active).show(fragment1).commit();
+                    active = fragment1;
+                    return true;
 
-            @Nullable
-            @Override
-            public SectionInfo getSectionHeader(int position) {
-                if(viewType == ViewType.MONTHLY){
-                    return new SectionInfo(expenseData.get(position).getDate(), "", AppCompatResources.getDrawable(getApplicationContext(), R.drawable.check));
-                }
-                else if(viewType == ViewType.YEARLY){
-                    return new SectionInfo(expenseData.get(position).getTextMonth(), "", AppCompatResources.getDrawable(getApplicationContext(), R.drawable.check));
-                }
-                else{
-                    return new SectionInfo(expenseData.get(position).getYear()+"", "", AppCompatResources.getDrawable(getApplicationContext(), R.drawable.check));
-                }
+                case R.id.year:
+                    fm.beginTransaction().hide(active).show(fragment2).commit();
+                    active = fragment2;
+                    return true;
 
+                case R.id.all:
+                    fm.beginTransaction().hide(active).show(fragment3).commit();
+                    active = fragment3;
+                    return true;
             }
+            return false;
+        });
 
-            @Override
-            public boolean isSection(int position) {
-                if(viewType == ViewType.MONTHLY){
-                    return !expenseData.get(position).getDate().equals(expenseData.get(position - 1).getDate());
-                }
-                else if(viewType == ViewType.YEARLY){
-                    return !(expenseData.get(position).getMonth()  == expenseData.get(position - 1).getMonth());
-                }
-                else{
-                    return !(expenseData.get(position).getYear() == expenseData.get(position - 1).getYear());
-                }
-
-            }
-        };
     }
 }
