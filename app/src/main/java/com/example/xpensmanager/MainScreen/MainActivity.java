@@ -73,7 +73,7 @@ public class MainActivity extends AppCompatActivity {
     boolean isAddViewOpen = true;
 
     //Create New Category
-    EditText categoryName;
+    EditText categoryName,categoryLimit;
     Button createCategory;
 
     @Override
@@ -96,7 +96,7 @@ public class MainActivity extends AppCompatActivity {
         genericExpenseDB = new GenericExpenseDB(getApplicationContext());
         groupsDB = new GroupDB(getApplicationContext());
         categoryDB = new CategoryDB(getApplicationContext());
-        categoryList = categoryDB.findAll();
+        categoryList = categoryDB.findAllCategories();
         groupList = groupsDB.findAllGroups();
 
         // Add new expense
@@ -156,6 +156,7 @@ public class MainActivity extends AppCompatActivity {
                                             int splitBetween = groupsDB.findSplitBetween(newExpenseSelectGroup.getText().toString().trim());
                                             double netAmount = groupsDB.getNetAmountByTitle(newExpenseSelectGroup.getText().toString().trim());
                                             double totalAmount = groupsDB.getTotalAmountByTitle(newExpenseSelectGroup.getText().toString().trim());
+                                            double totalCategoryAmount = categoryDB.getTotalAmountByTitle(newExpenseSelectCategory.getText().toString().trim());
                                             totalAmount = totalAmount + tempAmount;
                                             if(paidBy.equalsIgnoreCase("Me")) {
                                                 netAmount = netAmount + (tempAmount - ((tempAmount)/splitBetween));
@@ -163,10 +164,9 @@ public class MainActivity extends AppCompatActivity {
                                                 netAmount = netAmount - ((tempAmount)/splitBetween);
                                             }
                                             groupsDB.updateGroupAmountByTitle(newExpenseSelectGroup.getText().toString().trim(),netAmount,totalAmount);
-
+                                            categoryDB.updateCategoryAmountByTitle(newExpenseSelectCategory.getText().toString().trim(),(totalCategoryAmount+(tempAmount/splitBetween)));
                                             genericExpenseDB.insertNewExpense(date,Double.parseDouble(newExpenseTotalAmount.getText().toString()),newExpenseDescription.getText().toString(),
                                                     newExpenseSelectCategory.getText().toString().trim(),paidBy,splitBetween,newExpenseSelectGroup.getText().toString());
-
                                             newExpenseTotalAmount.setText("");
                                             newExpenseSelectCategory.setText("");
                                             newExpenseDescription.setText("");
@@ -239,17 +239,29 @@ public class MainActivity extends AppCompatActivity {
         //new category
         categoryName = findViewById(R.id.categoryName);
         createCategory = findViewById(R.id.createCategory);
+        categoryLimit = findViewById(R.id.categoryLimit);
         createCategory.setOnClickListener((v) -> {
                     String categoryValue = categoryName.getText().toString();
+                    String categoryLimitVal = categoryLimit.getText().toString();
                     if(categoryValue == null || categoryValue.equalsIgnoreCase("")) {
                         categoryName.setError("Field Cannot be blank");
                     } else {
-                        String result = categoryDB.insertNewCategory(categoryValue);
-                        Toast.makeText(getApplicationContext(),result,Toast.LENGTH_SHORT).show();
-                        if(result.contains("Created")) {
-                            categoryName.setText("");
-                            categoryName.requestFocus();
-                            categoryAutoCompleteAdapter.add(categoryValue);
+                        if(categoryLimitVal == null || categoryLimitVal.equalsIgnoreCase("")) {
+                            categoryLimit.setError("Field Cannot be blank");
+                        }else{
+                            if(Double.parseDouble(categoryLimitVal) <= 0.0){
+                                categoryLimit.setError("Cannot be 0 or less");
+                            }
+                            else{
+                                String result = categoryDB.insertNewCategory(categoryValue,Double.parseDouble(categoryLimitVal));
+                                Toast.makeText(getApplicationContext(),result,Toast.LENGTH_SHORT).show();
+                                if(result.contains("Created")) {
+                                    categoryName.setText("");
+                                    categoryName.requestFocus();
+                                    categoryLimit.setText("");
+                                    categoryAutoCompleteAdapter.add(categoryValue);
+                                }
+                            }
                         }
                     }
         });

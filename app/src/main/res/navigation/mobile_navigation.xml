@@ -18,6 +18,12 @@
         tools:layout="@layout/fragment_group_all_expense" />
 
     <fragment
+        android:id="@+id/navigation_category"
+        android:name="com.example.xpensmanager.MainScreen.Fragments.Category"
+        android:label="@string/title_category"
+        tools:layout="@layout/fragment_category" />
+
+    <fragment
         android:id="@+id/navigation_stats"
         android:name="com.example.xpensmanager.MainScreen.Fragments.Stats"
         android:label="@string/title_stats"

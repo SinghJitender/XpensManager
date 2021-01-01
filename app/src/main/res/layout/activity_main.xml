@@ -70,7 +70,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="3dp"
                         android:layout_marginBottom="3dp"
-                        android:layout_weight="20"
+                        android:layout_weight="14"
                         android:background="@null"
                         android:focusedByDefault="true"
                         android:hint="Category"
@@ -78,6 +78,20 @@
                         android:singleLine="true"
                         android:textSize="22sp"
                         android:textStyle="bold"/>
+                    <EditText
+                        android:id="@+id/categoryLimit"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="3dp"
+                        android:layout_marginBottom="3dp"
+                        android:layout_weight="6"
+                        android:background="@null"
+                        android:hint="Limit"
+                        android:layout_gravity="center"
+                        android:paddingLeft="10dp"
+                        android:singleLine="true"
+                        android:textSize="18sp"
+                        android:textStyle="normal"/>
                 </LinearLayout>
                 <View
                     android:layout_width="match_parent"

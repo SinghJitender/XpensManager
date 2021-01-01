@@ -15,6 +15,7 @@
 
     <color name="theme_grey">#dee0e6</color>
     <color name="theme_cyan">#1ac0c6</color>
+    <color name="theme_cyan_light">#5079d1d4</color>
     <color name="theme_orange">#ff6150</color>
     <color name="theme_orange_variant">#ab3c30</color>
     <color name="theme_blue">#134e6f</color>
