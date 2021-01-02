@@ -4,6 +4,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
+import androidx.cardview.widget.CardView;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
@@ -13,16 +14,25 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.transition.Fade;
+import android.transition.Slide;
+import android.transition.Transition;
+import android.transition.TransitionManager;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.jitender.xpensmanager.BackupAndRestoreUtils.BackupExportRestoreUtil;
 import com.jitender.xpensmanager.BackupAndRestoreUtils.RestoreService;
 import com.jitender.xpensmanager.Database.CategoryDB;
 import com.jitender.xpensmanager.Database.GroupDB;
+import com.jitender.xpensmanager.Database.PaymentsDB;
 import com.jitender.xpensmanager.MainScreen.MainActivity;
 import com.jitender.xpensmanager.R;
 import com.jitender.xpensmanager.SplashScreen.SplashScreenActivity;
@@ -37,14 +47,25 @@ import java.util.concurrent.Executors;
 public class Setup extends AppCompatActivity {
     private static String[] combinedList = {"Rupee - ₹","Yen - ¥","Ruble - ₽","Korean Won - ₩","Dollar - $","Pound - £","Euro - €","Other - #"};
     private EditText salary,categoryLimit,categoryName,newGroupTitle,newGroupNoOfPersons,newGroupLimit;
-    private Button createCategory,create,completeSetup, restoreFromBackup, restoreFromFile;
+    private Button createCategory,create;
     private TextView currency, restoreInfo,age;
     private static GroupDB groupsDB;
     private static CategoryDB categoryDB;
+    private static PaymentsDB paymentsDB;
     private SharedPreferences sharedPref;
     private SharedPreferences.Editor editor;
     private LinearLayout restoringLayout;
     private Calendar today;
+    private LinearLayout quickSetup;
+    private LinearLayout restore;
+    private CardView addgroupholder,addcategoryholder,addpaymentholder;
+    private LinearLayout setupLayoutHolder,restorelayout,categorylayout,grouplayout,paymentlayout,restoreFromBackup, restoreFromFile,backFromRestore,completeSetup,back;
+    private ScrollView setuplayout;
+    //create new payment mode
+    private EditText modeName, modeLimit;
+    private Button createPaymentMode;
+
+    private int gflag = 0, cflag = 0, pflag = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,6 +83,115 @@ public class Setup extends AppCompatActivity {
         restoreFromFile = findViewById(R.id.restoreFromFile);
         restoreInfo = findViewById(R.id.restoreInfo);
         restoringLayout = findViewById(R.id.restoringLayout);
+        restore = findViewById(R.id.restore);
+        quickSetup = findViewById(R.id.quickSetup);
+        setupLayoutHolder = findViewById(R.id.setupLayoutHolder);
+        restorelayout = findViewById(R.id.restorelayout);
+        setuplayout = findViewById(R.id.setuplayout);
+        back = findViewById(R.id.back);
+        backFromRestore = findViewById(R.id.backFromRestore);
+        categorylayout = findViewById(R.id.categorylayout);
+        grouplayout = findViewById(R.id.grouplayout);
+        paymentlayout = findViewById(R.id.paymentlayout);
+        addpaymentholder = findViewById(R.id.addpaymentholder);
+        addcategoryholder = findViewById(R.id.addcategoryholder);
+        addgroupholder = findViewById(R.id.addgroupholder);
+
+
+        restore.setOnClickListener((v)->{
+            Transition transition = new Slide(Gravity.LEFT);
+            transition.setDuration(200);
+            transition.addTarget(setupLayoutHolder).addTarget(restorelayout).addTarget(setuplayout);
+            TransitionManager.beginDelayedTransition(findViewById(R.id.mainLayout), transition);
+            setupLayoutHolder.setVisibility(View.GONE);
+            restorelayout.setVisibility(View.VISIBLE);
+            setuplayout.setVisibility(View.GONE);
+        });
+
+        quickSetup.setOnClickListener((v)->{
+            Transition transition = new Slide(Gravity.LEFT);
+            transition.setDuration(200);
+            transition.addTarget(setupLayoutHolder).addTarget(restorelayout).addTarget(setuplayout);
+            TransitionManager.beginDelayedTransition(findViewById(R.id.mainLayout), transition);
+            setupLayoutHolder.setVisibility(View.GONE);
+            restorelayout.setVisibility(View.GONE);
+            setuplayout.setVisibility(View.VISIBLE);
+        });
+
+        back.setOnClickListener((v)->{
+            Transition transition = new Slide(Gravity.LEFT);
+            transition.setDuration(200);
+            transition.addTarget(setupLayoutHolder).addTarget(restorelayout).addTarget(setuplayout);
+            TransitionManager.beginDelayedTransition(findViewById(R.id.mainLayout), transition);
+            setupLayoutHolder.setVisibility(View.VISIBLE);
+            restorelayout.setVisibility(View.GONE);
+            setuplayout.setVisibility(View.GONE);
+        });
+
+        backFromRestore.setOnClickListener((v)->{
+            Transition transition = new Slide(Gravity.LEFT);
+            transition.setDuration(200);
+            transition.addTarget(setupLayoutHolder).addTarget(restorelayout).addTarget(setuplayout);
+            TransitionManager.beginDelayedTransition(findViewById(R.id.mainLayout), transition);
+            setupLayoutHolder.setVisibility(View.VISIBLE);
+            restorelayout.setVisibility(View.GONE);
+            setuplayout.setVisibility(View.GONE);
+        });
+
+        addpaymentholder.setOnClickListener((v)->{
+            if(pflag == 0) {
+                Transition transition = new Fade(Fade.IN);
+                transition.setDuration(200);
+                transition.addTarget(categorylayout).addTarget(grouplayout).addTarget(paymentlayout);
+                TransitionManager.beginDelayedTransition(findViewById(R.id.mainLayout), transition);
+                categorylayout.setVisibility(View.GONE);
+                grouplayout.setVisibility(View.GONE);
+                paymentlayout.setVisibility(View.VISIBLE);
+                pflag = 1;
+            }else{
+                pflag = 0;
+                paymentlayout.setVisibility(View.GONE);
+            }
+            cflag = 0;
+            gflag = 0;
+        });
+
+        addcategoryholder.setOnClickListener((v)->{
+            if(cflag == 0) {
+                Transition transition = new Fade(Fade.IN);
+                transition.setDuration(200);
+                transition.addTarget(categorylayout).addTarget(grouplayout).addTarget(paymentlayout);
+                TransitionManager.beginDelayedTransition(findViewById(R.id.mainLayout), transition);
+                categorylayout.setVisibility(View.VISIBLE);
+                grouplayout.setVisibility(View.GONE);
+                paymentlayout.setVisibility(View.GONE);
+                cflag = 1;
+            }else{
+                cflag = 0;
+                categorylayout.setVisibility(View.GONE);
+            }
+            pflag = 0;
+            gflag = 0;
+        });
+
+        addgroupholder.setOnClickListener((v)->{
+            if(gflag == 0) {
+                Transition transition = new Fade(Fade.IN);
+                transition.setDuration(200);
+                transition.addTarget(categorylayout).addTarget(grouplayout).addTarget(paymentlayout);
+                TransitionManager.beginDelayedTransition(findViewById(R.id.mainLayout), transition);
+                categorylayout.setVisibility(View.GONE);
+                grouplayout.setVisibility(View.VISIBLE);
+                paymentlayout.setVisibility(View.GONE);
+                gflag = 1;
+            }else{
+                gflag = 0;
+                grouplayout.setVisibility(View.GONE);
+            }
+            cflag = 0;
+            pflag = 0;
+        });
+
 
         //Buttons
         createCategory = findViewById(R.id.createCategory);
@@ -73,6 +203,7 @@ public class Setup extends AppCompatActivity {
 
         groupsDB = new GroupDB(getApplicationContext());
         categoryDB = new CategoryDB(getApplicationContext());
+        paymentsDB = new PaymentsDB(getApplicationContext());
         groupsDB.insertNewGroup("Personal",1,20000);
 
         today = Calendar.getInstance();
@@ -144,6 +275,35 @@ public class Setup extends AppCompatActivity {
                 }
             }
         });
+
+        modeName = findViewById(R.id.modeName);
+        createPaymentMode = findViewById(R.id.createPaymentMode);
+        modeLimit = findViewById(R.id.modeLimit);
+        createPaymentMode.setOnClickListener((v) -> {
+            String modeValue = modeName.getText().toString();
+            String modeLimitVal = modeLimit.getText().toString();
+            if(modeValue == null || modeValue.equalsIgnoreCase("")) {
+                modeName.setError("Field Cannot be blank");
+            } else {
+                if(modeLimitVal == null || modeLimitVal.equalsIgnoreCase("")) {
+                    modeLimit.setError("Field Cannot be blank");
+                }else{
+                    if(Double.parseDouble(modeLimitVal) <= 0.0){
+                        modeLimit.setError("Cannot be 0 or less");
+                    }
+                    else{
+                        String result = paymentsDB.insertNewPaymentMode(modeValue,Double.parseDouble(modeLimitVal));
+                        //Toast.makeText(getApplicationContext(),result,Toast.LENGTH_SHORT).show();
+                        if(result.contains("Created")) {
+                            modeName.setText("");
+                            modeName.requestFocus();
+                            modeLimit.setText("");
+                        }
+                    }
+                }
+            }
+        });
+
 
         age.setOnClickListener( (v)->{
             displayGroupDialogBox();
