@@ -35,6 +35,7 @@ import com.example.xpensmanager.Database.GroupDB;
 import com.example.xpensmanager.Enums.ViewType;
 import com.example.xpensmanager.ExpenseScreen.Expense;
 import com.example.xpensmanager.MainScreen.Fragments.HomePage;
+import com.example.xpensmanager.MainScreen.MainActivity;
 import com.example.xpensmanager.R;
 
 import java.text.DecimalFormat;
@@ -222,6 +223,7 @@ public class GroupViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                                 results.remove(position);
                                 list.remove(position);
                                 notifyItemChanged(position);
+                                MainActivity.updateGroupList();
                             }
                         })
                         .setNegativeButton(android.R.string.no, null)

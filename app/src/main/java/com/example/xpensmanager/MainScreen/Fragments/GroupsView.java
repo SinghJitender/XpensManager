@@ -20,10 +20,11 @@ import java.util.Hashtable;
 
 public class GroupsView extends Fragment {
     private RecyclerView recyclerView;
-    private GroupViewAdapter adapter;
-    private GroupDB groupDB;
+    private static GroupViewAdapter adapter;
+    private static GroupDB groupDB;
     private TextView emptyView;
-    ArrayList<Hashtable<String,String>> results;
+    private static ArrayList<Hashtable<String,String>> results;
+    private static ArrayList<Boolean> list;
 
     public GroupsView() {
         // Required empty public constructor
@@ -62,7 +63,7 @@ public class GroupsView extends Fragment {
             emptyView.setVisibility(View.GONE);
         }
 
-        ArrayList<Boolean> list = new ArrayList<>();
+        list = new ArrayList<>();
         for(int i=0;i<results.size();i++){
             list.add(false);
         }
@@ -71,5 +72,15 @@ public class GroupsView extends Fragment {
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.setAdapter(adapter);
         return view;
+    }
+
+    public static void updateGroupAdapter(){
+        results.clear();
+        results.addAll(groupDB.findAll());
+        list.clear();
+        for(int i=0;i<results.size();i++){
+            list.add(false);
+        }
+        adapter.notifyDataSetChanged();
     }
 }

@@ -145,6 +145,13 @@ public class GroupDB extends SQLiteOpenHelper {
         cursor.moveToNext();
         return cursor.getDouble(cursor.getColumnIndex(groupdb_totalAmount));
     }
+    public double getGroupLimitByTitle(String grouptitle){
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor =  db.rawQuery( "select "+groupdb_maxLimit+" from groups where "+groupdb_title+" = '"+grouptitle+"'", null );
+        cursor.moveToNext();
+        return cursor.getDouble(cursor.getColumnIndex(groupdb_maxLimit));
+    }
+
 
     public Integer deleteGroupByTitle(String title) {
         SQLiteDatabase db = this.getWritableDatabase();
