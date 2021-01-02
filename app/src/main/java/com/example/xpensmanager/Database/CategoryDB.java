@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.DatabaseUtils;
+import android.database.SQLException;
 import android.database.sqlite.SQLiteConstraintException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
@@ -67,14 +68,14 @@ public class CategoryDB extends SQLiteOpenHelper {
 
     public Integer deleteCategoryByTitle(String categoryname) {
         SQLiteDatabase db = this.getWritableDatabase();
-        return db.delete("groups",
+        return db.delete(categorydb_table,
                 "categoryname = ? ",
                 new String[] { categoryname });
     }
 
     public Integer deleteCategoryById(int id) {
         SQLiteDatabase db = this.getWritableDatabase();
-        return db.delete("groups",
+        return db.delete(categorydb_table,
                 "id = ? ",
                 new String[] { Integer.toString(id) });
     }
@@ -126,5 +127,32 @@ public class CategoryDB extends SQLiteOpenHelper {
         cursor.moveToNext();
         return cursor.getDouble(cursor.getColumnIndex(categorydb_totalcategoryspend));
     }
+
+
+    public double getTotalCategoryLimitSum(){
+        SQLiteDatabase db = this.getReadableDatabase();
+        try {
+            Cursor cursor = db.rawQuery("select sum("+categorydb_categorylimit+") from " + categorydb_table + ";", null);
+            cursor.moveToNext();
+            return cursor.getDouble(0);
+        }catch (SQLException e){
+            Log.d("CategoryDB","Exception : "+e.toString());
+            return 0.0;
+        }
+    }
+
+    public double getCategoryLimitByTitle(String category){
+        SQLiteDatabase db = this.getReadableDatabase();
+        try {
+            Cursor cursor = db.rawQuery("select "+categorydb_categorylimit+" from " + categorydb_table + " where "+categorydb_categoryname+" = '"+category+"';", null);
+            cursor.moveToNext();
+            return cursor.getDouble(0);
+        }catch (SQLException e){
+            Log.d("CategoryDB","Exception : "+e.toString());
+            return 0.0;
+        }
+    }
+
+
 
 }

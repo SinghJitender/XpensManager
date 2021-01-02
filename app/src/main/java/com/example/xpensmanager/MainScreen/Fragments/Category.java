@@ -23,10 +23,11 @@ import java.util.Hashtable;
 
 public class Category extends Fragment {
     private RecyclerView recyclerView;
-    private CategoryViewAdapter adapter;
-    private CategoryDB categoryDB;
-    ArrayList<CategoryData> results;
+    private static CategoryViewAdapter adapter;
+    private static CategoryDB categoryDB;
+    private static ArrayList<CategoryData> results;
     private TextView emptyView;
+    private static ArrayList<Boolean> list;
 
     public Category() {
         // Required empty public constructor
@@ -63,7 +64,7 @@ public class Category extends Fragment {
         }else{
             emptyView.setVisibility(View.GONE);
         }
-        ArrayList<Boolean> list = new ArrayList<>();
+        list = new ArrayList<>();
         for(int i=0;i<results.size();i++){
             list.add(false);
         }
@@ -73,5 +74,15 @@ public class Category extends Fragment {
         recyclerView.setAdapter(adapter);
 
         return view;
+    }
+
+    public static void updateCategoryAdapter(){
+        results.clear();
+        results.addAll(categoryDB.findAll());
+        list.clear();
+        for(int i=0;i<results.size();i++){
+            list.add(false);
+        }
+        adapter.notifyDataSetChanged();
     }
 }

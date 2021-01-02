@@ -101,7 +101,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:id="@+id/progress"
-                        android:progressTint="@color/theme_orange"
+                        android:progressTint="@color/theme_yellow"
                         android:layout_centerHorizontal="true"
                         android:layout_centerVertical="true"
                         android:max="100"
@@ -237,7 +237,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="20dp"
                 android:paddingLeft="10dp"
-                android:background="@color/theme_orange"
+                android:background="@color/theme_yellow"
                 android:paddingTop="2dp"
                 android:paddingBottom="2dp"
                 android:orientation="horizontal">

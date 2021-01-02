@@ -31,6 +31,7 @@ import com.example.xpensmanager.Database.GenericExpenseDB;
 import com.example.xpensmanager.Database.GroupDB;
 import com.example.xpensmanager.Enums.ViewType;
 import com.example.xpensmanager.ExpenseScreen.Expense;
+import com.example.xpensmanager.MainScreen.MainActivity;
 import com.example.xpensmanager.R;
 
 import java.text.DecimalFormat;
@@ -166,7 +167,8 @@ public class CategoryViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                                 categoryDB.deleteCategoryByTitle(results.get(position).getCategory());
                                 results.remove(position);
                                 list.remove(position);
-                                notifyItemChanged(position);
+                                notifyDataSetChanged();
+                                MainActivity.updateCategoryList();
                             }
                         })
                         .setNegativeButton(android.R.string.no, null)
