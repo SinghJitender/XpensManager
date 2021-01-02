@@ -247,10 +247,12 @@ public class MainActivity extends AppCompatActivity {
                                                     double totalCategoryAmount = categoryDB.getTotalAmountByTitle(newExpenseSelectCategory.getText().toString().trim());
                                                     double totalModeAmount = paymentsDB.getTotalAmountByMode(newExpenseSelectMode.getText().toString().trim());
                                                     double settlementAmount = 0;
+                                                    String settled = "false";
                                                     totalAmount = totalAmount + tempAmount;
                                                     if (paidBy.equalsIgnoreCase("Me")) {
                                                         netAmount = netAmount + (tempAmount - ((tempAmount) / splitBetween));
                                                         settlementAmount = (tempAmount - ((tempAmount) / splitBetween));
+                                                        settled = "true";
                                                     } else {
                                                         netAmount = netAmount - ((tempAmount) / splitBetween);
                                                         settlementAmount = ((tempAmount) / splitBetween);
@@ -260,7 +262,7 @@ public class MainActivity extends AppCompatActivity {
                                                     categoryDB.updateCategoryAmountByTitle(newExpenseSelectCategory.getText().toString().trim(), (totalCategoryAmount + (tempAmount / splitBetween)));
                                                     expenseDB.insertNewExpense(date, Double.parseDouble(newExpenseTotalAmount.getText().toString()), newExpenseDescription.getText().toString(),
                                                             newExpenseSelectCategory.getText().toString().trim(), paidBy, splitBetween, newExpenseSelectGroup.getText().toString().trim(),
-                                                            newExpenseSelectMode.getText().toString().trim(),"false",settlementAmount);
+                                                            newExpenseSelectMode.getText().toString().trim(),settled,settlementAmount);
                                                     newExpenseTotalAmount.setText("");
                                                     newExpenseSelectCategory.setText("Select Category");
                                                     newExpenseDescription.setText("");
