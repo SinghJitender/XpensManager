@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/theme_grey"
+    android:background="@color/theme_light_grey"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".MainScreen.Fragments.Stats">
 
@@ -19,7 +19,7 @@
 
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
-                android:layout_height="300dp"
+                android:layout_height="310dp"
                 android:elevation="5dp"
                 app:cardCornerRadius="5dp"
                 app:cardUseCompatPadding="true">
@@ -30,35 +30,36 @@
                     android:paddingLeft="18dp"
                     android:paddingTop="5dp"
                     android:paddingBottom="5dp"
-                    android:text="Week View"
+                    android:text="Weekday-wise Trend"
                     android:textSize="18sp" />
 
                 <com.hadiidbouk.charts.ChartProgressBar
                     android:id="@+id/ChartProgressBar"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:layout_centerInParent="true"
                     android:gravity="center"
-                    app:hdBarCanBeClick="true"
+                    app:hdBarCanBeClick="false"
                     app:hdBarHeight="190dp"
-                    app:hdBarRadius="10dp"
+                    app:hdBarRadius="5dp"
                     app:hdBarTitleColor="@color/bar_title_color"
                     app:hdBarTitleMarginTop="9dp"
                     app:hdBarTitleSelectedColor="@color/theme_blue"
                     app:hdBarTitleTxtSize="12sp"
                     app:hdBarWidth="20dp"
-                    app:hdEmptyColor="@color/theme_grey"
-                    app:hdMaxValue="40"
+                    app:hdEmptyColor="@color/theme_light_grey"
+                    app:hdMaxValue="100"
                     app:hdPinBackgroundColor="@color/theme_blue_variant"
                     app:hdPinDrawable="@drawable/ic_pin"
                     app:hdPinMarginBottom="30dp"
                     app:hdPinMarginEnd="22dp"
                     app:hdPinMarginTop="1dp"
                     app:hdPinPaddingBottom="5dp"
+                    android:layout_marginBottom="15dp"
                     app:hdPinTextColor="@color/white"
                     app:hdPinTxtSize="12sp"
                     app:hdProgressClickColor="@color/theme_blue"
-                    app:hdProgressColor="@color/theme_blue_variant"
+                    app:hdProgressColor="@color/theme_yellow"
                     app:hdProgressDisableColor="@color/progress_disable" />
 
                 <TextView
@@ -69,20 +70,16 @@
                     android:layout_marginBottom="5dp"
                     android:gravity="bottom"
                     android:paddingTop="8dp"
-                    android:text="Spends for last 7 days"
+                    android:textStyle="italic"
+                    android:text="*Chart indicates how much you spend day wise"
                     android:textSize="10sp" />
             </androidx.cardview.widget.CardView>
 
-            <androidx.cardview.widget.CardView
-                android:layout_width="match_parent"
-                app:cardUseCompatPadding="true"
-                android:elevation="5dp"
-                app:cardCornerRadius="5dp"
-                android:layout_height="210dp">
+
             <HorizontalScrollView
                 android:scrollbars="none"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="210dp">
                     <LinearLayout
                         android:background="@color/theme_light_grey"
                         android:orientation="horizontal"
@@ -123,34 +120,50 @@
                 </LinearLayout>
             </HorizontalScrollView>
 
-            </androidx.cardview.widget.CardView>
-
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 app:cardUseCompatPadding="true"
                 android:elevation="5dp"
                 app:cardCornerRadius="5dp"
-                android:layout_height="400dp">
+                android:layout_height="310dp">
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:paddingLeft="18dp"
                     android:paddingTop="5dp"
-                    android:paddingBottom="5dp"
-                    android:text="One Year View"
+                    android:text="Month-wise Trend"
                     android:textSize="18sp" />
-                <HorizontalScrollView
-                    android:layout_gravity="center"
-                    android:scrollbars="none"
-                    android:paddingRight="10dp"
-                    android:layout_height="wrap_content"
-                    android:layout_width="match_parent">
-                <view
+
+                <com.hadiidbouk.charts.ChartProgressBar
+                    android:id="@+id/ChartProgressBarYearly"
                     android:layout_width="match_parent"
-                    android:layout_height="300dp"
-                    class="im.dacer.androidcharts.BarView"
-                    android:id="@+id/bar_view" />
-                </HorizontalScrollView>
+                    android:layout_height="match_parent"
+                    android:layout_centerInParent="true"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:gravity="center"
+                    app:hdBarCanBeClick="false"
+                    app:hdBarHeight="190dp"
+                    app:hdBarRadius="1dp"
+                    app:hdBarTitleColor="@color/bar_title_color"
+                    app:hdBarTitleMarginTop="9dp"
+                    app:hdBarTitleSelectedColor="@color/theme_blue"
+                    app:hdBarTitleTxtSize="10sp"
+                    app:hdBarWidth="20dp"
+                    app:hdEmptyColor="@color/theme_light_grey"
+                    app:hdMaxValue="100"
+                    app:hdPinBackgroundColor="@color/theme_blue_variant"
+                    app:hdPinDrawable="@drawable/ic_pin"
+                    app:hdPinMarginBottom="30dp"
+                    app:hdPinMarginEnd="22dp"
+                    app:hdPinMarginTop="1dp"
+                    app:hdPinPaddingBottom="5dp"
+                    android:layout_marginBottom="15dp"
+                    app:hdPinTextColor="@color/white"
+                    app:hdPinTxtSize="12sp"
+                    app:hdProgressClickColor="@color/theme_blue"
+                    app:hdProgressColor="@color/theme_red"
+                    app:hdProgressDisableColor="@color/progress_disable" />
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -159,10 +172,66 @@
                     android:layout_marginBottom="5dp"
                     android:gravity="bottom"
                     android:paddingTop="8dp"
-                    android:text="Spends for last 1 year"
+                    android:textStyle="italic"
+                    android:text="*Chart indicates how much you spend month wise"
                     android:textSize="10sp" />
             </androidx.cardview.widget.CardView>
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                app:cardUseCompatPadding="true"
+                android:elevation="5dp"
+                app:cardCornerRadius="5dp"
+                android:layout_height="310dp">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="18dp"
+                    android:paddingTop="5dp"
+                    android:text="Day-wise Trend"
+                    android:textSize="18sp" />
 
+                <com.hadiidbouk.charts.ChartProgressBar
+                    android:id="@+id/ChartProgressBarEachDay"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_centerInParent="true"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:gravity="center"
+                    app:hdBarCanBeClick="false"
+                    app:hdBarHeight="190dp"
+                    app:hdBarRadius="5dp"
+                    app:hdBarTitleColor="@color/bar_title_color"
+                    app:hdBarTitleMarginTop="9dp"
+                    app:hdBarTitleSelectedColor="@color/theme_blue"
+                    app:hdBarTitleTxtSize="7sp"
+                    app:hdBarWidth="8dp"
+                    app:hdEmptyColor="@color/theme_light_grey"
+                    app:hdMaxValue="100"
+                    app:hdPinBackgroundColor="@color/theme_blue_variant"
+                    app:hdPinDrawable="@drawable/ic_pin"
+                    app:hdPinMarginBottom="30dp"
+                    app:hdPinMarginEnd="22dp"
+                    app:hdPinMarginTop="1dp"
+                    app:hdPinPaddingBottom="5dp"
+                    android:layout_marginBottom="15dp"
+                    app:hdPinTextColor="@color/white"
+                    app:hdPinTxtSize="12sp"
+                    app:hdProgressClickColor="@color/theme_blue"
+                    app:hdProgressColor="@color/theme_cyan"
+                    app:hdProgressDisableColor="@color/progress_disable" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom|end"
+                    android:layout_marginRight="18dp"
+                    android:layout_marginBottom="5dp"
+                    android:gravity="bottom"
+                    android:paddingTop="8dp"
+                    android:textStyle="italic"
+                    android:text="*Chart indicates how much you spend each day"
+                    android:textSize="10sp" />
+            </androidx.cardview.widget.CardView>
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 app:cardUseCompatPadding="true"
@@ -190,11 +259,61 @@
                 app:cardUseCompatPadding="true"
                 android:elevation="5dp"
                 app:cardCornerRadius="5dp"
-                android:layout_height="300dp">
+                android:layout_height="350dp">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="18dp"
+                    android:paddingTop="5dp"
+                    android:text="Category Breakup"
+                    android:textSize="18sp" />
                 <com.github.mikephil.charting.charts.PieChart
                     android:id="@+id/chart1"
+                    android:layout_marginTop="22dp"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"/>
+                    android:layout_height="300dp"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom|end"
+                    android:layout_marginRight="18dp"
+                    android:layout_marginBottom="5dp"
+                    android:gravity="bottom"
+                    android:paddingTop="8dp"
+                    android:textStyle="italic"
+                    android:text="*Pie chart indicates category wise breakup"
+                    android:textSize="10sp" />
+            </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                app:cardUseCompatPadding="true"
+                android:elevation="5dp"
+                app:cardCornerRadius="5dp"
+                android:layout_height="350dp">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="18dp"
+                    android:paddingTop="5dp"
+                    android:text="Group Breakup"
+                    android:textSize="18sp" />
+                <com.github.mikephil.charting.charts.PieChart
+                    android:id="@+id/pieChartGroup"
+                    android:layout_marginTop="22dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="300dp"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom|end"
+                    android:layout_marginRight="18dp"
+                    android:layout_marginBottom="5dp"
+                    android:gravity="bottom"
+                    android:paddingTop="8dp"
+                    android:textStyle="italic"
+                    android:text="*Pie chart indicates group wise breakup"
+                    android:textSize="10sp" />
             </androidx.cardview.widget.CardView>
 
             <androidx.cardview.widget.CardView

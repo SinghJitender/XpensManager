@@ -7,5 +7,22 @@
     <style name="Widget.Theme.XpensManager.ButtonBar.Fullscreen" parent="">
         <item name="android:background">@color/black_overlay</item>
         <item name="android:buttonBarStyle">?android:attr/buttonBarStyle</item>
-    </style>
+
+    </style> <style name="MonthPickerDialogStyle" >
+
+    <item name="monthBgColor">@color/white</item>
+    <item name="monthBgSelectedColor">@color/theme_yellow</item>
+    <item name="monthFontColorSelected">@color/white</item>
+    <item name="monthFontColorNormal">@color/black</item>
+    <item name="monthFontColorDisabled">@color/theme_grey</item>
+
+    <item name="headerBgColor">@color/theme_yellow</item>
+    <item name="headerFontColorSelected">#fff</item>
+    <item name="headerFontColorNormal">#85FFFFFF</item>
+    <item name="headerTitleColor">#fff</item>
+
+    <item name="dialogActionButtonColor">@color/theme_blue_variant</item>
+</style>
+
+
 </resources>
