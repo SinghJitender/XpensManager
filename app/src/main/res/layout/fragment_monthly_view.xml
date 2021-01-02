@@ -7,16 +7,156 @@
     android:id="@+id/monthly_container"
     tools:context=".ExpenseScreen.Fragments.MonthlyViewFragment">
 
-    <xyz.sangcomz.stickytimelineview.TimeLineRecyclerView
-        android:id="@+id/recycler_view"
+    <RelativeLayout
+        android:id="@+id/mainrelativeview"
         android:layout_width="match_parent"
-        app:sectionBackgroundColor="@color/theme_light_grey"
-        app:sectionTitleTextColor="@color/black"
-        app:timeLineWidth="1.5dp"
-        app:sectionTitleTextSize="18sp"
-        app:sectionSubTitleTextSize="15sp"
-        app:sectionSubTitleTextColor="@color/black"
-        app:timeLineColor="@color/theme_blue_variant"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent">
 
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cardview"
+            android:elevation="2dp"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <FrameLayout
+                android:id="@+id/framelayouttopview"
+                android:layout_width="match_parent"
+                android:visibility="visible"
+                android:background="@color/theme_blue_variant"
+                android:layout_height="wrap_content">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:weightSum="10"
+                        android:orientation="horizontal">
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:layout_weight="10"
+                            android:layout_gravity="center"
+                            android:gravity="center">
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:weightSum="10"
+                                android:orientation="horizontal">
+                                <TextView
+                                    android:layout_width="0dp"
+                                    android:layout_weight="5"
+                                    android:layout_height="wrap_content"
+                                    android:text="Total Expense"
+                                    android:paddingTop="10dp"
+                                    android:paddingLeft="10dp"
+                                    android:textColor="@color/white"
+                                    android:textStyle="bold"
+                                    android:textSize="12sp"
+                                    />
+                                <TextView
+                                    android:layout_width="0dp"
+                                    android:layout_weight="5"
+                                    android:layout_height="wrap_content"
+                                    android:text="Tap to change"
+                                    android:layout_gravity="bottom"
+                                    android:gravity="right"
+                                    android:paddingTop="10dp"
+                                    android:paddingRight="15dp"
+                                    android:textColor="@color/white"
+                                    android:textStyle="bold"
+                                    android:textSize="12sp"
+                                    />
+                            </LinearLayout>
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:orientation="horizontal"
+                                android:weightSum="10"
+                                android:layout_height="wrap_content">
+                                <TextView
+                                    android:id="@+id/currentMonthTotalSpends"
+                                    android:layout_width="0dp"
+                                    android:layout_weight="5"
+                                    android:layout_height="match_parent"
+                                    android:layout_gravity="left|center"
+                                    android:gravity="center|left"
+                                    android:text="₹ 29455.34"
+                                    android:paddingLeft="10dp"
+                                    android:textColor="@color/white"
+                                    android:textStyle="bold"
+                                    android:textSize="25sp"
+                                    />
+                                <TextView
+                                    android:id="@+id/currentMonthName"
+                                    android:layout_width="0dp"
+                                    android:layout_weight="5"
+                                    android:layout_height="match_parent"
+                                    android:clickable="true"
+                                    android:text="September - Year"
+                                    android:textColor="@color/white"
+                                    android:textSize="22sp"
+                                    android:textStyle="bold"
+                                    android:gravity="center|right"
+                                    android:paddingRight="10dp"
+                                    android:layout_gravity="top"/>
+                            </LinearLayout>
+
+
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_marginTop="3dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:weightSum="10">
+                        <TextView
+                            android:id="@+id/limit"
+                            android:layout_width="0dp"
+                            android:layout_weight="10"
+                            android:layout_height="match_parent"
+                            android:layout_gravity="end"
+                            android:gravity="end"
+                            android:paddingRight="10dp"
+                            android:text="200/1000"
+                            android:textColor="@color/white"
+                            android:textSize="12sp"
+                            />
+                    </LinearLayout>
+                    <ProgressBar
+                        android:layout_width="match_parent"
+                        android:layout_height="4dp"
+                        android:id="@+id/progress"
+                        style="?android:progressBarStyleHorizontal"
+                        android:padding="0dp"
+                        android:layout_marginBottom="0dp"
+                        android:indeterminate="false"
+                        android:progressTint="@color/theme_yellow"
+                        android:progress="45"/>
+                </LinearLayout>
+
+            </FrameLayout>
+
+        </androidx.cardview.widget.CardView>
+
+        <xyz.sangcomz.stickytimelineview.TimeLineRecyclerView
+            android:id="@+id/recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@id/cardview"
+            app:sectionBackgroundColor="@color/theme_light_grey"
+            app:sectionTitleTextColor="@color/black"
+            app:timeLineWidth="1.5dp"
+            app:sectionTitleTextSize="18sp"
+            app:sectionSubTitleTextSize="15sp"
+            app:sectionSubTitleTextColor="@color/black"
+            app:timeLineColor="@color/theme_yellow"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"
+            />
+
+    </RelativeLayout>
 </FrameLayout>

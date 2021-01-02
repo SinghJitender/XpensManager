@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.example.xpensmanager.Database.GenericExpenseDB;
 import com.example.xpensmanager.Enums.ViewType;
@@ -19,6 +20,7 @@ import com.example.xpensmanager.ExpenseScreen.Adapters.ExpenseViewAdapter;
 import com.example.xpensmanager.R;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import xyz.sangcomz.stickytimelineview.TimeLineRecyclerView;
@@ -34,6 +36,7 @@ public class AllViewFragment extends Fragment {
     private GenericExpenseDB genericExpenseDB;
     private String tableName,groupBy,filterType;
     private int filterValue;
+    private TextView allTimeTotalSpends;
     private ArrayList<ExpenseData> expenseData;
 
     public AllViewFragment() {
@@ -62,6 +65,7 @@ public class AllViewFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_all_view, container, false);
         TimeLineRecyclerView recyclerView = view.findViewById(R.id.recycler_view);
+        allTimeTotalSpends = view.findViewById(R.id.allTimeTotalSpends);
 
         genericExpenseDB = new GenericExpenseDB(getActivity());
 
@@ -69,13 +73,20 @@ public class AllViewFragment extends Fragment {
                 RecyclerView.VERTICAL,
                 false));
 
-        if(groupBy.equalsIgnoreCase("None"))
+        if(groupBy.equalsIgnoreCase("None")) {
             expenseData = genericExpenseDB.findAll();
+            double totalSpends = genericExpenseDB.getAllExpenseSum();
+            allTimeTotalSpends.setText("₹ "+totalSpends);
+        }
         else{
             if(filterType.equalsIgnoreCase("category")) {
                 expenseData = genericExpenseDB.findAllByCategory(groupBy);
+                double totalSpends = genericExpenseDB.getAllExpenseSumByCategory(groupBy);
+                allTimeTotalSpends.setText("₹ "+totalSpends);
             }else{
                 expenseData = genericExpenseDB.findAllByGroup(groupBy);
+                double totalSpends = genericExpenseDB.getAllExpenseSumByGroup(groupBy);
+                allTimeTotalSpends.setText("₹ "+totalSpends);
             }
         }
 
@@ -91,7 +102,7 @@ public class AllViewFragment extends Fragment {
             @Nullable
             @Override
             public SectionInfo getSectionHeader(int position) {
-                return new SectionInfo(expenseData.get(position).getYear()+"", "", AppCompatResources.getDrawable(getActivity(), R.drawable.check));
+                return new SectionInfo(expenseData.get(position).getYear()+"", "", AppCompatResources.getDrawable(getActivity(), R.drawable.dot_yellow));
             }
 
             @Override
