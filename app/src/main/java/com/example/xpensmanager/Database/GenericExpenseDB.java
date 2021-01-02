@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.HashMap;
 import java.util.Locale;
 
 public class GenericExpenseDB extends SQLiteOpenHelper {
@@ -250,10 +251,10 @@ public class GenericExpenseDB extends SQLiteOpenHelper {
 
 
 
-    public ArrayList<ExpenseData> findByMonth(int month){
+    public ArrayList<ExpenseData> findByMonth(int month,int year){
         ArrayList<ExpenseData> list = new ArrayList<>();
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor =  db.rawQuery( "select * from "+tableName+" where month = "+month+" order by "+expenseday+" DESC, "+expenseid+" DESC", null );
+        Cursor cursor =  db.rawQuery( "select * from "+tableName+" where (month = "+month+" and year = "+year+") order by "+expenseday+" DESC, "+expenseid+" DESC", null );
         while(cursor.moveToNext()){
             ExpenseData data = new ExpenseData();
             data.setId(cursor.getInt(cursor.getColumnIndex(expenseid)));
@@ -275,10 +276,10 @@ public class GenericExpenseDB extends SQLiteOpenHelper {
         return list;
     }
 
-    public ArrayList<ExpenseData> findByMonthAndGroup(String group, int month){
+    public ArrayList<ExpenseData> findByMonthAndGroup(String group, int month,int year){
         ArrayList<ExpenseData> list = new ArrayList<>();
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor =  db.rawQuery( "select * from "+tableName+" where month = "+month+" and groupedWith = '"+group+"' order by "+expenseday+" DESC, "+expenseid+" DESC", null );
+        Cursor cursor =  db.rawQuery( "select * from "+tableName+" where  (month = "+month+" and year = "+year+" and groupedWith = '"+group+"') order by "+expenseday+" DESC, "+expenseid+" DESC", null );
         while(cursor.moveToNext()){
             ExpenseData data = new ExpenseData();
             data.setId(cursor.getInt(cursor.getColumnIndex(expenseid)));
@@ -300,10 +301,10 @@ public class GenericExpenseDB extends SQLiteOpenHelper {
         return list;
     }
 
-    public ArrayList<ExpenseData> findByMonthAndCategory(String category, int month){
+    public ArrayList<ExpenseData> findByMonthAndCategory(String category, int month,int year){
         ArrayList<ExpenseData> list = new ArrayList<>();
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor =  db.rawQuery( "select * from "+tableName+" where month = "+month+" and category = '"+category+"' order by "+expenseday+" DESC, "+expenseid+" DESC", null );
+        Cursor cursor =  db.rawQuery( "select * from "+tableName+" where month = "+month+" and year = "+year+" and category = '"+category+"' order by "+expenseday+" DESC, "+expenseid+" DESC", null );
         while(cursor.moveToNext()){
             ExpenseData data = new ExpenseData();
             data.setId(cursor.getInt(cursor.getColumnIndex(expenseid)));
@@ -339,6 +340,105 @@ public class GenericExpenseDB extends SQLiteOpenHelper {
         }
     }
 
+    public double getMonthlyExpenseSumByCategory(int month, int year,String category){
+        SQLiteDatabase db = this.getReadableDatabase();
+        try {
+            Cursor cursor = db.rawQuery("select sum(splitAmount) from " + tableName + " where (" + expensemonth + " = " + month + " and " + expenseyear + " = " + year +" and category = '"+category+"');", null);
+            cursor.moveToNext();
+            return cursor.getDouble(0);
+        }catch (SQLException e){
+            Log.d("GenericExpenseDB","Exception : "+e.toString());
+            return 0.0;
+        }
+    }
+
+    public double getMonthlyExpenseSumByGroup(int month, int year,String group){
+        SQLiteDatabase db = this.getReadableDatabase();
+        try {
+            Cursor cursor = db.rawQuery("select sum(splitAmount) from " + tableName + " where (" + expensemonth + " = " + month + " and " + expenseyear + " = " + year +" and groupedWith = '"+group+"');", null);
+            cursor.moveToNext();
+            return cursor.getDouble(0);
+        }catch (SQLException e){
+            Log.d("GenericExpenseDB","Exception : "+e.toString());
+            return 0.0;
+        }
+    }
+
+    public double getYearlyExpenseSum(int year){
+        SQLiteDatabase db = this.getReadableDatabase();
+        try {
+            Cursor cursor = db.rawQuery("select sum(splitAmount) from " + tableName + " where (" + expenseyear + " = " + year + ");", null);
+            cursor.moveToNext();
+            return cursor.getDouble(0);
+        }catch (SQLException e){
+            Log.d("GenericExpenseDB","Exception : "+e.toString());
+            return 0.0;
+        }
+    }
+
+
+    public double getYearlyExpenseSumByCategory(int year,String category){
+        SQLiteDatabase db = this.getReadableDatabase();
+        try {
+            Cursor cursor = db.rawQuery("select sum(splitAmount) from " + tableName + " where (" + expenseyear + " = " + year + " and "+expensecategory+" = '"+category+"');", null);
+            cursor.moveToNext();
+            return cursor.getDouble(0);
+        }catch (SQLException e){
+            Log.d("GenericExpenseDB","Exception : "+e.toString());
+            return 0.0;
+        }
+    }
+
+    public double getYearlyExpenseSumByGroup(int year,String group){
+        SQLiteDatabase db = this.getReadableDatabase();
+        try {
+            Cursor cursor = db.rawQuery("select sum(splitAmount) from " + tableName + " where (" + expenseyear + " = " + year + " and "+expensegroup+" = '"+group+"');", null);
+            cursor.moveToNext();
+            return cursor.getDouble(0);
+        }catch (SQLException e){
+            Log.d("GenericExpenseDB","Exception : "+e.toString());
+            return 0.0;
+        }
+    }
+
+
+    public double getAllExpenseSum(){
+        SQLiteDatabase db = this.getReadableDatabase();
+        try {
+            Cursor cursor = db.rawQuery("select sum(splitAmount) from " + tableName , null);
+            cursor.moveToNext();
+            return cursor.getDouble(0);
+        }catch (SQLException e){
+            Log.d("GenericExpenseDB","Exception : "+e.toString());
+            return 0.0;
+        }
+    }
+
+    public double getAllExpenseSumByCategory(String category){
+        SQLiteDatabase db = this.getReadableDatabase();
+        try {
+            Cursor cursor = db.rawQuery("select sum(splitAmount) from " + tableName+" where "+expensecategory+" = '"+category+"'", null);
+            cursor.moveToNext();
+            return cursor.getDouble(0);
+        }catch (SQLException e){
+            Log.d("GenericExpenseDB","Exception : "+e.toString());
+            return 0.0;
+        }
+    }
+
+    public double getAllExpenseSumByGroup(String group){
+        SQLiteDatabase db = this.getReadableDatabase();
+        try {
+            Cursor cursor = db.rawQuery("select sum(splitAmount) from " + tableName+" where "+expensegroup+" = '"+group+"'", null);
+            cursor.moveToNext();
+            return cursor.getDouble(0);
+        }catch (SQLException e){
+            Log.d("GenericExpenseDB","Exception : "+e.toString());
+            return 0.0;
+        }
+    }
+
+
     public double getMonthTotalForGroup(String groupName, int month, int year){
         SQLiteDatabase db = this.getReadableDatabase();
         try {
@@ -362,6 +462,82 @@ public class GenericExpenseDB extends SQLiteOpenHelper {
             return 0.0;
         }
     }
+
+    public HashMap<String,Double> getSumForAllWeekDays(){
+        HashMap<String,Double> results = new HashMap<>();
+        SQLiteDatabase db = this.getReadableDatabase();
+        try {
+            Cursor cursor = db.rawQuery("select "+expensedayOfWeek+",sum(splitAmount) from " + tableName + " group by " + expensedayOfWeek + ";", null);
+            while(cursor.moveToNext()){
+                results.put(cursor.getString(0),cursor.getDouble(1));
+            }
+            return results;
+        }catch (SQLException e){
+            Log.d("GenericExpenseDB","Exception : "+e.toString());
+            return null;
+        }
+    }
+
+    public HashMap<String,Double> getSumForAllMonths(){
+        HashMap<String,Double> results = new HashMap<>();
+        SQLiteDatabase db = this.getReadableDatabase();
+        try {
+            Cursor cursor = db.rawQuery("select "+expensetextMonth+",sum(splitAmount) from " + tableName + " group by " + expensetextMonth + ";", null);
+            while(cursor.moveToNext()){
+                results.put(cursor.getString(0),cursor.getDouble(1));
+            }
+            return results;
+        }catch (SQLException e){
+            Log.d("GenericExpenseDB","Exception : "+e.toString());
+            return null;
+        }
+    }
+
+    public HashMap<Integer,Double> getSumForAllDays(){
+        HashMap<Integer,Double> results = new HashMap<>();
+        SQLiteDatabase db = this.getReadableDatabase();
+        try {
+            Cursor cursor = db.rawQuery("select "+expenseday+",sum(splitAmount) from " + tableName + " group by " + expenseday + ";", null);
+            while(cursor.moveToNext()){
+                results.put(cursor.getInt(0),cursor.getDouble(1));
+            }
+            return results;
+        }catch (SQLException e){
+            Log.d("GenericExpenseDB","Exception : "+e.toString());
+            return null;
+        }
+    }
+
+    public HashMap<String,Double> getSumByCategory(){
+        HashMap<String,Double> results = new HashMap<>();
+        SQLiteDatabase db = this.getReadableDatabase();
+        try {
+            Cursor cursor = db.rawQuery("select "+expensecategory+",sum(splitAmount) from " + tableName + " group by " + expensecategory + ";", null);
+            while(cursor.moveToNext()){
+                results.put(cursor.getString(0),cursor.getDouble(1));
+            }
+            return results;
+        }catch (SQLException e){
+            Log.d("GenericExpenseDB","Exception : "+e.toString());
+            return null;
+        }
+    }
+
+    public HashMap<String,Double> getSumByGroup(){
+        HashMap<String,Double> results = new HashMap<>();
+        SQLiteDatabase db = this.getReadableDatabase();
+        try {
+            Cursor cursor = db.rawQuery("select "+expensegroup+",sum(splitAmount) from " + tableName + " group by " + expensegroup + ";", null);
+            while(cursor.moveToNext()){
+                results.put(cursor.getString(0),cursor.getDouble(1));
+            }
+            return results;
+        }catch (SQLException e){
+            Log.d("GenericExpenseDB","Exception : "+e.toString());
+            return null;
+        }
+    }
+
 
     public static String getDayOfWeek(Date date, Locale locale) {
         DateFormat formatter = new SimpleDateFormat("EEEE", locale);
@@ -394,5 +570,10 @@ public class GenericExpenseDB extends SQLiteOpenHelper {
     public String dateToString(Date date){
         DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
         return dateFormat.format(date);
+    }
+
+    public static String monthTextFromIntMonth(int mon){
+        String[] months = {"January","February","March","April","May","June","July","August","September","October","November","December"};
+        return months[mon%12];
     }
 }
