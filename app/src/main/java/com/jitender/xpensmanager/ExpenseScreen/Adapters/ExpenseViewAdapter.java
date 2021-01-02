@@ -4,6 +4,7 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -54,13 +55,28 @@ public class ExpenseViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         else{
             ((ViewHolder) holder).amount.setText(SplashScreenActivity.cSymbol+ " "+list.get(position).getAmount()+ " split with "+list.get(position).getGroup()+ " paid by "+list.get(position).getPaidBy());
         }
+        if(list.get(position).getSettled().equalsIgnoreCase("false")){
+            if(list.get(position).getPaidBy().equalsIgnoreCase("Me")){
+                ((ViewHolder) holder).remainingamount.setTextColor(context.getResources().getColor(R.color.theme_green));
+                ((ViewHolder) holder).remainingamount.setText("+"+list.get(position).getSettledAmount()+"");
+            }else{
+                ((ViewHolder) holder).remainingamount.setTextColor(context.getResources().getColor(R.color.theme_red));
+                ((ViewHolder) holder).remainingamount.setText("-"+list.get(position).getSettledAmount()+"");
+            }
+            ((ViewHolder) holder).remainingamount.setVisibility(View.VISIBLE);
+            ((ViewHolder) holder).expenseSettled.setVisibility(View.GONE);
+        }else{
+            ((ViewHolder) holder).remainingamount.setVisibility(View.GONE);
+            ((ViewHolder) holder).expenseSettled.setVisibility(View.VISIBLE);
+        }
         ((ViewHolder) holder).category.setText(list.get(position).getCategory());
         ((ViewHolder) holder).payment.setText(list.get(position).getModeOfPayment());
 
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        TextView description, splitamount, date,amount,category,payment;
+        TextView description, splitamount, date,amount,category,payment, remainingamount;
+        ImageView expenseSettled;
 
         ViewHolder(View itemView) {
             super(itemView);
@@ -70,6 +86,8 @@ public class ExpenseViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             category = itemView.findViewById(R.id.category);
             date = itemView.findViewById(R.id.date);
             payment = itemView.findViewById(R.id.payment);
+            remainingamount = itemView.findViewById(R.id.remainingamount);
+            expenseSettled = itemView.findViewById(R.id.expenseSettled);
         }
 
     }
