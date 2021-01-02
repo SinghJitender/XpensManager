@@ -28,6 +28,10 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:orientation="vertical">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
                     android:weightSum="10"
                     android:orientation="horizontal">
                     <LinearLayout
@@ -35,7 +39,6 @@
                         android:layout_height="wrap_content"
                         android:orientation="vertical"
                         android:layout_weight="9"
-
                         android:layout_gravity="center"
                         android:gravity="center">
                         <TextView
@@ -67,20 +70,6 @@
                                 android:textSize="30sp"
                                 />
                         </LinearLayout>
-
-                        <TextView
-                            android:id="@+id/currentMonthNetAmount"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="left"
-                            android:text="This amount will reset every month"
-                            android:paddingLeft="12dp"
-                            android:visibility="visible"
-                            android:textColor="@color/white"
-                            android:textSize="10sp"
-                            android:paddingBottom="5dp"
-                            />
-
                     </LinearLayout>
                     <ImageButton
                         android:id="@+id/viewAll"
@@ -93,6 +82,49 @@
                         android:backgroundTint="@color/theme_blue_variant"
                         android:src="@drawable/expand"
                         android:scaleType="fitCenter"/>
+                </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:weightSum="10">
+                        <TextView
+                            android:id="@+id/currentMonthNetAmount"
+                            android:layout_width="0dp"
+                            android:layout_weight="6"
+                            android:layout_height="match_parent"
+                            android:layout_gravity="center"
+                            android:gravity="left|center"
+                            android:text="This amount will reset every month"
+                            android:paddingLeft="12dp"
+                            android:visibility="visible"
+                            android:textColor="@color/white"
+                            android:textSize="10sp"
+                            />
+                        <TextView
+                            android:id="@+id/limit"
+                            android:layout_width="0dp"
+                            android:layout_weight="4"
+                            android:layout_height="match_parent"
+                            android:layout_gravity="end"
+                            android:gravity="end"
+                            android:paddingRight="15dp"
+                            android:text="200/1000"
+                            android:textColor="@color/white"
+                            android:textSize="12sp"
+                        />
+                    </LinearLayout>
+                    <ProgressBar
+                        android:layout_width="match_parent"
+                        android:layout_height="4dp"
+                        android:id="@+id/progress"
+                        style="?android:progressBarStyleHorizontal"
+                        android:padding="0dp"
+                        android:layout_marginBottom="0dp"
+                        android:indeterminate="false"
+                        android:progressTint="@color/theme_yellow"
+                        android:progress="45"/>
                 </LinearLayout>
 
             </FrameLayout>
@@ -110,7 +142,7 @@
             app:sectionTitleTextSize="18sp"
             app:sectionSubTitleTextSize="15sp"
             app:sectionSubTitleTextColor="@color/black"
-            app:timeLineColor="@color/theme_blue_variant"
+            app:timeLineColor="@color/theme_yellow"
             app:layout_behavior="@string/appbar_scrolling_view_behavior"
             />
 

@@ -13,8 +13,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.example.xpensmanager.Database.CategoryDB;
 import com.example.xpensmanager.Database.GenericExpenseDB;
 import com.example.xpensmanager.Database.GroupDB;
 import com.example.xpensmanager.Enums.ViewType;
@@ -31,6 +33,9 @@ import java.util.Date;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Locale;
+import java.util.concurrent.Executor;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import xyz.sangcomz.stickytimelineview.TimeLineRecyclerView;
 import xyz.sangcomz.stickytimelineview.callback.SectionCallback;
@@ -38,22 +43,45 @@ import xyz.sangcomz.stickytimelineview.model.SectionInfo;
 
 public class HomePage extends Fragment {
 
+    private static GenericExpenseDB genericExpenseDB;
+    private static double totalSpentThisMonth, totalCategorySum;
     private ImageButton viewAllButtom;
-    private TextView currentMonthName,currentMonthTotalSpends,currentMonthNetAmount;
-
+    private static TextView currentMonthTotalSpends,limit;
+    private static ProgressBar progressBar;
+    private static ExpenseViewAdapter adapter;
     ArrayList<Hashtable<String,String>> results;
-    private double totalSpentThisMonth;
-
+    private static ArrayList<ExpenseData> expenseData;
     private static boolean toggle = true;
     private static boolean toggleNewExpense = true;
+    private static TimeLineRecyclerView recyclerView;
 
     SwipeController swipeController = null;
 
     GroupDB groups;
-    GenericExpenseDB genericExpenseDB;
+    private static CategoryDB categoryDB;
+    ExecutorService mExecutor;
 
     public HomePage() {
     }
+
+    public Runnable updateExpenseData = () -> {
+        // Do some work
+        expenseData.clear();
+        expenseData.addAll(genericExpenseDB.findByMonth(GenericExpenseDB.getMonthFromDate(new Date()),GenericExpenseDB.getYearFromDate(new Date())));
+//        adapter.notifyDataSetChanged();
+        totalSpentThisMonth = genericExpenseDB.getMonthlyExpenseSum(GenericExpenseDB.getMonthFromDate(new Date()),GenericExpenseDB.getYearFromDate(new Date()));
+        //currentMonthName.setText(GenericExpenseDB.getDayOfMonth(new Date(),Locale.ENGLISH));
+        currentMonthTotalSpends.setText("₹ "+ new DecimalFormat("00.00").format(totalSpentThisMonth));
+        totalCategorySum = categoryDB.getTotalCategoryLimitSum();
+        limit.setText(new DecimalFormat("00.00").format(totalSpentThisMonth)+"/"+new DecimalFormat("00.00").format(totalCategorySum));
+        progressBar.setProgress((int)((totalSpentThisMonth/totalCategorySum)*100));
+        if(getActivity() != null) {
+            getActivity().runOnUiThread(() -> {
+                adapter.notifyDataSetChanged();
+            });
+        }
+    };
+
 
     public static HomePage newInstance(String param1, String param2) {
         HomePage fragment = new HomePage();
@@ -76,22 +104,19 @@ public class HomePage extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_home_page, container, false);
         ((MainActivity)getActivity()).getSupportActionBar().setTitle(GenericExpenseDB.getDayOfMonth(new Date(),Locale.ENGLISH));
-        TimeLineRecyclerView recyclerView = view.findViewById(R.id.recyclerView);
+        recyclerView = view.findViewById(R.id.recyclerView);
         viewAllButtom = view.findViewById(R.id.viewAll);
-        currentMonthName = view.findViewById(R.id.currentMonthName);
         currentMonthTotalSpends = view.findViewById(R.id.currentMonthTotalSpends);
-        currentMonthNetAmount = view.findViewById(R.id.currentMonthNetAmount);
+        progressBar = view.findViewById(R.id.progress);
 
+        limit = view.findViewById(R.id.limit);
+        expenseData = new ArrayList<>();
         //Add New Expense Widgets
-
+        categoryDB = new CategoryDB(getActivity());
+        genericExpenseDB = new GenericExpenseDB(getActivity());
         groups = new GroupDB(getActivity());
         results = new ArrayList<>();
-        results.addAll(groups.findAll());
 
-        totalSpentThisMonth = new GenericExpenseDB(getActivity()).getMonthlyExpenseSum(GenericExpenseDB.getMonthFromDate(new Date()),GenericExpenseDB.getYearFromDate(new Date()));
-        //currentMonthName.setText(GenericExpenseDB.getDayOfMonth(new Date(),Locale.ENGLISH));
-        currentMonthTotalSpends.setText("₹ "+ new DecimalFormat("00.00").format(totalSpentThisMonth));
-        //currentMonthNetAmount.setText("");
         viewAllButtom.setOnClickListener((v) -> {
             Intent intent = new Intent(getActivity(), Expense.class);
             intent.putExtra("groupBy","None");
@@ -99,15 +124,30 @@ public class HomePage extends Fragment {
             startActivity(intent);
         });
 
-        genericExpenseDB = new GenericExpenseDB(getActivity());
-
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity(),
                 RecyclerView.VERTICAL,
                 false));
 
-        ArrayList<ExpenseData> expenseData = genericExpenseDB.findByMonth(GenericExpenseDB.getMonthFromDate(new Date()));
+        //expenseData = genericExpenseDB.findByMonth(GenericExpenseDB.getMonthFromDate(new Date()),GenericExpenseDB.getYearFromDate(new Date()));
+
+        mExecutor = Executors.newSingleThreadExecutor();
+        mExecutor.execute(updateExpenseData);
+
+        adapter = new ExpenseViewAdapter(expenseData,getActivity(), ViewType.MONTHLY);
         recyclerView.addItemDecoration(getSectionCallback(expenseData));
-        recyclerView.setAdapter(new ExpenseViewAdapter(expenseData,getActivity(), ViewType.MONTHLY));
+        recyclerView.setAdapter(adapter);
+
+        //results.addAll(groups.findAll());
+
+/*        totalSpentThisMonth = genericExpenseDB.getMonthlyExpenseSum(GenericExpenseDB.getMonthFromDate(new Date()),GenericExpenseDB.getYearFromDate(new Date()));
+        //currentMonthName.setText(GenericExpenseDB.getDayOfMonth(new Date(),Locale.ENGLISH));
+        currentMonthTotalSpends.setText("₹ "+ new DecimalFormat("00.00").format(totalSpentThisMonth));
+        //currentMonthNetAmount.setText("");
+        categoryDB = new CategoryDB(getActivity());
+        totalCategorySum = categoryDB.getTotalCategoryLimitSum();
+        limit.setText(new DecimalFormat("00.00").format(totalSpentThisMonth)+"/"+new DecimalFormat("00.00").format(totalCategorySum));
+        progressBar.setProgress((int)((totalSpentThisMonth/totalCategorySum)*100));*/
+
 
         /*ItemTouchHelper.SimpleCallback touchHelperCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
             private final ColorDrawable background = new ColorDrawable(getResources().getColor(R.color.theme_light_grey));
@@ -145,7 +185,7 @@ public class HomePage extends Fragment {
             @Nullable
             @Override
             public SectionInfo getSectionHeader(int position) {
-                return new SectionInfo(expenseData.get(position).getDate(),"", AppCompatResources.getDrawable(getActivity(), R.drawable.dot));
+                return new SectionInfo(expenseData.get(position).getDate(),"", AppCompatResources.getDrawable(getActivity(), R.drawable.dot_yellow));
             }
 
             @Override
@@ -154,5 +194,6 @@ public class HomePage extends Fragment {
             }
         };
     }
+
 
 }

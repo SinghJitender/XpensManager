@@ -1,6 +1,7 @@
 package com.example.xpensmanager.MainScreen;
 
 import android.app.DatePickerDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.transition.Slide;
 import android.transition.Transition;
@@ -20,12 +21,16 @@ import android.widget.Toast;
 import com.example.xpensmanager.Database.CategoryDB;
 import com.example.xpensmanager.Database.GenericExpenseDB;
 import com.example.xpensmanager.Database.GroupDB;
+import com.example.xpensmanager.MainScreen.Fragments.Category;
+import com.example.xpensmanager.MainScreen.Fragments.GroupsView;
+import com.example.xpensmanager.MainScreen.Fragments.HomePage;
 import com.example.xpensmanager.R;
 import com.google.android.material.bottomappbar.BottomAppBar;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
@@ -41,6 +46,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
+import java.util.concurrent.Executors;
 
 public class MainActivity extends AppCompatActivity {
     FloatingActionButton main;
@@ -49,20 +55,20 @@ public class MainActivity extends AppCompatActivity {
     LinearLayout fabHolder;
     CoordinatorLayout CoordinatorLayout;
     private CheckBox newExpensePaidBy;
-    private AutoCompleteTextView newExpenseSelectCategory,newExpenseSelectGroup;
+    private TextView newExpenseSelectCategory,newExpenseSelectGroup;
     private ImageButton newExpenseCancel;
     private static TextView expenseTitle;
     private TextView newExpenseDate;
     Button newExpenseAdd;
     private EditText newExpenseTotalAmount,newExpenseDescription;
     private Calendar myCalendar;
-    private ArrayList<String> groupList;
-    private ArrayList<String> categoryList;
+    private static ArrayList<String> groupList;
+    private static ArrayList<String> categoryList;
 
     //Database Objects
     GenericExpenseDB genericExpenseDB;
-    GroupDB groupsDB;
-    CategoryDB categoryDB;
+    private static GroupDB groupsDB;
+    private static CategoryDB categoryDB;
 
     //Create New Group
     EditText newGroupTitle,newGroupNoOfPersons,newGroupLimit;
@@ -101,6 +107,7 @@ public class MainActivity extends AppCompatActivity {
 
         // Add new expense
         expenseTitle= findViewById(R.id.addExpenseTitle);
+
         newExpenseDate = findViewById(R.id.newExpenseDate);
         newExpensePaidBy = findViewById(R.id.newExpensePaidBy);
         newExpenseSelectCategory = findViewById(R.id.newExpenseSelectCategory);
@@ -109,12 +116,14 @@ public class MainActivity extends AppCompatActivity {
         newExpenseAdd = findViewById(R.id.newExpenseAdd);
         newExpenseSelectGroup = findViewById(R.id.newExpenseSelectGroup);
         myCalendar = Calendar.getInstance();
-        ArrayAdapter categoryAutoCompleteAdapter = new ArrayAdapter(getApplicationContext(), android.R.layout.select_dialog_item, categoryList);
-        newExpenseSelectCategory.setThreshold(1);//will start working from first character
-        newExpenseSelectCategory.setAdapter(categoryAutoCompleteAdapter);//setting the adapter data into the AutoCompleteTextView
-        ArrayAdapter groupAutoCompleteAdapter = new ArrayAdapter(getApplicationContext(), android.R.layout.select_dialog_item, groupList);
-        newExpenseSelectGroup.setThreshold(1);
-        newExpenseSelectGroup.setAdapter(groupAutoCompleteAdapter);
+
+        newExpenseSelectCategory.setOnClickListener((v)->{
+            displayCategoryDialogBox(categoryList);
+        });
+
+        newExpenseSelectGroup.setOnClickListener((v)->{
+            displayGroupDialogBox(groupList);
+        });
 
         newExpenseDate.setText(new SimpleDateFormat("dd/MM/yyyy").format(new Date()));
 
@@ -131,14 +140,14 @@ public class MainActivity extends AppCompatActivity {
                     if(newExpenseDescription.getText().toString().equalsIgnoreCase("") || newExpenseDescription.getText() == null){
                         newExpenseDescription.setError("Description cannot be blank");
                     }else {
-                        if(newExpenseSelectCategory.getText().toString().equalsIgnoreCase("") || newExpenseSelectCategory.getText() == null) {
-                            newExpenseSelectCategory.setError("Category cannot be blank");
+                        if(newExpenseSelectCategory.getText().toString().equalsIgnoreCase("Select Category") || newExpenseSelectCategory.getText() == null) {
+                            newExpenseSelectCategory.setError("Select Category");
                         }else{
                             if(!categoryList.contains(newExpenseSelectCategory.getText().toString().trim()) ){
                                 newExpenseSelectCategory.setError("Category must be from dropdown-list");
                             }else{
-                                if(newExpenseSelectGroup.getText().toString().equalsIgnoreCase("") || newExpenseSelectGroup.getText() == null) {
-                                    newExpenseSelectGroup.setError("Group cannot be blank");
+                                if(newExpenseSelectGroup.getText().toString().equalsIgnoreCase("Select Group") || newExpenseSelectGroup.getText() == null) {
+                                    newExpenseSelectGroup.setError("Select Group");
                                 }else{
                                     if(!groupList.contains(newExpenseSelectGroup.getText().toString().trim()) ){
                                         newExpenseSelectGroup.setError("Group must be from dropdown-list");
@@ -168,10 +177,13 @@ public class MainActivity extends AppCompatActivity {
                                             genericExpenseDB.insertNewExpense(date,Double.parseDouble(newExpenseTotalAmount.getText().toString()),newExpenseDescription.getText().toString(),
                                                     newExpenseSelectCategory.getText().toString().trim(),paidBy,splitBetween,newExpenseSelectGroup.getText().toString());
                                             newExpenseTotalAmount.setText("");
-                                            newExpenseSelectCategory.setText("");
+                                            newExpenseSelectCategory.setText("Select Category");
                                             newExpenseDescription.setText("");
                                             newExpenseTotalAmount.requestFocus();
-                                            newExpenseSelectGroup.setText("");
+                                            newExpenseSelectGroup.setText("Select Group");
+                                            HomePage page = new HomePage();
+                                            Executors.newSingleThreadExecutor().execute(page.updateExpenseData);
+                                            //HomePage.updateExpenseData();
                                         } catch (ParseException e) {
                                             Toast.makeText(getApplicationContext(),"Error in parsing date",Toast.LENGTH_SHORT).show();
                                         }
@@ -227,7 +239,8 @@ public class MainActivity extends AppCompatActivity {
                                     newGroupLimit.setText("");
                                     newGroupNoOfPersons.setText("");
                                     newGroupTitle.requestFocus();
-                                    groupAutoCompleteAdapter.add(titleValue);
+                                    groupList.add(titleValue);
+                                    GroupsView.updateGroupAdapter();
                                 }
                             }
                         }
@@ -259,7 +272,8 @@ public class MainActivity extends AppCompatActivity {
                                     categoryName.setText("");
                                     categoryName.requestFocus();
                                     categoryLimit.setText("");
-                                    categoryAutoCompleteAdapter.add(categoryValue);
+                                    categoryList.add(categoryValue);
+                                    Category.updateCategoryAdapter();
                                 }
                             }
                         }
@@ -299,6 +313,28 @@ public class MainActivity extends AppCompatActivity {
         myCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
         updateLabel();
     };
+
+    public void displayCategoryDialogBox(ArrayList<String> list){
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Select Category");
+        builder.setItems(list.toArray(new String[list.size()]), (dialog, which) -> {
+            newExpenseSelectCategory.setText(list.get(which));
+            newExpenseSelectCategory.setError(null);
+        });
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+
+    public void displayGroupDialogBox(ArrayList<String> list){
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Select Group");
+        builder.setItems(list.toArray(new String[list.size()]), (dialog, which) -> {
+            newExpenseSelectGroup.setText(list.get(which));
+            newExpenseSelectGroup.setError(null);
+        });
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
 
     private void toggleFabMenu(){
         Transition transition = new Slide(Gravity.BOTTOM);
@@ -356,5 +392,14 @@ public class MainActivity extends AppCompatActivity {
         String myFormat = "dd/MM/yyyy"; //In which you need put here
         SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.ENGLISH);
         newExpenseDate.setText(sdf.format(myCalendar.getTime()));
+    }
+
+    public static void updateCategoryList(){
+        categoryList.clear();
+        categoryList.addAll(categoryDB.findAllCategories());
+    }
+    public static void updateGroupList(){
+        groupList.clear();
+        groupList.addAll(groupsDB.findAllGroups());
     }
 }
