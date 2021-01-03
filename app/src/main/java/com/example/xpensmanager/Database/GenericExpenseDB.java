@@ -19,6 +19,8 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.Locale;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class GenericExpenseDB extends SQLiteOpenHelper {
     public static String tableName = "self_expense";
@@ -36,6 +38,7 @@ public class GenericExpenseDB extends SQLiteOpenHelper {
     public static String expensedeleted= "deleted" ;
     public static String expensesplitAmount= "splitAmount" ;
     public static String expensegroup = "groupedWith";
+    public static Calendar calendar = new GregorianCalendar();
 
     public GenericExpenseDB(Context context) {
         super(context,context.getString(R.string.database_name),null,1);
@@ -57,7 +60,6 @@ public class GenericExpenseDB extends SQLiteOpenHelper {
     }
 
     public String insertNewExpense(Date date, double amount, String description, String category, String paidBy, int splitBetween, String groupedWith) {
-
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
 
@@ -147,7 +149,6 @@ public class GenericExpenseDB extends SQLiteOpenHelper {
         }
         return list;
     }
-
 
     public ArrayList<ExpenseData> findAllByCategory(String category){
         ArrayList<ExpenseData> list = new ArrayList<>();
@@ -249,8 +250,6 @@ public class GenericExpenseDB extends SQLiteOpenHelper {
         return list;
     }
 
-
-
     public ArrayList<ExpenseData> findByMonth(int month,int year){
         ArrayList<ExpenseData> list = new ArrayList<>();
         SQLiteDatabase db = this.getReadableDatabase();
@@ -326,8 +325,6 @@ public class GenericExpenseDB extends SQLiteOpenHelper {
         return list;
     }
 
-
-
     public double getMonthlyExpenseSum(int month, int year){
         SQLiteDatabase db = this.getReadableDatabase();
         try {
@@ -376,7 +373,6 @@ public class GenericExpenseDB extends SQLiteOpenHelper {
         }
     }
 
-
     public double getYearlyExpenseSumByCategory(int year,String category){
         SQLiteDatabase db = this.getReadableDatabase();
         try {
@@ -400,7 +396,6 @@ public class GenericExpenseDB extends SQLiteOpenHelper {
             return 0.0;
         }
     }
-
 
     public double getAllExpenseSum(){
         SQLiteDatabase db = this.getReadableDatabase();
@@ -437,7 +432,6 @@ public class GenericExpenseDB extends SQLiteOpenHelper {
             return 0.0;
         }
     }
-
 
     public double getMonthTotalForGroup(String groupName, int month, int year){
         SQLiteDatabase db = this.getReadableDatabase();
@@ -538,6 +532,53 @@ public class GenericExpenseDB extends SQLiteOpenHelper {
         }
     }
 
+    public HashMap<String,Double> getAverageForMonth(String month){
+        HashMap<String,Double> results = new HashMap<>();
+        SQLiteDatabase db = this.getReadableDatabase();
+        try {
+            Cursor cursor = db.rawQuery("select "+expensetextMonth+",avg(splitAmount) from " + tableName + " where + "+expensetextMonth+" = '"+month+"' group by " + expensetextMonth + ";", null);
+            while(cursor.moveToNext()){
+                results.put(cursor.getString(0),cursor.getDouble(1));
+            }
+            return results;
+        }catch (SQLException e){
+            Log.d("GenericExpenseDB","Exception : "+e.toString());
+            return null;
+        }
+    }
+
+    public HashMap<Integer,Double> getAverageForDay(int day){
+        HashMap<Integer,Double> results = new HashMap<>();
+        SQLiteDatabase db = this.getReadableDatabase();
+        try {
+            Cursor cursor = db.rawQuery("select "+expenseday+",avg(splitAmount) from " + tableName +" where + "+expenseday+" = "+day+ " group by " + expenseday + ";", null);
+            while(cursor.moveToNext()){
+                results.put(cursor.getInt(0),cursor.getDouble(1));
+            }
+            return results;
+        }catch (SQLException e){
+            Log.d("GenericExpenseDB","Exception : "+e.toString());
+            return null;
+        }
+    }
+
+    public HashMap<String,Double> getAverageForWeekDays(String weekDay){
+        HashMap<String,Double> results = new HashMap<>();
+        SQLiteDatabase db = this.getReadableDatabase();
+        try {
+            Cursor c = db.rawQuery("Select count(*) from (select distinct year,month,day from self_expense where dayOfWeek = 'Monday')",null);
+            c.moveToNext();
+            Log.d("Distinct Values",""+c.getInt(0));
+            Cursor cursor = db.rawQuery("select "+expensedayOfWeek+",avg(splitAmount) from " + tableName + " where + "+expensedayOfWeek+" = '"+weekDay+"' group by " + expensedayOfWeek + ";", null);
+            while(cursor.moveToNext()){
+                results.put(cursor.getString(0),cursor.getDouble(1));
+            }
+            return results;
+        }catch (SQLException e){
+            Log.d("GenericExpenseDB","Exception : "+e.toString());
+            return null;
+        }
+    }
 
     public static String getDayOfWeek(Date date, Locale locale) {
         DateFormat formatter = new SimpleDateFormat("EEEE", locale);
@@ -550,19 +591,16 @@ public class GenericExpenseDB extends SQLiteOpenHelper {
     }
 
     public static int getYearFromDate(Date date) {
-        Calendar calendar = new GregorianCalendar();
         calendar.setTime(date);
         return calendar.get(Calendar.YEAR);
     }
 
     public static int getDayFromDate(Date date) {
-        Calendar calendar = new GregorianCalendar();
         calendar.setTime(date);
         return calendar.get(Calendar.DAY_OF_MONTH);
     }
 
     public static int getMonthFromDate(Date date) {
-        Calendar calendar = new GregorianCalendar();
         calendar.setTime(date);
         return calendar.get(Calendar.MONTH) + 1;
     }
