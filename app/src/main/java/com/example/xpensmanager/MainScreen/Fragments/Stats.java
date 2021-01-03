@@ -1,76 +1,63 @@
 package com.example.xpensmanager.MainScreen.Fragments;
 
-import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.Paint;
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.fragment.app.Fragment;
+
 import com.example.xpensmanager.Database.GenericExpenseDB;
 import com.example.xpensmanager.R;
 import com.github.mikephil.charting.animation.Easing;
-import com.github.mikephil.charting.charts.HorizontalBarChart;
 import com.github.mikephil.charting.charts.PieChart;
-import com.github.mikephil.charting.components.AxisBase;
 import com.github.mikephil.charting.components.Legend;
-import com.github.mikephil.charting.components.XAxis;
-import com.github.mikephil.charting.components.YAxis;
-import com.github.mikephil.charting.data.BarData;
-import com.github.mikephil.charting.data.BarDataSet;
-import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
-import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
 import com.github.mikephil.charting.formatter.PercentFormatter;
-import com.github.mikephil.charting.formatter.ValueFormatter;
-import com.github.mikephil.charting.highlight.Highlight;
-import com.github.mikephil.charting.interfaces.datasets.IBarDataSet;
-import com.github.mikephil.charting.utils.ColorTemplate;
 import com.github.mikephil.charting.utils.MPPointF;
+import com.hadiidbouk.charts.BarData;
 import com.hadiidbouk.charts.ChartProgressBar;
 
-import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
+import java.util.Locale;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
-import im.dacer.androidcharts.BarView;
 import im.dacer.androidcharts.LineView;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link Stats#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class Stats extends Fragment {
-    PieChart pchart,pieChartGroup;
-    GenericExpenseDB genericExpenseDB;
+    private PieChart pchart,pieChartGroup;
+    private GenericExpenseDB genericExpenseDB;
+    private HashMap<String,Double> weekList,yearList,categoryList,groupList,weekAvgExpense,monthAvgExpense;
+    private HashMap<Integer,Double> dayList,dayAvgExpense;
+    private ExecutorService mExecutor;
+    private double totalSpends;
+    private ChartProgressBar mChart, yChart, dChart;
+
     public Stats() {
         // Required empty public constructor
-    }
-
-
-    public static Stats newInstance(String param1, String param2) {
-        Stats fragment = new Stats();
-        Bundle args = new Bundle();
-        fragment.setArguments(args);
-        return fragment;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-        }
+        weekList = new HashMap<>();
+        yearList =  new HashMap<>();
+        dayList =  new HashMap<>();
+        categoryList =  new HashMap<>();
+        groupList =  new HashMap<>();
+        mExecutor = Executors.newFixedThreadPool(4);
+        genericExpenseDB = new GenericExpenseDB(getActivity());
+        totalSpends = genericExpenseDB.getAllExpenseSum();
     }
 
     @Override
@@ -78,50 +65,88 @@ public class Stats extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_stats, container, false);
-        ChartProgressBar mChart = view.findViewById(R.id.ChartProgressBar);
-        ChartProgressBar yChart = view.findViewById(R.id.ChartProgressBarYearly);
-        ChartProgressBar dChart = view.findViewById(R.id.ChartProgressBarEachDay);
+        mChart = view.findViewById(R.id.ChartProgressBar);
+        yChart = view.findViewById(R.id.ChartProgressBarYearly);
+        dChart = view.findViewById(R.id.ChartProgressBarEachDay);
         //BarView barView = view.findViewById(R.id.bar_view);
         LineView lineView = view.findViewById(R.id.line_view);
         pchart = view.findViewById(R.id.chart1);
         pieChartGroup = view.findViewById(R.id.pieChartGroup);
-        genericExpenseDB = new GenericExpenseDB(getActivity());
 
-        HashMap<String,Double> weekList = genericExpenseDB.getSumForAllWeekDays();
-        HashMap<String,Double> yearList = genericExpenseDB.getSumForAllMonths();
-        HashMap<Integer,Double> dayList = genericExpenseDB.getSumForAllDays();
-        HashMap<String,Double> categoryList = genericExpenseDB.getSumByCategory();
-        HashMap<String,Double> groupList = genericExpenseDB.getSumByGroup();
+        mExecutor.execute(()->{
+            if(weekList.size()>0){
+                weekList.clear();
+            }
+            weekList = genericExpenseDB.getSumForAllWeekDays();
+            Log.d("Stats",weekList+"");
+            getActivity().runOnUiThread(()->{
+                //Weekly Chart View
+                mChart.setDataList(setWeeklyChart(weekList,totalSpends));
+                mChart.setMaxValue(100);
+                mChart.build();
+            });
+        });
 
-        double totalSpends = genericExpenseDB.getAllExpenseSum();
-        Log.d("Stats",weekList+"");
-        Log.d("Stats",yearList+"");
-        Log.d("Stats",dayList+"");
-        Log.d("Stats",categoryList+"");
-        Log.d("Stats",groupList+"");
+        mExecutor.execute(()->{
+            if(yearList.size()>0){
+                yearList.clear();
+            }
+            yearList = genericExpenseDB.getSumForAllMonths();
+            Log.d("Stats",yearList+"");
+            getActivity().runOnUiThread(()->{
+                //Yearly Chart View
+                yChart.setDataList(setYearlyChart(yearList,totalSpends));
+                yChart.setMaxValue(100);
+                yChart.build();
+            });
+        });
 
-        //Weekly Chart View
-        mChart.setDataList(setWeeklyChart(weekList,totalSpends));
-        mChart.setMaxValue(100);
-        mChart.build();
+        mExecutor.execute(()->{
+            if(dayList.size()>0){
+                dayList.clear();
+            }
+            dayList = genericExpenseDB.getSumForAllDays();
+            Log.d("Stats",dayList+"");
+            getActivity().runOnUiThread(()->{
+                //Each Day Chart View
+                dChart.setDataList(setDailyChart(dayList,totalSpends));
+                dChart.setMaxValue(100);
+                dChart.build();
+            });
+        });
 
-        //Yearly Chart View
-        yChart.setDataList(setYearlyChart(yearList,totalSpends));
-        yChart.setMaxValue(100);
-        yChart.build();
+        mExecutor.execute(()->{
+            if(categoryList.size()>0){
+                categoryList.clear();
+            }
+            categoryList = genericExpenseDB.getSumByCategory();
+            Log.d("Stats",categoryList+"");
+            getActivity().runOnUiThread(()->{
+                //Set Category Data
+                setCategoryData(categoryList,totalSpends);
+            });
+        });
 
-        //Each Day Chart View
-        dChart.setDataList(setDailyChart(dayList,totalSpends));
-        dChart.setMaxValue(100);
-        dChart.build();
+        mExecutor.execute(()->{
+            if(groupList.size()>0){
+                groupList.clear();
+            }
+            groupList = genericExpenseDB.getSumByGroup();
+            Log.d("Stats",groupList+"");
+            getActivity().runOnUiThread(()->{
+                //Set Group Data
+                setGroupData(groupList,totalSpends);
+            });
+        });
 
-        //Set Category Data
-        setCategoryData(categoryList,totalSpends);
-
-        //Set Group Data
-        setGroupData(groupList,totalSpends);
-
-
+        Date date = new Date();
+        Locale locale = Locale.ENGLISH;
+        weekAvgExpense = genericExpenseDB.getAverageForWeekDays(GenericExpenseDB.getDayOfWeek(date, locale));
+        dayAvgExpense = genericExpenseDB.getAverageForDay(GenericExpenseDB.getDayFromDate(date));
+        monthAvgExpense = genericExpenseDB.getAverageForMonth(GenericExpenseDB.getDayOfMonth(date,locale));
+        Log.d("Week Avg",weekAvgExpense+"");
+        Log.d("Day Avg",dayAvgExpense+"");
+        Log.d("Month Avg",monthAvgExpense.toString());
 
 
         lineView.setDrawDotLine(true); //optional
@@ -139,66 +164,61 @@ public class Stats extends Fragment {
         lis.add(al4);//lis.add(al5);
         lineView.setDataList(lis); //or lineView.setFloatDataList(floatDataLists)
 
-
-       /* barView.setBottomTextList(new ArrayList<>(Arrays.asList("Jan","Feb","Mar","Apr","May","June","July","Aug","Sep","Oct","Nov","Dec")));
-        barView.setDataList(new ArrayList<>(Arrays.asList(9,5,6,3,5,8,6,4,5,2,6,8)),10);*/
-
-
         return view;
     }
 
-    private ArrayList<com.hadiidbouk.charts.BarData> setWeeklyChart(HashMap<String,Double> weekList,double totalSpends){
-        ArrayList<com.hadiidbouk.charts.BarData> dataList = new ArrayList<>();
-        com.hadiidbouk.charts.BarData data = new com.hadiidbouk.charts.BarData("Sun", (float) (((weekList.containsKey("Sunday")?weekList.get("Sunday"):0.0)/totalSpends)*100), "3.4€");
+    private ArrayList<BarData> setWeeklyChart(HashMap<String,Double> weekList,double totalSpends){
+        ArrayList<BarData> dataList = new ArrayList<>();
+        BarData data = new BarData("Sun", (float) (((weekList.containsKey("Sunday")?weekList.get("Sunday"):0.0)/totalSpends)*100), "3.4€");
         dataList.add(data);
-        data = new com.hadiidbouk.charts.BarData("Mon", (float) (((weekList.containsKey("Monday")?weekList.get("Monday"):0.0)/totalSpends)*100), "8€");
+        data = new BarData("Mon", (float) (((weekList.containsKey("Monday")?weekList.get("Monday"):0.0)/totalSpends)*100), "8€");
         dataList.add(data);
-        data = new com.hadiidbouk.charts.BarData("Tue", (float) (((weekList.containsKey("Tuesday")?weekList.get("Tuesday"):0.0)/totalSpends)*100), "1.8€");
+        data = new BarData("Tue", (float) (((weekList.containsKey("Tuesday")?weekList.get("Tuesday"):0.0)/totalSpends)*100), "1.8€");
         dataList.add(data);
-        data = new com.hadiidbouk.charts.BarData("Wed", (float) (((weekList.containsKey("Wednesday")?weekList.get("Wednesday"):0.0)/totalSpends)*100), "7.3€");
+        data = new BarData("Wed", (float) (((weekList.containsKey("Wednesday")?weekList.get("Wednesday"):0.0)/totalSpends)*100), "7.3€");
         dataList.add(data);
-        data = new com.hadiidbouk.charts.BarData("Thu", (float) (((weekList.containsKey("Thursday")?weekList.get("Thursday"):0.0)/totalSpends)*100), "6.2€");
+        data = new BarData("Thu", (float) (((weekList.containsKey("Thursday")?weekList.get("Thursday"):0.0)/totalSpends)*100), "6.2€");
         dataList.add(data);
-        data = new com.hadiidbouk.charts.BarData("Fri", (float) (((weekList.containsKey("Friday")?weekList.get("Friday"):0.0)/totalSpends)*100), "3.3€");
+        data = new BarData("Fri", (float) (((weekList.containsKey("Friday")?weekList.get("Friday"):0.0)/totalSpends)*100), "3.3€");
         dataList.add(data);
-        data = new com.hadiidbouk.charts.BarData("Sat", (float) (((weekList.containsKey("Saturday")?weekList.get("Saturday"):0.0)/totalSpends)*100), "3.3€");
-        dataList.add(data);
-        return dataList;
-    }
-
-    private ArrayList<com.hadiidbouk.charts.BarData> setYearlyChart(HashMap<String,Double> yearList,double totalSpends){
-        ArrayList<com.hadiidbouk.charts.BarData> dataList = new ArrayList<>();
-        com.hadiidbouk.charts.BarData data = new com.hadiidbouk.charts.BarData("JAN", (float) (((yearList.containsKey("January")?yearList.get("January"):0.0)/totalSpends)*100), "3.4€");
-        dataList.add(data);
-        data = new com.hadiidbouk.charts.BarData("FEB", (float) (((yearList.containsKey("February")?yearList.get("February"):0.0)/totalSpends)*100), "8€");
-        dataList.add(data);
-        data = new com.hadiidbouk.charts.BarData("MAR", (float) (((yearList.containsKey("March")?yearList.get("March"):0.0)/totalSpends)*100), "1.8€");
-        dataList.add(data);
-        data = new com.hadiidbouk.charts.BarData("APR", (float) (((yearList.containsKey("April")?yearList.get("April"):0.0)/totalSpends)*100), "7.3€");
-        dataList.add(data);
-        data = new com.hadiidbouk.charts.BarData("MAY", (float) (((yearList.containsKey("May")?yearList.get("May"):0.0)/totalSpends)*100), "6.2€");
-        dataList.add(data);
-        data = new com.hadiidbouk.charts.BarData("JUN", (float) (((yearList.containsKey("June")?yearList.get("June"):0.0)/totalSpends)*100), "3.3€");
-        dataList.add(data);
-        data = new com.hadiidbouk.charts.BarData("JUL", (float) (((yearList.containsKey("July")?yearList.get("July"):0.0)/totalSpends)*100), "3.3€");
-        dataList.add(data);
-        data = new com.hadiidbouk.charts.BarData("AUG", (float) (((yearList.containsKey("August")?yearList.get("August"):0.0)/totalSpends)*100), "8€");
-        dataList.add(data);
-        data = new com.hadiidbouk.charts.BarData("SEP", (float) (((yearList.containsKey("September")?yearList.get("September"):0.0)/totalSpends)*100), "1.8€");
-        dataList.add(data);
-        data = new com.hadiidbouk.charts.BarData("OCT", (float) (((yearList.containsKey("October")?yearList.get("October"):0.0)/totalSpends)*100), "7.3€");
-        dataList.add(data);
-        data = new com.hadiidbouk.charts.BarData("NOV", (float) (((yearList.containsKey("November")?yearList.get("November"):0.0)/totalSpends)*100), "6.2€");
-        dataList.add(data);
-        data = new com.hadiidbouk.charts.BarData("DEC", (float) (((yearList.containsKey("December")?yearList.get("December"):0.0)/totalSpends)*100), "3.3€");
+        data = new BarData("Sat", (float) (((weekList.containsKey("Saturday")?weekList.get("Saturday"):0.0)/totalSpends)*100), "3.3€");
         dataList.add(data);
         return dataList;
     }
 
-    private ArrayList<com.hadiidbouk.charts.BarData> setDailyChart(HashMap<Integer,Double> dayList,double totalSpends){
-        ArrayList<com.hadiidbouk.charts.BarData> dataList = new ArrayList<>();
+    private ArrayList<BarData> setYearlyChart(HashMap<String,Double> yearList,double totalSpends){
+        ArrayList<BarData> dataList = new ArrayList<>();
+        BarData data = new BarData("JAN", (float) (((yearList.containsKey("January")?yearList.get("January"):0.0)/totalSpends)*100), "3.4€");
+        dataList.add(data);
+        data = new BarData("FEB", (float) (((yearList.containsKey("February")?yearList.get("February"):0.0)/totalSpends)*100), "8€");
+        dataList.add(data);
+        data = new BarData("MAR", (float) (((yearList.containsKey("March")?yearList.get("March"):0.0)/totalSpends)*100), "1.8€");
+        dataList.add(data);
+        data = new BarData("APR", (float) (((yearList.containsKey("April")?yearList.get("April"):0.0)/totalSpends)*100), "7.3€");
+        dataList.add(data);
+        data = new BarData("MAY", (float) (((yearList.containsKey("May")?yearList.get("May"):0.0)/totalSpends)*100), "6.2€");
+        dataList.add(data);
+        data = new BarData("JUN", (float) (((yearList.containsKey("June")?yearList.get("June"):0.0)/totalSpends)*100), "3.3€");
+        dataList.add(data);
+        data = new BarData("JUL", (float) (((yearList.containsKey("July")?yearList.get("July"):0.0)/totalSpends)*100), "3.3€");
+        dataList.add(data);
+        data = new BarData("AUG", (float) (((yearList.containsKey("August")?yearList.get("August"):0.0)/totalSpends)*100), "8€");
+        dataList.add(data);
+        data = new BarData("SEP", (float) (((yearList.containsKey("September")?yearList.get("September"):0.0)/totalSpends)*100), "1.8€");
+        dataList.add(data);
+        data = new BarData("OCT", (float) (((yearList.containsKey("October")?yearList.get("October"):0.0)/totalSpends)*100), "7.3€");
+        dataList.add(data);
+        data = new BarData("NOV", (float) (((yearList.containsKey("November")?yearList.get("November"):0.0)/totalSpends)*100), "6.2€");
+        dataList.add(data);
+        data = new BarData("DEC", (float) (((yearList.containsKey("December")?yearList.get("December"):0.0)/totalSpends)*100), "3.3€");
+        dataList.add(data);
+        return dataList;
+    }
+
+    private ArrayList<BarData> setDailyChart(HashMap<Integer,Double> dayList,double totalSpends){
+        ArrayList<BarData> dataList = new ArrayList<>();
         for(int i=1;i<=31;i++){
-            com.hadiidbouk.charts.BarData data = new com.hadiidbouk.charts.BarData(i+"", (float) (((dayList.containsKey(i)?dayList.get(i):0.0)/totalSpends)*100), "0.0");
+            BarData data = new BarData(i+"", (float) (((dayList.containsKey(i)?dayList.get(i):0.0)/totalSpends)*100), "0.0");
             dataList.add(data);
         }
         return dataList;
