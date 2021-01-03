@@ -7,13 +7,13 @@
 
     <fragment
         android:id="@+id/navigation_home"
-        android:name="com.example.xpensmanager.MainScreen.Fragments.HomePage"
+        android:name="com.example.xpensmanager.MainScreen.Fragments.Home"
         android:label="@string/title_home"
         tools:layout="@layout/fragment_home_page" />
 
     <fragment
         android:id="@+id/navigation_group"
-        android:name="com.example.xpensmanager.MainScreen.Fragments.GroupsView"
+        android:name="com.example.xpensmanager.MainScreen.Fragments.Group"
         android:label="@string/title_group"
         tools:layout="@layout/fragment_group_all_expense" />
 
