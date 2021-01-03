@@ -16,6 +16,25 @@ public class ExpenseData {
     private double splitAmount;
     private String group;
 
+    public ExpenseData(){}
+
+    public ExpenseData(int id, String date, String dayOfWeek, String textMonth, int month, int year, int day, double amount, String description, String paidBy, String category, int deleted, double splitAmount, String group) {
+        this.id = id;
+        this.date = date;
+        this.dayOfWeek = dayOfWeek;
+        this.textMonth = textMonth;
+        this.month = month;
+        this.year = year;
+        this.day = day;
+        this.amount = amount;
+        this.description = description;
+        this.paidBy = paidBy;
+        this.category = category;
+        this.deleted = deleted;
+        this.splitAmount = splitAmount;
+        this.group = group;
+    }
+
     public int getId() {
         return id;
     }
