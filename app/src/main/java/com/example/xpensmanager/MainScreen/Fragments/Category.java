@@ -20,6 +20,8 @@ import com.example.xpensmanager.R;
 
 import java.util.ArrayList;
 import java.util.Hashtable;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class Category extends Fragment {
     private RecyclerView recyclerView;
@@ -28,23 +30,19 @@ public class Category extends Fragment {
     private static ArrayList<CategoryData> results;
     private TextView emptyView;
     private static ArrayList<Boolean> list;
+    private ExecutorService mExecutor;
 
     public Category() {
         // Required empty public constructor
     }
 
-    public static Category newInstance(String param1, String param2) {
-        Category fragment = new Category();
-        Bundle args = new Bundle();
-        fragment.setArguments(args);
-        return fragment;
-    }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-        }
+        categoryDB = new CategoryDB(getActivity());
+        results = new ArrayList<>();
+        list = new ArrayList<>();
+        mExecutor = Executors.newSingleThreadExecutor();
     }
 
     @Override
@@ -55,20 +53,21 @@ public class Category extends Fragment {
         recyclerView = view.findViewById(R.id.recyclerView);
         emptyView = view.findViewById(R.id.emptyView);
 
-        categoryDB = new CategoryDB(getActivity());
-        results = new ArrayList<>();
-        results.addAll(categoryDB.findAll());
+       mExecutor.execute(()->{
+           results.addAll(categoryDB.findAll());
+           for(int i=0;i<results.size();i++){
+               list.add(false);
+           }
+           getActivity().runOnUiThread(()->{
+               adapter.notifyDataSetChanged();
+               if(results.size() == 0) {
+                   emptyView.setVisibility(View.VISIBLE);
+               }else{
+                   emptyView.setVisibility(View.GONE);
+               }
+           });
+       });
 
-        if(results.size() == 0) {
-            emptyView.setVisibility(View.VISIBLE);
-        }else{
-            emptyView.setVisibility(View.GONE);
-        }
-        list = new ArrayList<>();
-        for(int i=0;i<results.size();i++){
-            list.add(false);
-        }
-        //((SimpleItemAnimator) recyclerView.getItemAnimator()).setSupportsChangeAnimations(false);
         adapter = new CategoryViewAdapter(getActivity(), results, list);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.setAdapter(adapter);
@@ -76,13 +75,11 @@ public class Category extends Fragment {
         return view;
     }
 
-    public static void updateCategoryAdapter(){
+    public static void updateCategoryAdapter(ArrayList<CategoryData> updatedResults,ArrayList<Boolean> updateList){
         results.clear();
-        results.addAll(categoryDB.findAll());
+        results.addAll(updatedResults);
         list.clear();
-        for(int i=0;i<results.size();i++){
-            list.add(false);
-        }
+        list.addAll(updateList);
         adapter.notifyDataSetChanged();
     }
 }
