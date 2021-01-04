@@ -13,14 +13,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.example.xpensmanager.Database.GenericExpenseDB;
+import com.example.xpensmanager.Database.ExpenseDB;
 import com.example.xpensmanager.Enums.ViewType;
 import com.example.xpensmanager.Database.ExpenseData;
 import com.example.xpensmanager.ExpenseScreen.Adapters.ExpenseViewAdapter;
 import com.example.xpensmanager.R;
+import com.example.xpensmanager.SplashScreen.SplashScreenActivity;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import xyz.sangcomz.stickytimelineview.TimeLineRecyclerView;
@@ -33,7 +33,7 @@ import xyz.sangcomz.stickytimelineview.model.SectionInfo;
  * create an instance of this fragment.
  */
 public class AllViewFragment extends Fragment {
-    private GenericExpenseDB genericExpenseDB;
+    private ExpenseDB expenseDB;
     private String tableName,groupBy,filterType;
     private int filterValue;
     private TextView allTimeTotalSpends;
@@ -67,26 +67,26 @@ public class AllViewFragment extends Fragment {
         TimeLineRecyclerView recyclerView = view.findViewById(R.id.recycler_view);
         allTimeTotalSpends = view.findViewById(R.id.allTimeTotalSpends);
 
-        genericExpenseDB = new GenericExpenseDB(getActivity());
+        expenseDB = new ExpenseDB(getActivity());
 
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity(),
                 RecyclerView.VERTICAL,
                 false));
 
         if(groupBy.equalsIgnoreCase("None")) {
-            expenseData = genericExpenseDB.findAll();
-            double totalSpends = genericExpenseDB.getAllExpenseSum();
-            allTimeTotalSpends.setText("₹ "+totalSpends);
+            expenseData = expenseDB.findAll();
+            double totalSpends = expenseDB.getAllExpenseSum();
+            allTimeTotalSpends.setText(SplashScreenActivity.cSymbol+ " "+totalSpends);
         }
         else{
             if(filterType.equalsIgnoreCase("category")) {
-                expenseData = genericExpenseDB.findAllByCategory(groupBy);
-                double totalSpends = genericExpenseDB.getAllExpenseSumByCategory(groupBy);
-                allTimeTotalSpends.setText("₹ "+totalSpends);
+                expenseData = expenseDB.findAllByCategory(groupBy);
+                double totalSpends = expenseDB.getAllExpenseSumByCategory(groupBy);
+                allTimeTotalSpends.setText(SplashScreenActivity.cSymbol+ " "+totalSpends);
             }else{
-                expenseData = genericExpenseDB.findAllByGroup(groupBy);
-                double totalSpends = genericExpenseDB.getAllExpenseSumByGroup(groupBy);
-                allTimeTotalSpends.setText("₹ "+totalSpends);
+                expenseData = expenseDB.findAllByGroup(groupBy);
+                double totalSpends = expenseDB.getAllExpenseSumByGroup(groupBy);
+                allTimeTotalSpends.setText(SplashScreenActivity.cSymbol+ " "+totalSpends);
             }
         }
 

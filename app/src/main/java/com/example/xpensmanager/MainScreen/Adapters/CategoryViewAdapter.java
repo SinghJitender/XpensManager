@@ -16,10 +16,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.AppCompatImageButton;
 import androidx.cardview.widget.CardView;
@@ -27,17 +25,16 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.xpensmanager.Database.CategoryDB;
 import com.example.xpensmanager.Database.CategoryData;
-import com.example.xpensmanager.Database.GenericExpenseDB;
-import com.example.xpensmanager.Database.GroupDB;
+import com.example.xpensmanager.Database.ExpenseDB;
 import com.example.xpensmanager.Enums.ViewType;
 import com.example.xpensmanager.ExpenseScreen.Expense;
 import com.example.xpensmanager.MainScreen.MainActivity;
 import com.example.xpensmanager.R;
+import com.example.xpensmanager.SplashScreen.SplashScreenActivity;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.Hashtable;
 
 public class CategoryViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
@@ -47,7 +44,7 @@ public class CategoryViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     private Context context;
     private ArrayList<Boolean> list;
     private CategoryDB categoryDB;
-    private GenericExpenseDB genericExpenseDB;
+    private ExpenseDB expenseDB;
 
     // data is passed into the constructor
     public CategoryViewAdapter(Context context, ArrayList<CategoryData> results, ArrayList<Boolean> list) {
@@ -56,7 +53,7 @@ public class CategoryViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         this.context = context;
         this.list = list;
         categoryDB = new CategoryDB(context);
-        genericExpenseDB = new GenericExpenseDB(context);
+        expenseDB = new ExpenseDB(context);
     }
 
     @NonNull
@@ -67,10 +64,10 @@ public class CategoryViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
-        double currentMonthTotal = genericExpenseDB.getMonthTotalForCategory(results.get(position).getCategory(),GenericExpenseDB.getMonthFromDate(new Date()),GenericExpenseDB.getYearFromDate(new Date()));
+        double currentMonthTotal = expenseDB.getMonthTotalForCategory(results.get(position).getCategory(), ExpenseDB.getMonthFromDate(new Date()), ExpenseDB.getYearFromDate(new Date()));
         ((ViewHolder) holder).title.setText(results.get(position).getCategory());
-        ((ViewHolder) holder).totalAmount.setText("₹ "+currentMonthTotal);
-        ((ViewHolder) holder).lifeTimeSpend.setText("₹ "+results.get(position).getTotalCategorySpend());
+        ((ViewHolder) holder).totalAmount.setText(SplashScreenActivity.cSymbol+ " "+currentMonthTotal);
+        ((ViewHolder) holder).lifeTimeSpend.setText(SplashScreenActivity.cSymbol+ " "+results.get(position).getTotalCategorySpend());
         double limit = results.get(position).getLimit();
         double percentageLimit = ((currentMonthTotal/limit)*100);
         if(percentageLimit<=50){
@@ -108,7 +105,7 @@ public class CategoryViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 intent.putExtra("viewType", ViewType.MONTHLY);
                 intent.putExtra("groupBy",results.get(position).getCategory());
                 intent.putExtra("filterType","category");
-                intent.putExtra("filterValue", GenericExpenseDB.getMonthFromDate(new Date()));
+                intent.putExtra("filterValue", ExpenseDB.getMonthFromDate(new Date()));
                 context.startActivity(intent);
             });
 
