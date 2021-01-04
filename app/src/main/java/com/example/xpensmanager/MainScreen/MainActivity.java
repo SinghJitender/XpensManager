@@ -18,12 +18,14 @@ import android.widget.Toast;
 import com.example.xpensmanager.Database.CategoryDB;
 import com.example.xpensmanager.Database.CategoryData;
 import com.example.xpensmanager.Database.ExpenseData;
-import com.example.xpensmanager.Database.GenericExpenseDB;
+import com.example.xpensmanager.Database.ExpenseDB;
 import com.example.xpensmanager.Database.GroupDB;
+import com.example.xpensmanager.Database.GroupData;
 import com.example.xpensmanager.MainScreen.Fragments.Category;
 import com.example.xpensmanager.MainScreen.Fragments.Group;
 import com.example.xpensmanager.MainScreen.Fragments.Home;
 import com.example.xpensmanager.R;
+import com.example.xpensmanager.SplashScreen.SplashScreenActivity;
 import com.google.android.material.bottomappbar.BottomAppBar;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
@@ -66,7 +68,7 @@ public class MainActivity extends AppCompatActivity {
     private static ArrayList<String> categoryList;
 
     //Database Objects
-    private GenericExpenseDB genericExpenseDB;
+    private ExpenseDB expenseDB;
     private static GroupDB groupsDB;
     private static CategoryDB categoryDB;
 
@@ -103,7 +105,7 @@ public class MainActivity extends AppCompatActivity {
         createnewcategory = findViewById(R.id.createnewcategory);
 
         //DB initialization
-        genericExpenseDB = new GenericExpenseDB(getApplicationContext());
+        expenseDB = new ExpenseDB(getApplicationContext());
         groupsDB = new GroupDB(getApplicationContext());
         categoryDB = new CategoryDB(getApplicationContext());
         mExecutor.execute(()->{
@@ -122,7 +124,7 @@ public class MainActivity extends AppCompatActivity {
         newExpenseAdd = findViewById(R.id.newExpenseAdd);
         newExpenseSelectGroup = findViewById(R.id.newExpenseSelectGroup);
         myCalendar = Calendar.getInstance();
-
+        newExpenseTotalAmount.setHint(SplashScreenActivity.cSymbol+" Amount");
         newExpenseSelectCategory.setOnClickListener((v)->{
             displayCategoryDialogBox(categoryList);
         });
@@ -180,14 +182,14 @@ public class MainActivity extends AppCompatActivity {
                                             }
                                             groupsDB.updateGroupAmountByTitle(newExpenseSelectGroup.getText().toString().trim(),netAmount,totalAmount);
                                             categoryDB.updateCategoryAmountByTitle(newExpenseSelectCategory.getText().toString().trim(),(totalCategoryAmount+(tempAmount/splitBetween)));
-                                            genericExpenseDB.insertNewExpense(date,Double.parseDouble(newExpenseTotalAmount.getText().toString()),newExpenseDescription.getText().toString(),
+                                            expenseDB.insertNewExpense(date,Double.parseDouble(newExpenseTotalAmount.getText().toString()),newExpenseDescription.getText().toString(),
                                                     newExpenseSelectCategory.getText().toString().trim(),paidBy,splitBetween,newExpenseSelectGroup.getText().toString());
                                             newExpenseTotalAmount.setText("");
                                             newExpenseSelectCategory.setText("Select Category");
                                             newExpenseDescription.setText("");
                                             newExpenseTotalAmount.requestFocus();
                                             newExpenseSelectGroup.setText("Select Group");
-                                            mExecutor.execute(updateHomePageData);
+                                            updateHomePageData();
 
                                         } catch (ParseException e) {
                                             Toast.makeText(getApplicationContext(),"Error in parsing date",Toast.LENGTH_SHORT).show();
@@ -245,7 +247,7 @@ public class MainActivity extends AppCompatActivity {
                                     newGroupNoOfPersons.setText("");
                                     newGroupTitle.requestFocus();
                                     groupList.add(titleValue);
-                                    mExecutor.execute(updateGroupFragmentData);
+                                    updateGroupFragmentData();
                                 }
                             }
                         }
@@ -278,7 +280,7 @@ public class MainActivity extends AppCompatActivity {
                                     categoryName.requestFocus();
                                     categoryLimit.setText("");
                                     categoryList.add(categoryValue);
-                                    mExecutor.execute(updateCategoryFragmentData);
+                                    updateCategoryFragmentData();
                                 }
                             }
                         }
@@ -413,16 +415,16 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    public Runnable updateHomePageData = () -> {
+    public void updateHomePageData() {
         ArrayList<ExpenseData> data = new ArrayList<>();
-        data.addAll(genericExpenseDB.findByMonth(GenericExpenseDB.getMonthFromDate(new Date()),GenericExpenseDB.getYearFromDate(new Date())));
-        double totalSpentThisMonth = genericExpenseDB.getMonthlyExpenseSum(GenericExpenseDB.getMonthFromDate(new Date()),GenericExpenseDB.getYearFromDate(new Date()));
+        data.addAll(expenseDB.findByMonth(ExpenseDB.getMonthFromDate(new Date()), ExpenseDB.getYearFromDate(new Date())));
+        double totalSpentThisMonth = expenseDB.getMonthlyExpenseSum(ExpenseDB.getMonthFromDate(new Date()), ExpenseDB.getYearFromDate(new Date()));
         double totalCategorySum = categoryDB.getTotalCategoryLimitSum();
         Home.updateRecyclerView(data,totalSpentThisMonth,totalCategorySum);
     };
 
-    public Runnable updateGroupFragmentData = () -> {
-        ArrayList<Hashtable<String,String>> updatedResults = new ArrayList<>();
+    public void updateGroupFragmentData(){
+        ArrayList<GroupData> updatedResults = new ArrayList<>();
         ArrayList<Boolean> updateList = new ArrayList<>();
         updatedResults.addAll(groupsDB.findAll());
         for(int i=0;i<updatedResults.size();i++){
@@ -431,7 +433,7 @@ public class MainActivity extends AppCompatActivity {
         Group.updateGroupAdapter(updatedResults,updateList);
     };
 
-    public Runnable updateCategoryFragmentData = () -> {
+    public void updateCategoryFragmentData(){
         ArrayList<CategoryData> updatedResults = new ArrayList<>();
         ArrayList<Boolean> updateList = new ArrayList<>();
         updatedResults.addAll(categoryDB.findAll());

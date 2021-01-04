@@ -17,7 +17,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.example.xpensmanager.Database.CategoryDB;
-import com.example.xpensmanager.Database.GenericExpenseDB;
+import com.example.xpensmanager.Database.ExpenseDB;
 import com.example.xpensmanager.Database.GroupDB;
 import com.example.xpensmanager.Enums.ViewType;
 import com.example.xpensmanager.Database.ExpenseData;
@@ -25,6 +25,7 @@ import com.example.xpensmanager.ExpenseScreen.Adapters.ExpenseViewAdapter;
 import com.example.xpensmanager.ExpenseScreen.Expense;
 import com.example.xpensmanager.MainScreen.MainActivity;
 import com.example.xpensmanager.R;
+import com.example.xpensmanager.SplashScreen.SplashScreenActivity;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -40,7 +41,7 @@ import xyz.sangcomz.stickytimelineview.model.SectionInfo;
 
 public class Home extends Fragment {
 
-    private static GenericExpenseDB genericExpenseDB;
+    private static ExpenseDB expenseDB;
     private static double totalSpentThisMonth, totalCategorySum;
     private ImageButton viewAllButtom;
     private static TextView currentMonthTotalSpends,limit;
@@ -63,12 +64,12 @@ public class Home extends Fragment {
     private Runnable updateData = () -> {
         // Do some work
         expenseData.clear();
-        expenseData.addAll(genericExpenseDB.findByMonth(GenericExpenseDB.getMonthFromDate(new Date()),GenericExpenseDB.getYearFromDate(new Date())));
-        totalSpentThisMonth = genericExpenseDB.getMonthlyExpenseSum(GenericExpenseDB.getMonthFromDate(new Date()),GenericExpenseDB.getYearFromDate(new Date()));
+        expenseData.addAll(expenseDB.findByMonth(ExpenseDB.getMonthFromDate(new Date()), ExpenseDB.getYearFromDate(new Date())));
+        totalSpentThisMonth = expenseDB.getMonthlyExpenseSum(ExpenseDB.getMonthFromDate(new Date()), ExpenseDB.getYearFromDate(new Date()));
         totalCategorySum = categoryDB.getTotalCategoryLimitSum();
         getActivity().runOnUiThread(()->{
             adapter.notifyDataSetChanged();
-            currentMonthTotalSpends.setText("₹ "+ new DecimalFormat("00.00").format(totalSpentThisMonth));
+            currentMonthTotalSpends.setText(SplashScreenActivity.cSymbol+ " "+ new DecimalFormat("00.00").format(totalSpentThisMonth));
             limit.setText(new DecimalFormat("00.00").format(totalSpentThisMonth)+"/"+new DecimalFormat("00.00").format(totalCategorySum));
             progressBar.setProgress((int)((totalSpentThisMonth/totalCategorySum)*100));
         });
@@ -80,7 +81,7 @@ public class Home extends Fragment {
         setHasOptionsMenu(true);
         expenseData = new ArrayList<>();
         categoryDB = new CategoryDB(getActivity());
-        genericExpenseDB = new GenericExpenseDB(getActivity());
+        expenseDB = new ExpenseDB(getActivity());
         groups = new GroupDB(getActivity());
         mExecutor = Executors.newSingleThreadExecutor();
     }
@@ -90,7 +91,7 @@ public class Home extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_home_page, container, false);
-        ((MainActivity)getActivity()).getSupportActionBar().setTitle(GenericExpenseDB.getDayOfMonth(new Date(),Locale.ENGLISH));
+        ((MainActivity)getActivity()).getSupportActionBar().setTitle(ExpenseDB.getNameOfMonth(new Date(),Locale.ENGLISH));
         recyclerView = view.findViewById(R.id.recyclerView);
         viewAllButtom = view.findViewById(R.id.viewAll);
         currentMonthTotalSpends = view.findViewById(R.id.currentMonthTotalSpends);
@@ -98,7 +99,7 @@ public class Home extends Fragment {
         limit = view.findViewById(R.id.limit);
         mExecutor.execute(updateData);
 
-        currentMonthTotalSpends.setText("₹ "+ new DecimalFormat("00.00").format(totalSpentThisMonth));
+        currentMonthTotalSpends.setText(SplashScreenActivity.cSymbol+ " "+ new DecimalFormat("00.00").format(totalSpentThisMonth));
         limit.setText(new DecimalFormat("00.00").format(totalSpentThisMonth)+"/"+new DecimalFormat("00.00").format(totalCategorySum));
         progressBar.setProgress((int)((totalSpentThisMonth/totalCategorySum)*100));
 
@@ -137,7 +138,7 @@ public class Home extends Fragment {
         expenseData.clear();
         expenseData.addAll(data);
         adapter.notifyDataSetChanged();
-        currentMonthTotalSpends.setText("₹ "+ new DecimalFormat("00.00").format(updatedTotalSpentThisMonth));
+        currentMonthTotalSpends.setText(SplashScreenActivity.cSymbol+ " "+ new DecimalFormat("00.00").format(updatedTotalSpentThisMonth));
         limit.setText(new DecimalFormat("00.00").format(updatedTotalSpentThisMonth)+"/"+new DecimalFormat("00.00").format(updatedTotalCategorySum));
         progressBar.setProgress((int)((updatedTotalSpentThisMonth/updatedTotalCategorySum)*100));
     }

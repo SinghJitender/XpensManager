@@ -23,12 +23,14 @@ import androidx.appcompat.widget.AppCompatImageButton;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.xpensmanager.Database.GenericExpenseDB;
+import com.example.xpensmanager.Database.ExpenseDB;
 import com.example.xpensmanager.Database.GroupDB;
+import com.example.xpensmanager.Database.GroupData;
 import com.example.xpensmanager.Enums.ViewType;
 import com.example.xpensmanager.ExpenseScreen.Expense;
 import com.example.xpensmanager.MainScreen.MainActivity;
 import com.example.xpensmanager.R;
+import com.example.xpensmanager.SplashScreen.SplashScreenActivity;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -37,7 +39,7 @@ import java.util.Hashtable;
 
 public class GroupViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    ArrayList<Hashtable<String,String>> results;
+    ArrayList<GroupData> results;
     private LayoutInflater mInflater;
     private ItemClickListener mClickListener;
     private Context context;
@@ -45,7 +47,7 @@ public class GroupViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     private GroupDB groupDB;
 
     // data is passed into the constructor
-    public GroupViewAdapter(Context context, ArrayList<Hashtable<String,String>> results, ArrayList<Boolean> list) {
+    public GroupViewAdapter(Context context, ArrayList<GroupData> results, ArrayList<Boolean> list) {
         this.mInflater = LayoutInflater.from(context);
         this.results = results;
         this.context = context;
@@ -64,13 +66,13 @@ public class GroupViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     // binds the data to the TextView in each row
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-        double currentMonthTotal = Double.parseDouble(results.get(position).get("currentMonthTotal"));
-        int nPeps = Integer.parseInt(results.get(position).get("noOfPersons"));
-        ((ViewHolder) holder).title.setText(results.get(position).get("title"));
-        ((ViewHolder) holder).totalAmount.setText("₹ "+currentMonthTotal);
-        ((ViewHolder) holder).lifeTimeSpend.setText("₹ "+results.get(position).get("totalAmount"));
+        double currentMonthTotal = results.get(position).getTotalAmount();
+        int nPeps = results.get(position).getNoOfPersons();
+        ((ViewHolder) holder).title.setText(results.get(position).getTitle());
+        ((ViewHolder) holder).totalAmount.setText(SplashScreenActivity.cSymbol+ " "+currentMonthTotal);
+        ((ViewHolder) holder).lifeTimeSpend.setText(SplashScreenActivity.cSymbol+ " "+results.get(position).getTotalAmount());
         ((ViewHolder) holder).splitBetween.setText(nPeps<=1? nPeps+ " Person" : "Split Between "+ nPeps + " People");
-        double net_amount = Double.parseDouble(results.get(position).get("netAmount"));
+        double net_amount = results.get(position).getNetAmount();
         if(net_amount>=0){
             ((ViewHolder) holder).netAmount.setTextColor(context.getResources().getColor(R.color.theme_green));
             ((ViewHolder) holder).netAmount.setText("+"+net_amount);
@@ -78,7 +80,7 @@ public class GroupViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             ((ViewHolder) holder).netAmount.setTextColor(context.getResources().getColor(R.color.theme_red));
             ((ViewHolder) holder).netAmount.setText(""+net_amount);
         }
-        double limit = Double.parseDouble(results.get(position).get("maxLimit"));
+        double limit = results.get(position).getMaxLimit();
         double percentageLimit = ((currentMonthTotal/limit)*100);
         if(percentageLimit<=50){
             //((ViewHolder) holder).warning.setText(String.format("You have used %s%% of your limit (%s)", new DecimalFormat("00.00").format(percentageLimit),new DecimalFormat("00.00").format(limit)));
@@ -109,9 +111,9 @@ public class GroupViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         });
         if(list.get(position)) {
             if(net_amount>0){
-                ((ViewHolder) holder).info.setText(results.get(position).get("title") + " owes you "+net_amount);
+                ((ViewHolder) holder).info.setText(results.get(position).getTitle() + " owes you "+net_amount);
             }else if (net_amount<0){
-                ((ViewHolder) holder).info.setText("You owe "+(-1*net_amount)+" to "+results.get(position).get("title"));
+                ((ViewHolder) holder).info.setText("You owe "+(-1*net_amount)+" to "+results.get(position).getTitle());
             }else{
                 ((ViewHolder) holder).info.setText("No Dues");
             }
@@ -119,9 +121,9 @@ public class GroupViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                 Intent intent = new Intent(context, Expense.class);
                 intent.putExtra("tableName","self_expense");
                 intent.putExtra("viewType", ViewType.MONTHLY);
-                intent.putExtra("groupBy",results.get(position).get("title"));
+                intent.putExtra("groupBy",results.get(position).getTitle());
                 intent.putExtra("filterType","group");
-                intent.putExtra("filterValue", GenericExpenseDB.getMonthFromDate(new Date()));
+                intent.putExtra("filterValue", ExpenseDB.getMonthFromDate(new Date()));
                 context.startActivity(intent);
             });
 
@@ -133,9 +135,9 @@ public class GroupViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                 TextView groupName = dialogView.findViewById(R.id.groupName);
                 EditText noOfPeps = dialogView.findViewById(R.id.noofpeps);
                 EditText maxLimit = dialogView.findViewById(R.id.limit);
-                groupName.setText(results.get(position).get("title"));
-                noOfPeps.setText(results.get(position).get("noOfPersons"));
-                maxLimit.setText(results.get(position).get("maxLimit"));
+                groupName.setText(results.get(position).getTitle());
+                noOfPeps.setText(results.get(position).getNoOfPersons());
+                maxLimit.setText(results.get(position).getMaxLimit()+"");
                 dialog.setView(dialogView);
                 dialogView.findViewById(R.id.update).setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -155,15 +157,15 @@ public class GroupViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                                     if(tempLimit <= 0 ){
                                         maxLimit.setError("Cannot be 0 or less");
                                     }else{
-                                        int originalNoOfPersons = Integer.parseInt(results.get(position).get("noOfPersons"));
-                                        int originalLimit = Integer.parseInt(results.get(position).get("maxLimit"));
+                                        int originalNoOfPersons = results.get(position).getNoOfPersons();
+                                        double originalLimit = results.get(position).getMaxLimit();
                                         if(originalLimit == tempLimit && originalNoOfPersons == tempNoOfPersons){
                                             //No change
                                             dialog.dismiss();
                                         }else{
-                                            groupDB.updateGroupLimitAndPersons(results.get(position).get("title"),tempNoOfPersons,tempLimit);
-                                            results.get(position).put("maxLimit",new DecimalFormat("00.00").format(tempLimit));
-                                            results.get(position).put("noOfPersons",tempNoOfPersons+"");
+                                            groupDB.updateGroupLimitAndPersons(results.get(position).getTitle(),tempNoOfPersons,tempLimit);
+                                            results.get(position).setMaxLimit(tempLimit);
+                                            results.get(position).setNoOfPersons(tempNoOfPersons);
                                             notifyItemChanged(position);
                                             dialog.dismiss();
                                         }
@@ -191,8 +193,8 @@ public class GroupViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                         // The dialog is automatically dismissed when a dialog button is clicked.
                         .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
-                                groupDB.updateNetAmountByTitle(results.get(position).get("title"));
-                                results.get(position).put("netAmount","00.00");
+                                groupDB.updateNetAmountByTitle(results.get(position).getTitle());
+                                results.get(position).setNetAmount(00.00);
                                 notifyItemChanged(position);
                             }
                         })
@@ -209,7 +211,7 @@ public class GroupViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                         // The dialog is automatically dismissed when a dialog button is clicked.
                         .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
-                                groupDB.deleteGroupByTitle(results.get(position).get("title"));
+                                groupDB.deleteGroupByTitle(results.get(position).getTitle());
                                 results.remove(position);
                                 list.remove(position);
                                 notifyDataSetChanged();

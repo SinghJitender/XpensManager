@@ -2,7 +2,6 @@ package com.example.xpensmanager.Database;
 
 import android.content.ContentValues;
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteConstraintException;
@@ -18,8 +17,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Hashtable;
 
-import static android.content.Context.MODE_PRIVATE;
-
 
 public class GroupDB extends SQLiteOpenHelper {
 
@@ -32,11 +29,11 @@ public class GroupDB extends SQLiteOpenHelper {
     public static String groupdb_netAmount = "netAmount";
     public static String groupdb_totalAmount = "totalAmount";
 
-    private GenericExpenseDB genericExpenseDB;
+    private ExpenseDB expenseDB;
 
     public GroupDB(Context context) {
         super(context,context.getString(R.string.database_name),null,1);
-        genericExpenseDB = new GenericExpenseDB(context);
+        expenseDB = new ExpenseDB(context);
     }
 
     @Override
@@ -132,26 +129,26 @@ public class GroupDB extends SQLiteOpenHelper {
         return true;
     }
 
-
     public double getNetAmountByTitle(String grouptitle){
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor =  db.rawQuery( "select "+groupdb_netAmount+" from groups where "+groupdb_title+" = '"+grouptitle+"'", null );
         cursor.moveToNext();
         return cursor.getDouble(cursor.getColumnIndex(groupdb_netAmount));
     }
+
     public double getTotalAmountByTitle(String grouptitle){
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor =  db.rawQuery( "select "+groupdb_totalAmount+" from groups where "+groupdb_title+" = '"+grouptitle+"'", null );
         cursor.moveToNext();
         return cursor.getDouble(cursor.getColumnIndex(groupdb_totalAmount));
     }
+
     public double getGroupLimitByTitle(String grouptitle){
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor =  db.rawQuery( "select "+groupdb_maxLimit+" from groups where "+groupdb_title+" = '"+grouptitle+"'", null );
         cursor.moveToNext();
         return cursor.getDouble(cursor.getColumnIndex(groupdb_maxLimit));
     }
-
 
     public Integer deleteGroupByTitle(String title) {
         SQLiteDatabase db = this.getWritableDatabase();
@@ -167,19 +164,19 @@ public class GroupDB extends SQLiteOpenHelper {
                 new String[] { Integer.toString(id) });
     }
 
-    public ArrayList<Hashtable<String,String>> findAll(){
-        ArrayList<Hashtable<String,String>> results = new ArrayList<>();
+    public ArrayList<GroupData> findAll(){
+        ArrayList<GroupData> results = new ArrayList<>();
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor =  db.rawQuery( "select * from groups", null );
         while (cursor.moveToNext()){
-            Hashtable<String,String> temp = new Hashtable<>();
-            temp.put("id",cursor.getString(cursor.getColumnIndex(groupdb_id)));
-            temp.put("title",cursor.getString(cursor.getColumnIndex(groupdb_title)));
-            temp.put("noOfPersons",cursor.getString(cursor.getColumnIndex(groupdb_noOfPersons)));
-            temp.put("maxLimit",cursor.getString(cursor.getColumnIndex(groupdb_maxLimit)));
-            temp.put("netAmount",cursor.getString(cursor.getColumnIndex(groupdb_netAmount)));
-            temp.put("totalAmount",cursor.getString(cursor.getColumnIndex(groupdb_totalAmount)));
-            temp.put("currentMonthTotal",genericExpenseDB.getMonthTotalForGroup(cursor.getString(cursor.getColumnIndex(groupdb_title)),GenericExpenseDB.getMonthFromDate(new Date()),GenericExpenseDB.getYearFromDate(new Date()))+"");
+            GroupData temp = new GroupData();
+            temp.setId(cursor.getInt(cursor.getColumnIndex(groupdb_id)));
+            temp.setTitle(cursor.getString(cursor.getColumnIndex(groupdb_title)));
+            temp.setNoOfPersons(cursor.getInt(cursor.getColumnIndex(groupdb_noOfPersons)));
+            temp.setMaxLimit(cursor.getDouble(cursor.getColumnIndex(groupdb_maxLimit)));
+            temp.setNetAmount(cursor.getDouble(cursor.getColumnIndex(groupdb_netAmount)));
+            temp.setTotalAmount(cursor.getDouble(cursor.getColumnIndex(groupdb_totalAmount)));
+            temp.setGroupTotal(expenseDB.getMonthTotalForGroup(cursor.getString(cursor.getColumnIndex(groupdb_title)), ExpenseDB.getMonthFromDate(new Date()), ExpenseDB.getYearFromDate(new Date())));
             results.add(temp);
         }
         return results;
