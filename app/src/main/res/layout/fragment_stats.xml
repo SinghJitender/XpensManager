@@ -75,25 +75,260 @@
                     android:textSize="10sp" />
             </androidx.cardview.widget.CardView>
 
-
             <HorizontalScrollView
                 android:scrollbars="none"
                 android:layout_width="match_parent"
-                android:layout_height="210dp">
+                android:layout_height="220dp">
                     <LinearLayout
                         android:background="@color/theme_light_grey"
                         android:orientation="horizontal"
+                        android:paddingTop="10dp"
+                        android:paddingBottom="10dp"
                         android:layout_width="match_parent"
-                        android:padding="10dp"
                         android:layout_height="wrap_content">
 
                     <androidx.cardview.widget.CardView
-                        android:layout_width="300dp"
-                        android:layout_height="180dp"
+                        android:layout_width="290dp"
+                        android:layout_height="200dp"
                         android:elevation="5dp"
                         app:cardBackgroundColor="@color/white"
                         app:cardCornerRadius="5dp"
                         app:cardUseCompatPadding="true">
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:weightSum="10"
+                            android:orientation="horizontal">
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="10"
+                                android:layout_gravity="center"
+                                android:gravity="center"
+                                android:orientation="vertical">
+                                <TextView
+                                    android:textSize="15sp"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="Monthly Average"/>
+                                <TextView
+                                    android:id="@+id/overallMonthlyExpense"
+                                    android:textStyle="bold"
+                                    android:textSize="28sp"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="85,300.00"/>
+                                <TextView
+                                    android:id="@+id/percentageOfMonthlySalary"
+                                    android:textStyle="bold"
+                                    android:textSize="20sp"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="30%"/>
+                                <TextView
+                                    android:textSize="15sp"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="of your salary"/>
+
+                            </LinearLayout>
+
+                        </LinearLayout>
+                    </androidx.cardview.widget.CardView>
+
+                    <androidx.cardview.widget.CardView
+                        android:layout_width="330dp"
+                        app:cardUseCompatPadding="true"
+                        android:elevation="5dp"
+                        app:cardCornerRadius="5dp"
+                        app:cardBackgroundColor="@color/white"
+                        android:layout_height="200dp">
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_marginTop="3dp"
+                            android:layout_marginBottom="3dp"
+                            android:orientation="vertical">
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_weight="10"
+                                android:layout_gravity="center"
+                                android:gravity="center"
+                                android:orientation="vertical">
+                                <TextView
+                                    android:id="@+id/monthName"
+                                    android:textSize="14sp"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="January Average"/>
+                                <TextView
+                                    android:id="@+id/currentMonthAverage"
+                                    android:textStyle="bold"
+                                    android:textSize="18sp"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="85,300.00"/>
+                            </LinearLayout>
+                            <View
+                                android:layout_width="match_parent"
+                                android:layout_height="1dp"
+                                android:layout_marginLeft="30dp"
+                                android:layout_marginRight="30dp"
+                                android:layout_marginTop="3dp"
+                                android:layout_marginBottom="3dp"
+                                android:background="@color/theme_grey" />
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_weight="10"
+                                android:layout_gravity="center"
+                                android:gravity="center"
+                                android:orientation="vertical">
+                                <TextView
+                                    android:id="@+id/weekDayName"
+                                    android:textSize="14sp"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="Friday Average"/>
+                                <TextView
+                                    android:id="@+id/currentWeekAverage"
+                                    android:textStyle="bold"
+                                    android:textSize="18sp"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="85,300.00"/>
+
+                            </LinearLayout>
+                            <View
+                                android:layout_width="match_parent"
+                                android:layout_height="1dp"
+                                android:layout_marginLeft="30dp"
+                                android:layout_marginRight="30dp"
+                                android:layout_marginTop="3dp"
+                                android:layout_marginBottom="3dp"
+                                android:background="@color/theme_grey" />
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_weight="10"
+                                android:layout_gravity="center"
+                                android:gravity="center"
+                                android:orientation="vertical">
+                                <TextView
+                                    android:id="@+id/dayName"
+                                    android:textSize="14sp"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="Average Spends on day 2 of month "/>
+                                <TextView
+                                    android:id="@+id/currentDayAverage"
+                                    android:textStyle="bold"
+                                    android:textSize="18sp"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="85,300.00"/>
+                            </LinearLayout>
+
+                        </LinearLayout>
+                    </androidx.cardview.widget.CardView>
+
+                    <androidx.cardview.widget.CardView
+                        android:layout_width="350dp"
+                        app:cardUseCompatPadding="true"
+                        android:elevation="5dp"
+                        app:cardCornerRadius="5dp"
+                        app:cardBackgroundColor="@color/white"
+                        android:layout_height="200dp">
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_marginTop="5dp"
+                            android:layout_marginBottom="5dp"
+                            android:layout_marginLeft="20dp"
+                            android:orientation="vertical">
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="left"
+                                android:textSize="18sp"
+                                android:textStyle="bold"
+                                android:text="Top Categories"/>
+
+                            <View
+                                android:layout_width="200dp"
+                                android:layout_height="1dp"
+                                android:layout_marginTop="2dp"
+                                android:layout_marginBottom="8dp"
+                                android:background="@color/theme_grey" />
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="vertical"
+                                android:layout_gravity="center">
+                                <TextView
+                                    android:id="@+id/category1"
+                                    android:textSize="15sp"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="#1  Not enough data"/>
+                                <View
+                                    android:layout_width="match_parent"
+                                    android:layout_height="0.5dp"
+                                    android:layout_marginRight="30dp"
+                                    android:layout_marginTop="3dp"
+                                    android:layout_marginBottom="3dp"
+                                    android:background="@color/theme_grey" />
+                                <TextView
+                                    android:id="@+id/category2"
+                                    android:textSize="15sp"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="#2  Not enough data"/>
+                                <View
+                                    android:layout_width="match_parent"
+                                    android:layout_height="0.5dp"
+                                    android:layout_marginRight="30dp"
+                                    android:layout_marginTop="3dp"
+                                    android:layout_marginBottom="3dp"
+                                    android:background="@color/theme_grey" />
+                                <TextView
+                                    android:id="@+id/category3"
+                                    android:textSize="15sp"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="#3  Not enough data"/>
+                                <View
+                                    android:layout_width="match_parent"
+                                    android:layout_height="0.5dp"
+                                    android:layout_marginRight="30dp"
+                                    android:layout_marginTop="3dp"
+                                    android:layout_marginBottom="3dp"
+                                    android:background="@color/theme_grey" />
+                                <TextView
+                                    android:id="@+id/category4"
+                                    android:textSize="15sp"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="#4  Not enough data"/>
+
+                                <View
+                                    android:layout_width="match_parent"
+                                    android:layout_height="0.5dp"
+                                    android:layout_marginRight="30dp"
+                                    android:layout_marginTop="3dp"
+                                    android:layout_marginBottom="3dp"
+                                    android:background="@color/theme_grey" />
+                                <TextView
+                                    android:id="@+id/category5"
+                                    android:textSize="15sp"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="#5  Not enough data"/>
+
+                            </LinearLayout>
+
+                        </LinearLayout>
                     </androidx.cardview.widget.CardView>
 
                     <androidx.cardview.widget.CardView
@@ -102,21 +337,7 @@
                         android:elevation="5dp"
                         app:cardCornerRadius="5dp"
                         app:cardBackgroundColor="@color/theme_grey"
-                        android:layout_height="180dp"/>
-                    <androidx.cardview.widget.CardView
-                        android:layout_width="300dp"
-                        app:cardUseCompatPadding="true"
-                        android:elevation="5dp"
-                        app:cardCornerRadius="5dp"
-                        app:cardBackgroundColor="@color/theme_grey"
-                        android:layout_height="180dp"/>
-                    <androidx.cardview.widget.CardView
-                        android:layout_width="300dp"
-                        app:cardUseCompatPadding="true"
-                        android:elevation="5dp"
-                        app:cardCornerRadius="5dp"
-                        app:cardBackgroundColor="@color/theme_grey"
-                        android:layout_height="180dp"/>
+                        android:layout_height="200dp"/>
                 </LinearLayout>
             </HorizontalScrollView>
 

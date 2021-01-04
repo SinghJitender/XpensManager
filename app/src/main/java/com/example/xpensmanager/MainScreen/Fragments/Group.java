@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.xpensmanager.Database.GroupDB;
+import com.example.xpensmanager.Database.GroupData;
 import com.example.xpensmanager.MainScreen.Adapters.GroupViewAdapter;
 import com.example.xpensmanager.R;
 
@@ -24,7 +25,7 @@ public class Group extends Fragment {
     private static GroupViewAdapter adapter;
     private static GroupDB groupDB;
     private TextView emptyView;
-    private static ArrayList<Hashtable<String,String>> results;
+    private static ArrayList<GroupData> results;
     private static ArrayList<Boolean> list;
     private ExecutorService mExecutor;
 
@@ -70,7 +71,7 @@ public class Group extends Fragment {
         return view;
     }
 
-    public static void updateGroupAdapter(ArrayList<Hashtable<String,String>> updatedResults, ArrayList<Boolean> updateList){
+    public static void updateGroupAdapter(ArrayList<GroupData> updatedResults, ArrayList<Boolean> updateList){
         results.clear();
         results.addAll(updatedResults);
         list.clear();
