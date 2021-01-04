@@ -14,20 +14,18 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.example.xpensmanager.Database.CategoryDB;
-import com.example.xpensmanager.Database.GenericExpenseDB;
-import com.example.xpensmanager.Database.GroupDB;
+import com.example.xpensmanager.Database.ExpenseDB;
 import com.example.xpensmanager.Enums.ViewType;
 import com.example.xpensmanager.Database.ExpenseData;
 import com.example.xpensmanager.ExpenseScreen.Adapters.ExpenseViewAdapter;
 import com.example.xpensmanager.R;
+import com.example.xpensmanager.SplashScreen.SplashScreenActivity;
 import com.whiteelephant.monthpicker.MonthPickerDialog;
 
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 import xyz.sangcomz.stickytimelineview.TimeLineRecyclerView;
 import xyz.sangcomz.stickytimelineview.callback.SectionCallback;
@@ -39,7 +37,7 @@ import xyz.sangcomz.stickytimelineview.model.SectionInfo;
  * create an instance of this fragment.
  */
 public class YearlyViewFragment extends Fragment {
-    private GenericExpenseDB genericExpenseDB;
+    private ExpenseDB expenseDB;
     private String tableName,groupBy,filterType;
     private int filterValue;
     private ArrayList<ExpenseData> expenseData;
@@ -79,7 +77,7 @@ public class YearlyViewFragment extends Fragment {
         currentYearName = view.findViewById(R.id.currentYearName);
         currentYearTotalSpends = view.findViewById(R.id.currentYearTotalSpends);
 
-        genericExpenseDB = new GenericExpenseDB(getActivity());
+        expenseDB = new ExpenseDB(getActivity());
 
         today = Calendar.getInstance();
         currentYearName.setText(today.get(Calendar.YEAR)+"");
@@ -93,19 +91,19 @@ public class YearlyViewFragment extends Fragment {
                 false));
 
         if(groupBy.equalsIgnoreCase("None")) {
-            expenseData = genericExpenseDB.findByYear(filterValue);
-            double totalSpendsThisYear = genericExpenseDB.getYearlyExpenseSum(GenericExpenseDB.getYearFromDate(new Date()));
-            currentYearTotalSpends.setText("₹ " + totalSpendsThisYear);
+            expenseData = expenseDB.findByYear(filterValue);
+            double totalSpendsThisYear = expenseDB.getYearlyExpenseSum(ExpenseDB.getYearFromDate(new Date()));
+            currentYearTotalSpends.setText(SplashScreenActivity.cSymbol+ " "+ totalSpendsThisYear);
         }
         else{
             if(filterType.equalsIgnoreCase("category")) {
-                expenseData = genericExpenseDB.findByYearAndCategory(groupBy,filterValue);
-                double totalSpendsThisYear = genericExpenseDB.getYearlyExpenseSumByCategory(GenericExpenseDB.getYearFromDate(new Date()),groupBy);
-                currentYearTotalSpends.setText("₹ "+totalSpendsThisYear);
+                expenseData = expenseDB.findByYearAndCategory(groupBy,filterValue);
+                double totalSpendsThisYear = expenseDB.getYearlyExpenseSumByCategory(ExpenseDB.getYearFromDate(new Date()),groupBy);
+                currentYearTotalSpends.setText(SplashScreenActivity.cSymbol+ " "+totalSpendsThisYear);
             }else{
-                expenseData = genericExpenseDB.findByYearAndGroup(groupBy,filterValue);
-                double totalSpendsThisYear = genericExpenseDB.getYearlyExpenseSumByGroup(GenericExpenseDB.getYearFromDate(new Date()),groupBy);
-                currentYearTotalSpends.setText("₹ "+totalSpendsThisYear);
+                expenseData = expenseDB.findByYearAndGroup(groupBy,filterValue);
+                double totalSpendsThisYear = expenseDB.getYearlyExpenseSumByGroup(ExpenseDB.getYearFromDate(new Date()),groupBy);
+                currentYearTotalSpends.setText(SplashScreenActivity.cSymbol+ " "+totalSpendsThisYear);
             }
         }
 
@@ -139,18 +137,18 @@ public class YearlyViewFragment extends Fragment {
                         currentYearName.setText(""+selectedYear);
                         expenseData.clear();
                         if (groupBy.equalsIgnoreCase("None")) {
-                            expenseData.addAll(genericExpenseDB.findByYear(selectedYear));
-                            double totalSpendsThisYear = genericExpenseDB.getYearlyExpenseSum(selectedYear);
-                            currentYearTotalSpends.setText("₹ "+totalSpendsThisYear);
+                            expenseData.addAll(expenseDB.findByYear(selectedYear));
+                            double totalSpendsThisYear = expenseDB.getYearlyExpenseSum(selectedYear);
+                            currentYearTotalSpends.setText(SplashScreenActivity.cSymbol+ " "+totalSpendsThisYear);
                         } else {
                             if (filterType.equalsIgnoreCase("category")) {
-                                expenseData.addAll(genericExpenseDB.findByYearAndCategory(groupBy, selectedYear));
-                                double totalSpendsThisYear = genericExpenseDB.getYearlyExpenseSumByCategory(selectedYear,groupBy);
-                                currentYearTotalSpends.setText("₹ "+totalSpendsThisYear);
+                                expenseData.addAll(expenseDB.findByYearAndCategory(groupBy, selectedYear));
+                                double totalSpendsThisYear = expenseDB.getYearlyExpenseSumByCategory(selectedYear,groupBy);
+                                currentYearTotalSpends.setText(SplashScreenActivity.cSymbol+ " "+totalSpendsThisYear);
                             } else {
-                                expenseData.addAll(genericExpenseDB.findByYearAndGroup(groupBy, selectedYear));
-                                double totalSpendsThisYear = genericExpenseDB.getYearlyExpenseSumByGroup(selectedYear,groupBy);
-                                currentYearTotalSpends.setText("₹ "+totalSpendsThisYear);
+                                expenseData.addAll(expenseDB.findByYearAndGroup(groupBy, selectedYear));
+                                double totalSpendsThisYear = expenseDB.getYearlyExpenseSumByGroup(selectedYear,groupBy);
+                                currentYearTotalSpends.setText(SplashScreenActivity.cSymbol+ " "+totalSpendsThisYear);
                             }
                         }
                         adapter.notifyDataSetChanged();
