@@ -6,7 +6,7 @@ import androidx.fragment.app.FragmentManager;
 
 import android.os.Bundle;
 
-import com.example.xpensmanager.Database.GenericExpenseDB;
+import com.example.xpensmanager.Database.ExpenseDB;
 import com.example.xpensmanager.ExpenseScreen.Fragments.AllViewFragment;
 import com.example.xpensmanager.ExpenseScreen.Fragments.MonthlyViewFragment;
 import com.example.xpensmanager.ExpenseScreen.Fragments.YearlyViewFragment;
@@ -40,13 +40,13 @@ public class Expense extends AppCompatActivity{
         monthlyView = new Bundle();
         monthlyView.putString("groupBy",groupBy);
         monthlyView.putString("filterType",filterType);
-        monthlyView.putInt("filterValue",GenericExpenseDB.getMonthFromDate(new Date()));
+        monthlyView.putInt("filterValue", ExpenseDB.getMonthFromDate(new Date()));
         fragment1.setArguments(monthlyView);
 
         yearlyView = new Bundle();
         yearlyView.putString("groupBy",groupBy);
         yearlyView.putString("filterType",filterType);
-        yearlyView.putInt("filterValue",GenericExpenseDB.getYearFromDate(new Date()));
+        yearlyView.putInt("filterValue", ExpenseDB.getYearFromDate(new Date()));
         fragment2.setArguments(yearlyView);
 
         allView = new Bundle();

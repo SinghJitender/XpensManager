@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.xpensmanager.Database.ExpenseData;
 import com.example.xpensmanager.Enums.ViewType;
 import com.example.xpensmanager.R;
+import com.example.xpensmanager.SplashScreen.SplashScreenActivity;
 
 import java.util.ArrayList;
 
@@ -36,7 +37,7 @@ public class ExpenseViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         ((ViewHolder) holder).description.setText(list.get(position).getDescription());
-        ((ViewHolder) holder).splitamount.setText("₹ "+list.get(position).getSplitAmount());
+        ((ViewHolder) holder).splitamount.setText(SplashScreenActivity.cSymbol+ " "+list.get(position).getSplitAmount());
         if(viewType == ViewType.MONTHLY){
             ((ViewHolder) holder).date.setVisibility(View.GONE);
         }else if (viewType == ViewType.YEARLY){
@@ -48,10 +49,10 @@ public class ExpenseViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             ((ViewHolder) holder).date.setText(list.get(position).getTextMonth());
         }
         if(list.get(position).getGroup().equalsIgnoreCase("OWN")) {
-            ((ViewHolder) holder).amount.setText("₹ "+list.get(position).getAmount() + " paid by "+list.get(position).getPaidBy());
+            ((ViewHolder) holder).amount.setText(SplashScreenActivity.cSymbol+ " "+list.get(position).getAmount() + " paid by "+list.get(position).getPaidBy());
         }
         else{
-            ((ViewHolder) holder).amount.setText("₹ "+list.get(position).getAmount()+ " split with "+list.get(position).getGroup()+ " paid by "+list.get(position).getPaidBy());
+            ((ViewHolder) holder).amount.setText(SplashScreenActivity.cSymbol+ " "+list.get(position).getAmount()+ " split with "+list.get(position).getGroup()+ " paid by "+list.get(position).getPaidBy());
         }
         ((ViewHolder) holder).category.setText(list.get(position).getCategory());
     }
