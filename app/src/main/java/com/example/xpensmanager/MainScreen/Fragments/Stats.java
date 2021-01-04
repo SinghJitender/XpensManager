@@ -6,11 +6,13 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
 
-import com.example.xpensmanager.Database.GenericExpenseDB;
+import com.example.xpensmanager.Database.ExpenseDB;
 import com.example.xpensmanager.R;
+import com.example.xpensmanager.SplashScreen.SplashScreenActivity;
 import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.components.Legend;
@@ -25,9 +27,9 @@ import com.hadiidbouk.charts.ChartProgressBar;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Locale;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -36,12 +38,16 @@ import im.dacer.androidcharts.LineView;
 
 public class Stats extends Fragment {
     private PieChart pchart,pieChartGroup;
-    private GenericExpenseDB genericExpenseDB;
-    private HashMap<String,Double> weekList,yearList,categoryList,groupList,weekAvgExpense,monthAvgExpense;
-    private HashMap<Integer,Double> dayList,dayAvgExpense;
+    private ExpenseDB expenseDB;
+    private HashMap<String,Double> weekList,yearList,groupList;
+    private LinkedHashMap<String,Double> categoryList;
+    private int monthCount, weekCount, dayCount, totalDistinctMonthCount;
+    private HashMap<Integer,Double> dayList;
     private ExecutorService mExecutor;
     private double totalSpends;
     private ChartProgressBar mChart, yChart, dChart;
+    private TextView overallMonthlyExpense,monthName,currentMonthAverage,weekDayName,currentWeekAverage,dayName,currentDayAverage;
+    private TextView category1,category2,category3,category4,category5;
 
     public Stats() {
         // Required empty public constructor
@@ -53,11 +59,11 @@ public class Stats extends Fragment {
         weekList = new HashMap<>();
         yearList =  new HashMap<>();
         dayList =  new HashMap<>();
-        categoryList =  new HashMap<>();
+        categoryList =  new LinkedHashMap<>();
         groupList =  new HashMap<>();
         mExecutor = Executors.newFixedThreadPool(4);
-        genericExpenseDB = new GenericExpenseDB(getActivity());
-        totalSpends = genericExpenseDB.getAllExpenseSum();
+        expenseDB = new ExpenseDB(getActivity());
+        totalSpends = expenseDB.getAllExpenseSum();
     }
 
     @Override
@@ -72,12 +78,25 @@ public class Stats extends Fragment {
         LineView lineView = view.findViewById(R.id.line_view);
         pchart = view.findViewById(R.id.chart1);
         pieChartGroup = view.findViewById(R.id.pieChartGroup);
+        overallMonthlyExpense= view.findViewById(R.id.overallMonthlyExpense);
+        monthName = view.findViewById(R.id.monthName);
+        weekDayName = view.findViewById(R.id.weekDayName);
+        dayName = view.findViewById(R.id.dayName);
+        currentMonthAverage = view.findViewById(R.id.currentMonthAverage);
+        currentWeekAverage = view.findViewById(R.id.currentWeekAverage);
+        currentDayAverage = view.findViewById(R.id.currentDayAverage);
+        category1 = view.findViewById(R.id.category1);
+        category2 = view.findViewById(R.id.category2);
+        category3 = view.findViewById(R.id.category3);
+        category4 = view.findViewById(R.id.category4);
+        category5 = view.findViewById(R.id.category5);
 
+        //Sum of all weekdays
         mExecutor.execute(()->{
             if(weekList.size()>0){
                 weekList.clear();
             }
-            weekList = genericExpenseDB.getSumForAllWeekDays();
+            weekList = expenseDB.getSumForAllWeekDays();
             Log.d("Stats",weekList+"");
             getActivity().runOnUiThread(()->{
                 //Weekly Chart View
@@ -87,11 +106,12 @@ public class Stats extends Fragment {
             });
         });
 
+        //Sum of all months
         mExecutor.execute(()->{
             if(yearList.size()>0){
                 yearList.clear();
             }
-            yearList = genericExpenseDB.getSumForAllMonths();
+            yearList = expenseDB.getSumForAllMonths();
             Log.d("Stats",yearList+"");
             getActivity().runOnUiThread(()->{
                 //Yearly Chart View
@@ -101,11 +121,12 @@ public class Stats extends Fragment {
             });
         });
 
+        //Sum of all days
         mExecutor.execute(()->{
             if(dayList.size()>0){
                 dayList.clear();
             }
-            dayList = genericExpenseDB.getSumForAllDays();
+            dayList = expenseDB.getSumForAllDays();
             Log.d("Stats",dayList+"");
             getActivity().runOnUiThread(()->{
                 //Each Day Chart View
@@ -115,23 +136,36 @@ public class Stats extends Fragment {
             });
         });
 
+        //Sum of all categories
         mExecutor.execute(()->{
             if(categoryList.size()>0){
                 categoryList.clear();
             }
-            categoryList = genericExpenseDB.getSumByCategory();
+            categoryList = expenseDB.getSumByCategory();
+            ArrayList<TextView> categoryTextViewList = new ArrayList<>();
+            categoryTextViewList.add(category1);categoryTextViewList.add(category2);categoryTextViewList.add(category3);categoryTextViewList.add(category4);categoryTextViewList.add(category5);
             Log.d("Stats",categoryList+"");
             getActivity().runOnUiThread(()->{
                 //Set Category Data
                 setCategoryData(categoryList,totalSpends);
+                int i = 0;
+                for(String key:categoryList.keySet()){
+                    if(i<=5) {
+                        categoryTextViewList.get(i).setText("#"+(i+1)+"  "+key+"  - " +SplashScreenActivity.cSymbol+ " "+ categoryList.get(key));
+                    }else{
+                        break;
+                    }
+                    i++;
+                }
             });
         });
 
+        //Sum of all groups
         mExecutor.execute(()->{
             if(groupList.size()>0){
                 groupList.clear();
             }
-            groupList = genericExpenseDB.getSumByGroup();
+            groupList = expenseDB.getSumByGroup();
             Log.d("Stats",groupList+"");
             getActivity().runOnUiThread(()->{
                 //Set Group Data
@@ -139,15 +173,59 @@ public class Stats extends Fragment {
             });
         });
 
-        Date date = new Date();
-        Locale locale = Locale.ENGLISH;
-        weekAvgExpense = genericExpenseDB.getAverageForWeekDays(GenericExpenseDB.getDayOfWeek(date, locale));
-        dayAvgExpense = genericExpenseDB.getAverageForDay(GenericExpenseDB.getDayFromDate(date));
-        monthAvgExpense = genericExpenseDB.getAverageForMonth(GenericExpenseDB.getDayOfMonth(date,locale));
-        Log.d("Week Avg",weekAvgExpense+"");
-        Log.d("Day Avg",dayAvgExpense+"");
-        Log.d("Month Avg",monthAvgExpense.toString());
+        //Text Stats
+        mExecutor.execute(()->{
+            Date date = new Date();
+            Locale locale = Locale.ENGLISH;
+            String currentDayOfWeek = ExpenseDB.getDayOfWeek(date, locale);
+            String currentMonth = ExpenseDB.getNameOfMonth(date,locale);
+            int currentDay = ExpenseDB.getDayFromDate(date);
+            weekCount = expenseDB.getCountOfDistinctWeekDaysRecords(currentDayOfWeek);
+            monthCount = expenseDB.getCountOfDistinctMonthRecords(currentMonth);
+            dayCount = expenseDB.getCountOfDistinctDayRecords(currentDay);
+            totalDistinctMonthCount = expenseDB.getCountOfAllMonthRecords();
+            getActivity().runOnUiThread(()->{
+                monthName.setText("Average Spending In "+currentMonth);
+                weekDayName.setText("Average Expenditure On "+currentDayOfWeek+"");
+                dayName.setText("Average Spends On Day "+currentDay+" Of Month");
+                if(weekCount>0 && weekList.containsKey(currentDayOfWeek)){
+                    //Log.d("Stats - Week Day Avg",(weekList.get(currentDayOfWeek)/weekCount)+"");
+                    currentWeekAverage.setText((weekList.get(currentDayOfWeek)/weekCount)+"");
+                }else{
+                    // No Value Present in db
+                    currentWeekAverage.setText("Not enough data to calculate");
+                    currentWeekAverage.setTextSize(10f);
+                }
 
+                if(monthCount>0 && yearList.containsKey(currentMonth)){
+                    //Log.d("Stats - Month Avg",(yearList.get(currentMonth)/monthCount)+"");
+                    currentMonthAverage.setText((yearList.get(currentMonth)/monthCount)+"");
+                }else{
+                    // No Value Present in db
+                    currentMonthAverage.setText("Not enough data to calculate");
+                    currentMonthAverage.setTextSize(10f);
+                }
+
+                if(dayCount>0 && dayList.containsKey(currentDay)){
+                    //Log.d("Stats - Day Avg",(dayList.get(currentDay)/dayCount)+"");
+                    currentDayAverage.setText((dayList.get(currentDay)/dayCount)+"");
+                }else{
+                    // No Value Present in db
+                    currentDayAverage.setText("Not enough data to calculate");
+                    currentDayAverage.setTextSize(10f);
+                }
+
+                if(totalDistinctMonthCount>0){
+                    Log.d("All Time Monthly Avg", (totalSpends/totalDistinctMonthCount)+"");
+                    overallMonthlyExpense.setText((totalSpends/totalDistinctMonthCount)+"");
+                }else{
+                    // No Value Present in db
+                    overallMonthlyExpense.setText("Not enough data to calculate");
+                }
+            });
+
+
+        });
 
         lineView.setDrawDotLine(true); //optional
         lineView.setShowPopup(LineView.SHOW_POPUPS_MAXMIN_ONLY); //optional
@@ -157,8 +235,6 @@ public class Stats extends Fragment {
         ArrayList<Integer> al = new ArrayList<>(Arrays.asList(44,30,56,36,75,80,40,70,42,53,44,52));
         ArrayList<Integer> al2 = new ArrayList<>(Arrays.asList(80,40,70,42,53,56,55,85,74,65,25,96));
         ArrayList<Integer> al4 = new ArrayList<>(Arrays.asList(56,55,85,74,65,74,85,89,55,54,33,45));
-        //ArrayList<Integer> al5 = new ArrayList<>(Arrays.asList(74,85,89,55,54,56,95,94,53,63,65,98));
-        //ArrayList<Integer> al3 = new ArrayList<>(Arrays.asList(56,95,94,53,63,90,30,56,36,75,80,40));
         ArrayList<ArrayList<Integer>>  lis = new ArrayList<>();
         lis.add(al);lis.add(al2);//lis.add(al3);
         lis.add(al4);//lis.add(al5);
@@ -362,5 +438,4 @@ public class Stats extends Fragment {
         pieChartGroup.setDrawEntryLabels(false);
         pieChartGroup.invalidate();
     }
-
 }

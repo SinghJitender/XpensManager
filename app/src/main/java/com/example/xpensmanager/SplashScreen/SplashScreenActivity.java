@@ -16,9 +16,6 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
-import com.example.xpensmanager.Database.CategoryDB;
-import com.example.xpensmanager.Database.GenericExpenseDB;
-import com.example.xpensmanager.Database.GroupDB;
 import com.example.xpensmanager.MainScreen.MainActivity;
 import com.example.xpensmanager.R;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -43,6 +40,8 @@ public class SplashScreenActivity extends AppCompatActivity {
     private SharedPreferences sharedPref;
     private SharedPreferences.Editor editor;
     private SQLiteDatabase mydatabase;
+    public static String cSymbol;
+    public static Long salary;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,6 +82,8 @@ public class SplashScreenActivity extends AppCompatActivity {
         String userPassword = sharedPref.getString("userPassword",null);
         boolean skipLogin = sharedPref.getBoolean("skipLogin",false);
         boolean userLoggedIn = sharedPref.getBoolean("userLoggedIn",false);
+        cSymbol = sharedPref.getString("cSymbol","#");
+        salary = sharedPref.getLong("salary",0);
         Log.d(LOG_TAG,"Shared Preference Values Fetched");
 
         layout.setVisibility(View.INVISIBLE);
