@@ -60,10 +60,37 @@ public class CategoryDB extends SQLiteOpenHelper {
         }
     }
 
+    public String insertNewCategoryFromBackup(String categoryname, double categorylimit,double totalcategoryspent) {
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+
+        contentValues.put("categoryname", categoryname);
+        contentValues.put("categorylimit",categorylimit);
+        contentValues.put("totalcategoryspend",0.0);
+        try {
+            db.insertOrThrow(categorydb_table, null, contentValues);
+            Log.d(categorydb_table,"Inserted into category: Values -" + contentValues.toString());
+            return "Created";
+        }catch (SQLiteConstraintException e){
+            Log.d(categorydb_table,"Exception Occured : "+e);
+            if(e.toString().contains("UNIQUE constraint failed: category.categoryname")) {
+                Log.d(categorydb_table,"Category Name Not Unique");
+                return "Please use different name";
+            }
+            return "Some error occurred. Try again!";
+        }
+    }
+
     public int numberOfRows(){
         SQLiteDatabase db = this.getReadableDatabase();
         int numRows = (int) DatabaseUtils.queryNumEntries(db, categorydb_table);
         return numRows;
+    }
+
+    public Integer deleteAll() {
+        SQLiteDatabase db = this.getWritableDatabase();
+        return db.delete(categorydb_table, null,null);
     }
 
     public Integer deleteCategoryByTitle(String categoryname) {
