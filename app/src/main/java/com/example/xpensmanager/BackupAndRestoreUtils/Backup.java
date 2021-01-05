@@ -23,6 +23,7 @@ import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -55,16 +56,10 @@ public class Backup {
         for (int i = 0; i < expenseData.size(); i++) {
             data.append(expenseData.get(i).getId() + "||" +
                     expenseData.get(i).getDate() + "||" +
-                    expenseData.get(i).getDayOfWeek() + "||" +
-                    expenseData.get(i).getTextMonth() + "||" +
-                    expenseData.get(i).getDay() + "||" +
-                    expenseData.get(i).getMonth() + "||" +
-                    expenseData.get(i).getYear() + "||" +
                     expenseData.get(i).getAmount() + "||" +
                     expenseData.get(i).getDescription() + "||" +
                     expenseData.get(i).getPaidBy() + "||" +
                     expenseData.get(i).getCategory() + "||" +
-                    expenseData.get(i).getDeleted() + "||" +
                     expenseData.get(i).getSplitAmount() + "||" +
                     expenseData.get(i).getGroup() + "\n");
         }
@@ -284,42 +279,38 @@ public class Backup {
                 } else {
                     BufferedReader data = new BufferedReader(new FileReader(output));
                     String line;
+                    int flag = -1;
                     while((line = data.readLine())!=null){
                         if( !(line.contains("***END***") || line.contains("***START***")) ) {
                             if (line.contains("Tablename -:- ")) {
                                 String tablename = line.split("-:-")[1].trim();
                                 if (tablename.equals(ExpenseDB.tableName)) {
-                                    Log.d("Restore Data", "Expense Data");
+                                    flag = 0;
+                                    expenseDB.deleteAll();
                                 } else if (tablename.equals(GroupDB.groupdb_table)) {
-                                    Log.d("Restore Data", "Group Data");
+                                    flag = 1;
+                                    groupDB.deleteAll();
                                 } else if (tablename.equals(CategoryDB.categorydb_table)) {
-                                    Log.d("Restore Data", "Category Data");
+                                    flag =2;
+                                    categoryDB.deleteAll();
                                 } else if (tablename.equals("Share-Preferences")) {
                                     Log.d("Restore Data", "Shared Preferences");
+                                    flag = 3;
                                 } else {
                                     Log.d("Restore Data", "Some Issue in data");
                                 }
                             }else {
-                                //System.out.println(line);
+                                System.out.println(line);
                                 String[] actualData = line.split("\\|\\|");
-                                ExpenseData expenseObj =  new ExpenseData();
-                                for(int i=0;i<actualData.length;i++){
-                                    expenseObj.setId(Integer.parseInt(actualData[i]));
-                                    expenseObj.setDate(actualData[i]);
-                                    expenseObj.setDayOfWeek(actualData[i]);
-                                    expenseObj.setTextMonth(actualData[i]);
-                                    expenseObj.setDay(actualData[i]);
-                                    expenseObj.setMonth(actualData[i]);
-                                    expenseObj.setYear(actualData[i]);
-                                    expenseObj.setAmount(actualData[i]);
-                                    expenseObj.setDescription(actualData[i]);
-                                    expenseObj.setPaidBy(actualData[i]);
-                                    expenseObj.setCategory(actualData[i]);
-                                    expenseObj.setDeleted(actualData[i]);
-                                    expenseObj.setSplitAmount(actualData[i]);
-                                    expenseObj.setGroup(actualData[i]);
+                                if(flag == 0)
+                                    expenseDB.insertNewExpense(new SimpleDateFormat("dd/MM/yyyy").parse(actualData[1]), Double.parseDouble(actualData[2]), actualData[3], actualData[5], actualData[4], Integer.parseInt(actualData[6]), actualData[7]);
+                                else if(flag == 1)
+                                    groupDB.insertNewGroupFromBackup(actualData[1], Integer.parseInt(actualData[2]), Double.parseDouble(actualData[3]),  Double.parseDouble(actualData[4]), Double.parseDouble(actualData[5]));
+                                else if(flag == 2)
+                                    categoryDB.insertNewCategoryFromBackup(actualData[1], Double.parseDouble(actualData[2]), Double.parseDouble(actualData[3]));
+                                else if(flag == 4){
+                                    //shared preferences
                                 }
-                                System.out.println();
                             }
 
                         }
@@ -332,7 +323,7 @@ public class Backup {
                 return "Storage Not Accessible";
             }
         }
-        catch(IOException e){
+        catch(IOException | ParseException e){
             return "Error while restoring";
         }
     }
