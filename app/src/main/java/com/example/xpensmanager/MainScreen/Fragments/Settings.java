@@ -33,7 +33,7 @@ public class Settings extends Fragment {
     private String currentCurrencySymbol,currentCurrencyName;
     private long currentSalary;
     private int currentAge;
-    private Button createBackup,exportToExcel;
+    private Button createBackup,exportToExcel,restoreBackup;
     private static final int STORAGE_PERMISSION_CODE = 101;
     private Backup backupUtils;
 
@@ -64,6 +64,7 @@ public class Settings extends Fragment {
         version = view.findViewById(R.id.version);
         createBackup = view.findViewById(R.id.createBackup);
         exportToExcel = view.findViewById(R.id.exportToExcel);
+        restoreBackup = view.findViewById(R.id.restoreBackup);
 
         try {
             String versionName = getActivity().getPackageManager().getPackageInfo(getActivity().getPackageName(), 0).versionName;
@@ -177,6 +178,13 @@ public class Settings extends Fragment {
             }
         });
 
+        restoreBackup.setOnClickListener((v)->{
+            if(checkStoragePermission(Manifest.permission.WRITE_EXTERNAL_STORAGE, STORAGE_PERMISSION_CODE)){
+                backupUtils.restoreFromBackUp();
+            }
+        });
+
+
         return view;
     }
 
@@ -198,8 +206,7 @@ public class Settings extends Fragment {
         dialog.show();
     }
 
-    public boolean checkStoragePermission(String permission, int requestCode)
-    {
+    public boolean checkStoragePermission(String permission, int requestCode) {
         if (ContextCompat.checkSelfPermission(getActivity(), permission)
                 == PackageManager.PERMISSION_DENIED) {
 
