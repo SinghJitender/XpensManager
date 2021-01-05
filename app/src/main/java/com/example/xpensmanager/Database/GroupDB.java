@@ -74,6 +74,30 @@ public class GroupDB extends SQLiteOpenHelper {
         }
     }
 
+    public String insertNewGroupFromBackup(String title, int noOfPersons, double maxLimit,double netAmount, double totalAmount) {
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+
+        contentValues.put("title", title);
+        contentValues.put("noOfPersons", noOfPersons);
+        contentValues.put("maxLimit", maxLimit);
+        contentValues.put("netAmount", netAmount);
+        contentValues.put("totalAmount", totalAmount);
+        try {
+            db.insertOrThrow("groups", null, contentValues);
+            Log.d("GroupDB","Inserted into groups: Values -" + contentValues.toString());
+            return "Created";
+        }catch (SQLiteConstraintException e){
+            Log.d("GroupDB","Exception Occured : "+e);
+            if(e.toString().contains("UNIQUE constraint failed: groups.title")) {
+                Log.d("GroupDB","Title Not Unique");
+                return "Please use different title";
+            }
+            return "Some error occurred. Try again!";
+        }
+    }
+
     public int numberOfRows(){
         SQLiteDatabase db = this.getReadableDatabase();
         int numRows = (int) DatabaseUtils.queryNumEntries(db, groupdb_table);
@@ -148,6 +172,11 @@ public class GroupDB extends SQLiteOpenHelper {
         Cursor cursor =  db.rawQuery( "select "+groupdb_maxLimit+" from groups where "+groupdb_title+" = '"+grouptitle+"'", null );
         cursor.moveToNext();
         return cursor.getDouble(cursor.getColumnIndex(groupdb_maxLimit));
+    }
+
+    public Integer deleteAll() {
+        SQLiteDatabase db = this.getWritableDatabase();
+        return db.delete(groupdb_table, null,null);
     }
 
     public Integer deleteGroupByTitle(String title) {
