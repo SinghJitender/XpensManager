@@ -7,24 +7,22 @@ import android.widget.Toast;
 
 import com.example.xpensmanager.Database.CategoryDB;
 import com.example.xpensmanager.Database.CategoryData;
-import com.example.xpensmanager.Database.ExpenseData;
 import com.example.xpensmanager.Database.ExpenseDB;
+import com.example.xpensmanager.Database.ExpenseData;
 import com.example.xpensmanager.Database.GroupDB;
 import com.example.xpensmanager.Database.GroupData;
-import com.example.xpensmanager.ExpenseScreen.Expense;
 
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Workbook;
 
+import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.OutputStreamWriter;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -52,7 +50,7 @@ public class Backup {
 
     public void createBackUp() {
         StringBuffer data = new StringBuffer();
-        data.append("Tablename : " + ExpenseDB.tableName);
+        data.append("Tablename -:- " + ExpenseDB.tableName);
         data.append("\n***START***\n");
         for (int i = 0; i < expenseData.size(); i++) {
             data.append(expenseData.get(i).getId() + "||" +
@@ -71,7 +69,7 @@ public class Backup {
                     expenseData.get(i).getGroup() + "\n");
         }
         data.append("***END***\n");
-        data.append("Tablename : " + GroupDB.groupdb_table);
+        data.append("Tablename -:- " + GroupDB.groupdb_table);
         data.append("\n***START***\n");
         for (int i = 0; i < groupData.size(); i++) {
             data.append(groupData.get(i).getId() + "||" +
@@ -82,7 +80,7 @@ public class Backup {
                     groupData.get(i).getTotalAmount() + "\n");
         }
         data.append("***END***\n");
-        data.append("Tablename : " + CategoryDB.categorydb_table);
+        data.append("Tablename -:- " + CategoryDB.categorydb_table);
         data.append("\n***START***\n");
         for (int i = 0; i < categoryData.size(); i++) {
             data.append(categoryData.get(i).getId() + "||" +
@@ -125,8 +123,8 @@ public class Backup {
             }
         }
         catch(IOException e){
-                Log.e("Exception While backup", "File write failed: " + e.toString());
-            }
+            Log.e("Exception While backup", "File write failed: " + e.toString());
+        }
     }
 
     public void exportToExcel(){
@@ -269,6 +267,73 @@ public class Backup {
             }
         }catch(Exception e){
             Log.d("ExportToExcel",e.toString());
+        }
+    }
+
+    public String restoreFromBackUp(){
+        try {
+            if (isExternalStorageWritable() && isExternalStorageReadable()) {
+                String filename = "backup_do_not_delete.txt";
+                File dir = new File(Environment.getExternalStorageDirectory(),"XpensManager/Backup/");
+                if(!dir.exists())
+                    return "Backup directory doesn't not exist";
+
+                File output = new File(dir, filename);
+                if (!output.exists()) {
+                    return "Backup doesn't exist";
+                } else {
+                    BufferedReader data = new BufferedReader(new FileReader(output));
+                    String line;
+                    while((line = data.readLine())!=null){
+                        if( !(line.contains("***END***") || line.contains("***START***")) ) {
+                            if (line.contains("Tablename -:- ")) {
+                                String tablename = line.split("-:-")[1].trim();
+                                if (tablename.equals(ExpenseDB.tableName)) {
+                                    Log.d("Restore Data", "Expense Data");
+                                } else if (tablename.equals(GroupDB.groupdb_table)) {
+                                    Log.d("Restore Data", "Group Data");
+                                } else if (tablename.equals(CategoryDB.categorydb_table)) {
+                                    Log.d("Restore Data", "Category Data");
+                                } else if (tablename.equals("Share-Preferences")) {
+                                    Log.d("Restore Data", "Shared Preferences");
+                                } else {
+                                    Log.d("Restore Data", "Some Issue in data");
+                                }
+                            }else {
+                                //System.out.println(line);
+                                String[] actualData = line.split("\\|\\|");
+                                ExpenseData expenseObj =  new ExpenseData();
+                                for(int i=0;i<actualData.length;i++){
+                                    expenseObj.setId(Integer.parseInt(actualData[i]));
+                                    expenseObj.setDate(actualData[i]);
+                                    expenseObj.setDayOfWeek(actualData[i]);
+                                    expenseObj.setTextMonth(actualData[i]);
+                                    expenseObj.setDay(actualData[i]);
+                                    expenseObj.setMonth(actualData[i]);
+                                    expenseObj.setYear(actualData[i]);
+                                    expenseObj.setAmount(actualData[i]);
+                                    expenseObj.setDescription(actualData[i]);
+                                    expenseObj.setPaidBy(actualData[i]);
+                                    expenseObj.setCategory(actualData[i]);
+                                    expenseObj.setDeleted(actualData[i]);
+                                    expenseObj.setSplitAmount(actualData[i]);
+                                    expenseObj.setGroup(actualData[i]);
+                                }
+                                System.out.println();
+                            }
+
+                        }
+                    }
+                    data.close();
+                    return "Backup Restored";
+                }
+
+            } else {
+                return "Storage Not Accessible";
+            }
+        }
+        catch(IOException e){
+            return "Error while restoring";
         }
     }
 
