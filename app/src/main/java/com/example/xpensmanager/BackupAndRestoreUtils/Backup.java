@@ -1,6 +1,7 @@
 package com.example.xpensmanager.BackupAndRestoreUtils;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Environment;
 import android.util.Log;
 import android.widget.Toast;
@@ -11,6 +12,7 @@ import com.example.xpensmanager.Database.ExpenseDB;
 import com.example.xpensmanager.Database.ExpenseData;
 import com.example.xpensmanager.Database.GroupDB;
 import com.example.xpensmanager.Database.GroupData;
+import com.example.xpensmanager.R;
 
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
@@ -28,6 +30,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
+import java.util.Map;
 
 public class Backup {
 
@@ -38,6 +41,8 @@ public class Backup {
     private ArrayList<CategoryData> categoryData = new ArrayList<>();
     private ArrayList<GroupData> groupData = new ArrayList<>();
     private Context context;
+    private SharedPreferences sharedPreferences;
+    private SharedPreferences.Editor editor;
 
     public Backup(Context context){
         this.context = context;
@@ -47,6 +52,8 @@ public class Backup {
         expenseData.addAll(expenseDB.findAll());
         categoryData.addAll(categoryDB.findAll());
         groupData.addAll(groupDB.findAll());
+        sharedPreferences = context.getSharedPreferences(context.getString(R.string.preference_file_key),Context.MODE_PRIVATE);
+        editor = sharedPreferences.edit();
     }
 
     public void createBackUp() {
@@ -82,6 +89,13 @@ public class Backup {
                     categoryData.get(i).getCategory() + "||" +
                     categoryData.get(i).getLimit() + "||" +
                     categoryData.get(i).getTotalCategorySpend() + "\n");
+        }
+        data.append("***END***\n");
+        Map<String,?> sharedPref = sharedPreferences.getAll();
+        data.append("Tablename -:- Shared-Preferences");
+        data.append("\n***START***\n");
+        for(String key : sharedPref.keySet()){
+            data.append(key+"||"+sharedPref.get(key).toString()+"||"+sharedPref.get(key).getClass().toString()+"\n");
         }
         data.append("***END***\n");
         Log.d("Backup data - ", String.valueOf(data));
@@ -293,7 +307,7 @@ public class Backup {
                                 } else if (tablename.equals(CategoryDB.categorydb_table)) {
                                     flag =2;
                                     categoryDB.deleteAll();
-                                } else if (tablename.equals("Share-Preferences")) {
+                                } else if (tablename.equals("Shared-Preferences")) {
                                     Log.d("Restore Data", "Shared Preferences");
                                     flag = 3;
                                 } else {
@@ -303,13 +317,32 @@ public class Backup {
                                 System.out.println(line);
                                 String[] actualData = line.split("\\|\\|");
                                 if(flag == 0)
-                                    expenseDB.insertNewExpense(new SimpleDateFormat("dd/MM/yyyy").parse(actualData[1]), Double.parseDouble(actualData[2]), actualData[3], actualData[5], actualData[4], Integer.parseInt(actualData[6]), actualData[7]);
+                                    expenseDB.insertNewExpenseFromBackup(new SimpleDateFormat("dd/MM/yyyy").parse(actualData[1]), Double.parseDouble(actualData[2]), actualData[3], actualData[5], actualData[4], Double.parseDouble(actualData[6]), actualData[7]);
                                 else if(flag == 1)
                                     groupDB.insertNewGroupFromBackup(actualData[1], Integer.parseInt(actualData[2]), Double.parseDouble(actualData[3]),  Double.parseDouble(actualData[4]), Double.parseDouble(actualData[5]));
                                 else if(flag == 2)
                                     categoryDB.insertNewCategoryFromBackup(actualData[1], Double.parseDouble(actualData[2]), Double.parseDouble(actualData[3]));
-                                else if(flag == 4){
+                                else if(flag == 3){
                                     //shared preferences
+                                    if(actualData[2].contains("Boolean")){
+                                        editor.putBoolean(actualData[0],Boolean.parseBoolean(actualData[1]));
+                                        editor.apply();
+                                    }else if(actualData[2].contains("String")){
+                                        editor.putString(actualData[0],actualData[1]);
+                                        editor.apply();
+                                    }else if(actualData[2].contains("Integer")){
+                                        editor.putInt(actualData[0],Integer.parseInt(actualData[1]));
+                                        editor.apply();
+                                    }else if(actualData[2].contains("Long")){
+                                        editor.putLong(actualData[0],Long.parseLong(actualData[1]));
+                                        editor.apply();
+                                    }else if(actualData[2].contains("Float")){
+                                        editor.putFloat(actualData[0],Float.parseFloat(actualData[1]));
+                                        editor.apply();
+                                    }else{
+                                        //Ignore the row.
+                                        Log.d("Shared_preferences","Error in restoring shared-preferences");
+                                    }
                                 }
                             }
 
