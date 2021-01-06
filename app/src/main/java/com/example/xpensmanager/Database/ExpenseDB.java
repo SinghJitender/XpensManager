@@ -104,6 +104,46 @@ public class ExpenseDB extends SQLiteOpenHelper {
         //return "NULL";
     }
 
+    public String insertNewExpenseFromBackup(Date date, double amount, String description, String category, String paidBy, double splitAmount, String groupedWith) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+
+        String dayOfWeek = getDayOfWeek(date,Locale.ENGLISH);
+        String textMonth = getNameOfMonth(date,Locale.ENGLISH);
+        int year = getYearFromDate(date);
+        int month = getMonthFromDate(date);
+        int day = getDayFromDate(date);
+        String stringDate = dateToString(date);
+
+        Log.d(tableName+" DB : ","Original Date Object : "+date+ " dayOfWeek : "+dayOfWeek+" dayOfMonth:"+day+
+                " textMonth : "+textMonth+" year :"+year+" month :"+month+" stringDate : "+stringDate+ " splitAmount : "+splitAmount);
+
+        contentValues.put(expenseamount, amount);
+        contentValues.put(expensedescription, description);
+        contentValues.put(expensedate, stringDate);
+        contentValues.put(expensedayOfWeek, dayOfWeek);
+        contentValues.put(expensetextMonth, textMonth);
+        contentValues.put(expensemonth, month);
+        contentValues.put(expenseyear, year);
+        contentValues.put(expenseday, day);
+        contentValues.put(expensesplitAmount,new DecimalFormat("##.00").format(splitAmount));
+        contentValues.put(expensepaidBy,paidBy);
+        contentValues.put(expensecategory,category);
+        contentValues.put(expensegroup,groupedWith);
+        contentValues.put(expensedeleted,1); // 0 - true, 1 - false
+
+        //Log.d(tableName+" DB : ","Content Values -" + contentValues.toString());
+        try {
+            db.insertOrThrow(tableName, null, contentValues);
+            Log.d(tableName+" DB : ","Inserted into "+tableName+": Values -" + contentValues.toString());
+            return "Created";
+        }catch (Exception e){
+            Log.d(tableName+" DB : ","Exception Occured : "+e +" \n Content Values : "+ contentValues.toString());
+            return "Some error occurred. Try again!";
+        }
+        //return "NULL";
+    }
+
     public ArrayList<ExpenseData> findAll(){
         ArrayList<ExpenseData> list = new ArrayList<>();
         SQLiteDatabase db = this.getReadableDatabase();
