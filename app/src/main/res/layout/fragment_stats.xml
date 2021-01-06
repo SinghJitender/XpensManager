@@ -115,6 +115,7 @@
                                     android:id="@+id/overallMonthlyExpense"
                                     android:textStyle="bold"
                                     android:textSize="28sp"
+                                    android:gravity="center"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:text="85,300.00"/>
