@@ -1,16 +1,22 @@
 package com.example.xpensmanager.MainScreen.Fragments;
 
 import android.Manifest;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.app.ActivityCompat;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -169,6 +175,34 @@ public class Settings extends Fragment {
         createBackup.setOnClickListener((v) -> {
             if(checkStoragePermission(Manifest.permission.WRITE_EXTERNAL_STORAGE, STORAGE_PERMISSION_CODE)){
                 backupUtils.createBackUp();
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    CharSequence name = "Channel1";
+                    String description = "Channel Desc";
+                    int importance = NotificationManager.IMPORTANCE_LOW;
+                    NotificationChannel channel = new NotificationChannel("1234", name, importance);
+                    channel.setDescription(description);
+                    // Register the channel with the system; you can't change the importance
+                    // or other notification behaviors after this
+                    NotificationManager notificationManager = getActivity().getSystemService(NotificationManager.class);
+                    notificationManager.createNotificationChannel(channel);
+                }
+                NotificationManagerCompat manager =  NotificationManagerCompat.from(getActivity());
+                NotificationCompat.Builder builder = new NotificationCompat.Builder(getActivity(),"1234");
+                builder.setContentTitle("Creating Backup")
+                        .setSmallIcon(R.drawable.check)
+                        .setPriority(NotificationCompat.PRIORITY_LOW);
+                builder.setProgress(100,0,true);
+                manager.notify(1234,builder.build());
+                try{
+                    Thread.sleep(10000);
+                }catch (Exception e){
+                    Log.d("Notification Exception",e+"");
+                }
+                //start backup
+                builder.setContentText("Backup Created Successfully");
+                builder.setProgress(0,0,false);
+                manager.notify(1234,builder.build());
+
             }
         });
 
@@ -181,6 +215,11 @@ public class Settings extends Fragment {
         restoreBackup.setOnClickListener((v)->{
             if(checkStoragePermission(Manifest.permission.WRITE_EXTERNAL_STORAGE, STORAGE_PERMISSION_CODE)){
                 backupUtils.restoreFromBackUp();
+                SplashScreenActivity.cSymbol = sharedPref.getString("cSymbol","#");
+                age.setText(sharedPref.getInt("age",0)+"");
+                salary.setText(SplashScreenActivity.cSymbol+" "+sharedPref.getLong("salary",0));
+                currencyName.setText(sharedPref.getString("cName","#"));
+                currencySymbol.setText(SplashScreenActivity.cSymbol);
             }
         });
 
