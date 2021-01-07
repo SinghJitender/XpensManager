@@ -75,7 +75,7 @@ public class Stats extends Fragment {
         yChart = view.findViewById(R.id.ChartProgressBarYearly);
         dChart = view.findViewById(R.id.ChartProgressBarEachDay);
         //BarView barView = view.findViewById(R.id.bar_view);
-        LineView lineView = view.findViewById(R.id.line_view);
+       // LineView lineView = view.findViewById(R.id.line_view);
         pchart = view.findViewById(R.id.chart1);
         pieChartGroup = view.findViewById(R.id.pieChartGroup);
         overallMonthlyExpense= view.findViewById(R.id.overallMonthlyExpense);
@@ -227,7 +227,7 @@ public class Stats extends Fragment {
 
         });
 
-        lineView.setDrawDotLine(true); //optional
+       /* lineView.setDrawDotLine(true); //optional
         lineView.setShowPopup(LineView.SHOW_POPUPS_MAXMIN_ONLY); //optional
         lineView.setBottomTextList(new ArrayList<>(Arrays.asList("Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec")));
         lineView.setColorArray(new int[]{getActivity().getResources().getColor(R.color.theme_red),getActivity().getResources().getColor(R.color.theme_blue),getActivity().getResources().getColor(R.color.theme_yellow),
@@ -238,7 +238,7 @@ public class Stats extends Fragment {
         ArrayList<ArrayList<Integer>>  lis = new ArrayList<>();
         lis.add(al);lis.add(al2);//lis.add(al3);
         lis.add(al4);//lis.add(al5);
-        lineView.setDataList(lis); //or lineView.setFloatDataList(floatDataLists)
+        lineView.setDataList(lis); //or lineView.setFloatDataList(floatDataLists)*/
 
         return view;
     }
