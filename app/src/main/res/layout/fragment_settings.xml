@@ -161,60 +161,174 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Backup"
+                        android:text="Back Up"
                         android:textSize="20sp"/>
-                    <TextView
-                        android:id="@+id/lastBackUpDate"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="Last Backup created on 20/10/2020"
-                        android:textSize="15sp"/>
-
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
                         android:background="@color/theme_grey"
                         android:layout_marginTop="3dp"
-                        android:layout_marginBottom="3dp"/>
+                        android:layout_marginBottom="5dp"/>
 
-                    <TextView
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Tap to change"
-                        android:textSize="10sp"/>
-                    <TextView
-                        android:id="@+id/backUpfrequency"
-                        android:clickable="true"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:textSize="25sp"
-                        android:textStyle="bold"
-                        android:layout_marginRight="10dp"
-                        android:text="Weekly"/>
+                        android:visibility="gone"
+                        android:orientation="vertical">
+                        <TextView
+                            android:clickable="true"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_marginRight="10dp"
+                            android:text="Automatic Back Up Frequency"/>
 
-                    <Button
-                        android:id="@+id/createBackup"
+                        <TextView
+                            android:id="@+id/backUpfrequency"
+                            android:clickable="true"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:textSize="25sp"
+                            android:textStyle="bold"
+                            android:layout_marginRight="10dp"
+                            android:text="None"/>
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Tap to change"
+                            android:textSize="10sp"/>
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:background="@color/theme_grey"
+                            android:layout_marginTop="5dp"
+                            android:layout_marginBottom="5dp"/>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_gravity="center"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Create Backup"/>
+                        android:weightSum="10"
+                        android:orientation="horizontal">
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_gravity="center"
+                            android:orientation="vertical"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="7">
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="Back up data"
+                                android:textSize="15sp"/>
+                            <TextView
+                                android:id="@+id/lastBackUpDate"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="Last back up - 20/10/2020"
+                                android:textSize="13sp"/>
+                            <TextView
+                                android:visibility="gone"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="Android/dat/XpensManager//Backup/"
+                                android:textSize="13sp"/>
+                        </LinearLayout>
+                        <Button
+                            android:layout_gravity="center"
+                            android:id="@+id/createBackup"
+                            android:layout_width="0dp"
+                            android:layout_weight="3"
+                            android:layout_height="wrap_content"
+                            android:text="Back Up"/>
+                    </LinearLayout>
 
-                    <Button
-                        android:id="@+id/exportToExcel"
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="@color/theme_grey"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginBottom="5dp"/>
+
+
+                    <LinearLayout
+                        android:layout_gravity="center"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Export To Excel"/>
+                        android:weightSum="10"
+                        android:orientation="horizontal">
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_gravity="center"
+                            android:orientation="vertical"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="7">
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="Export to excel"
+                                android:textSize="15sp"/>
+                            <TextView
+                                android:visibility="gone"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="Location - /XpensManager/ExcelExports/"
+                                android:textSize="13sp"/>
+                        </LinearLayout>
+                        <Button
+                            android:id="@+id/exportToExcel"
+                            android:layout_gravity="center"
+                            android:layout_width="0dp"
+                            android:layout_weight="3"
+                            android:layout_height="wrap_content"
+                            android:backgroundTint="@color/theme_orange"
+                            android:text="Export"/>
 
-                    <Button
-                        android:id="@+id/uploadToGoogleDriver"
+                    </LinearLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="@color/theme_grey"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginBottom="5dp"/>
+
+
+                    <LinearLayout
+                        android:layout_gravity="center"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Upload Backup To Google Drive"/>
-
-                    <Button
-                        android:id="@+id/restoreBackup"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="Restore From BackUp"/>
+                        android:weightSum="10"
+                        android:orientation="horizontal">
+                        <LinearLayout
+                            android:id="@+id/restoreDetails"
+                            android:layout_width="0dp"
+                            android:layout_gravity="center"
+                            android:orientation="vertical"
+                            android:clickable="true"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="7">
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="Restore from back up"
+                                android:textSize="15sp"/>
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="Tap here for more details"
+                                android:textSize="13sp"/>
+                        </LinearLayout>
+                        <Button
+                            android:id="@+id/restoreBackup"
+                            android:layout_gravity="center"
+                            android:layout_width="0dp"
+                            android:layout_weight="3"
+                            android:layout_height="wrap_content"
+                            android:backgroundTint="@color/theme_green"
+                            android:text="Restore"/>
+                    </LinearLayout>
 
                 </LinearLayout>
 
@@ -253,4 +367,54 @@
             </androidx.cardview.widget.CardView>
         </LinearLayout>
     </ScrollView>
+
+    <LinearLayout
+        android:id="@+id/restoringLayout"
+        android:visibility="gone"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:clickable="true"
+        android:elevation="30dp"
+        android:background="#B3000000">
+        <TextView
+            android:textColor="@color/white"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textSize="23sp"
+            android:text="Restoring Data"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/white"
+            android:gravity="center"
+            android:paddingBottom="5dp"
+            android:paddingTop="3dp"
+            android:textSize="16sp"
+            android:text="This might take a few minutes" />
+        <ProgressBar
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="10dp"
+            android:layout_marginLeft="10dp"
+            android:id="@+id/progress"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:indeterminate="true"
+            />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/white"
+            android:gravity="center"
+            android:paddingBottom="3dp"
+            android:paddingTop="3dp"
+            android:textSize="12sp"
+            android:text="Do not close the app or switch tabs" />
+    </LinearLayout>
+
 </FrameLayout>
