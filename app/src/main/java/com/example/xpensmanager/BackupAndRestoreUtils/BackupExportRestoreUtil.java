@@ -32,7 +32,7 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.Map;
 
-public class Backup {
+public class BackupExportRestoreUtil {
 
     private ExpenseDB expenseDB;
     private CategoryDB categoryDB;
@@ -43,8 +43,9 @@ public class Backup {
     private Context context;
     private SharedPreferences sharedPreferences;
     private SharedPreferences.Editor editor;
+    private String filename = "backup.txt";
 
-    public Backup(Context context){
+    public BackupExportRestoreUtil(Context context){
         this.context = context;
         expenseDB = new ExpenseDB(context);
         categoryDB = new CategoryDB(context);
@@ -56,7 +57,7 @@ public class Backup {
         editor = sharedPreferences.edit();
     }
 
-    public void createBackUp() {
+    public String createBackUp() {
         StringBuffer data = new StringBuffer();
         data.append("Tablename -:- " + ExpenseDB.tableName);
         data.append("\n***START***\n");
@@ -101,18 +102,20 @@ public class Backup {
         Log.d("Backup data - ", String.valueOf(data));
         try {
             if (isExternalStorageWritable() && isExternalStorageReadable()) {
-                String filename = "backup_do_not_delete.txt";
-                File dir = new File(Environment.getExternalStorageDirectory(),"XpensManager/Backup/");
+                File dir = new File(context.getExternalFilesDir(null).getAbsolutePath(),"/XpensManager/Backup/");
                 if(!dir.exists())
                     dir.mkdir();
 
                 File output = new File(dir, filename);
                 if (!output.exists()) {
                     try {
+                        output.getParentFile().mkdirs();
                         output.createNewFile();
                     } catch (Exception e) {
                         Log.d("Error", e.toString());
-                        Toast.makeText(context, "Unable to make backup file. ", Toast.LENGTH_SHORT).show();
+                        e.printStackTrace();
+                        //Toast.makeText(context, "Unable to make backup file. ", Toast.LENGTH_SHORT).show();
+                        return "Please check folder permission";
                     }
                 } else {
                     output.delete();
@@ -120,23 +123,29 @@ public class Backup {
                         output.createNewFile();
                     } catch (Exception e) {
                         Log.d("Error", e.toString());
-                        Toast.makeText(context, "Unable to make backup file. ", Toast.LENGTH_SHORT).show();
+                        e.printStackTrace();
+                        //Toast.makeText(context, "Unable to make backup file. ", Toast.LENGTH_SHORT).show();
+                        return "Please check folder permission";
                     }
                 }
                 FileWriter writer = new FileWriter(output);
                 writer.append(data);
                 writer.flush();
                 writer.close();
+                return output.getCanonicalPath();
             } else {
                 Toast.makeText(context, "Storage Not Accessible", Toast.LENGTH_LONG).show();
+                return "Access to storage Denied";
             }
         }
         catch(IOException e){
             Log.e("Exception While backup", "File write failed: " + e.toString());
+            e.printStackTrace();
+            return "Try Again!";
         }
     }
 
-    public void exportToExcel(){
+    public String exportToExcel(){
         HSSFWorkbook workbook = new HSSFWorkbook();
 
         HSSFSheet expenseSheet = workbook.createSheet("Expenses");
@@ -259,13 +268,15 @@ public class Backup {
 
         try{
             if (isExternalStorageWritable() && isExternalStorageReadable()) {
-                File dir = new File(Environment.getExternalStorageDirectory(), "XpensManager/ExcelExports/");
+                File dir = new File(context.getExternalFilesDir(null).getAbsolutePath(), "/XpensManager/ExcelExports/");
                 if (!dir.exists())
                     dir.mkdir();
-                String filename = "XpenseManagerExport_"+new SimpleDateFormat("dd_MM_yyyy_HH_MM", Locale.ENGLISH).format(new Date())+".xlsx";
+                String filename = "XpenseManagerExport_" + new SimpleDateFormat("dd_MM_yyyy_HH_MM", Locale.ENGLISH).format(new Date()) + ".xlsx";
                 File output = new File(dir, filename);
-                if (!output.exists())
+                if (!output.exists()) {
+                    output.getParentFile().mkdirs();
                     output.createNewFile();
+                }
                 else {
                     output.delete();
                     output.createNewFile();
@@ -273,17 +284,20 @@ public class Backup {
                 FileOutputStream out = new FileOutputStream(output);
                 workbook.write(out);
                 out.close();
+                return output.getCanonicalPath();
+            }else{
+                return "Storage access denied";
             }
         }catch(Exception e){
             Log.d("ExportToExcel",e.toString());
+            return "Failed to export. Try Again!";
         }
     }
 
     public String restoreFromBackUp(){
         try {
             if (isExternalStorageWritable() && isExternalStorageReadable()) {
-                String filename = "backup_do_not_delete.txt";
-                File dir = new File(Environment.getExternalStorageDirectory(),"XpensManager/Backup/");
+                File dir = new File(context.getExternalFilesDir(null).getAbsolutePath(),"/XpensManager/Backup/");
                 if(!dir.exists())
                     return "Backup directory doesn't not exist";
 
@@ -349,7 +363,7 @@ public class Backup {
                         }
                     }
                     data.close();
-                    return "Backup Restored";
+                    return "Successfully restored data from backup";
                 }
 
             } else {
