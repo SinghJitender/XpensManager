@@ -25,12 +25,28 @@ import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.StringReader;
+import java.nio.charset.StandardCharsets;
+import java.security.InvalidKeyException;
+import java.security.KeyPair;
+import java.security.KeyPairGenerator;
+import java.security.NoSuchAlgorithmException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
 import java.util.Map;
+import java.util.stream.Collectors;
+
+import javax.crypto.BadPaddingException;
+import javax.crypto.Cipher;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.KeyGenerator;
+import javax.crypto.NoSuchPaddingException;
+import javax.crypto.SecretKey;
+
+import se.simbio.encryption.Encryption;
 
 public class BackupExportRestoreUtil {
 
@@ -44,6 +60,10 @@ public class BackupExportRestoreUtil {
     private SharedPreferences sharedPreferences;
     private SharedPreferences.Editor editor;
     private String filename = "backup.txt";
+    private Encryption encrypt;
+    private static String salt= "sugar";
+    private static String key = "love";
+    private byte[] iv = new byte[16];
 
     public BackupExportRestoreUtil(Context context){
         this.context = context;
@@ -55,6 +75,7 @@ public class BackupExportRestoreUtil {
         groupData.addAll(groupDB.findAll());
         sharedPreferences = context.getSharedPreferences(context.getString(R.string.preference_file_key),Context.MODE_PRIVATE);
         editor = sharedPreferences.edit();
+        encrypt = Encryption.getDefault(key,salt,iv);
     }
 
     public String createBackUp() {
@@ -100,6 +121,7 @@ public class BackupExportRestoreUtil {
         }
         data.append("***END***\n");
         Log.d("Backup data - ", String.valueOf(data));
+        String encrypted = encrypt.encryptOrNull(String.valueOf(data));
         try {
             if (isExternalStorageWritable() && isExternalStorageReadable()) {
                 File dir = new File(context.getExternalFilesDir(null).getAbsolutePath(),"/XpensManager/Backup/");
@@ -129,7 +151,7 @@ public class BackupExportRestoreUtil {
                     }
                 }
                 FileWriter writer = new FileWriter(output);
-                writer.append(data);
+                writer.append(encrypted);
                 writer.flush();
                 writer.close();
                 return output.getCanonicalPath();
@@ -305,7 +327,12 @@ public class BackupExportRestoreUtil {
                 if (!output.exists()) {
                     return "Backup doesn't exist";
                 } else {
-                    BufferedReader data = new BufferedReader(new FileReader(output));
+                    BufferedReader result = new BufferedReader(new FileReader(output));
+                    String temp="";
+                    String x;
+                    while((x = result.readLine())!=null){ temp +=x; }
+                    String tempData = encrypt.decryptOrNull(temp);
+                    BufferedReader data = new BufferedReader(new StringReader(tempData));
                     String line;
                     int flag = -1;
                     while((line = data.readLine())!=null){
@@ -382,7 +409,6 @@ public class BackupExportRestoreUtil {
         }
         return false;
     }
-
     /* Checks if external storage is available to at least read */
     public boolean isExternalStorageReadable() {
         String state = Environment.getExternalStorageState();
