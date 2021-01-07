@@ -1,47 +1,52 @@
 package com.example.xpensmanager.MainScreen.Fragments;
 
 import android.Manifest;
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.os.Build;
 import android.os.Bundle;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.app.ActivityCompat;
-import androidx.core.app.NotificationCompat;
-import androidx.core.app.NotificationManagerCompat;
+import androidx.core.app.AlarmManagerCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.example.xpensmanager.BackupAndRestoreUtils.Backup;
+import com.example.xpensmanager.BackupAndRestoreUtils.AutomaticBackup;
+import com.example.xpensmanager.BackupAndRestoreUtils.AutomaticBackupManager;
+import com.example.xpensmanager.BackupAndRestoreUtils.BackupExportRestoreUtil;
+import com.example.xpensmanager.BackupAndRestoreUtils.BackupService;
+import com.example.xpensmanager.BackupAndRestoreUtils.ExportToExcelService;
+import com.example.xpensmanager.BackupAndRestoreUtils.RestoreService;
 import com.example.xpensmanager.R;
 import com.example.xpensmanager.SplashScreen.SplashScreenActivity;
+
+import java.util.ArrayList;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 
 public class Settings extends Fragment {
     private static String[] combinedList = {"Rupee - ₹","Yen - ¥","Ruble - ₽","Korean Won - ₩","Dollar - $","Pound - £","Euro - €","Other - #"};
-    private TextView currencySymbol, currencyName, salary,age,version;
+    private TextView currencySymbol, currencyName, salary,age,version , backUpfrequency;
     private SharedPreferences sharedPref;
     private SharedPreferences.Editor editor;
-    private String currentCurrencySymbol,currentCurrencyName;
+    private String currentCurrencySymbol,currentCurrencyName,currentBackupFrequency;
     private long currentSalary;
     private int currentAge;
     private Button createBackup,exportToExcel,restoreBackup;
     private static final int STORAGE_PERMISSION_CODE = 101;
-    private Backup backupUtils;
+    private BackupExportRestoreUtil backupExportRestoreUtilUtils;
+    private LinearLayout restoringLayout;
 
     public Settings() {}
 
@@ -55,7 +60,8 @@ public class Settings extends Fragment {
         currentCurrencyName = sharedPref.getString("cName","Others");
         currentSalary = sharedPref.getLong("salary",0);
         currentAge = sharedPref.getInt("age",0);
-        backupUtils = new Backup(getActivity());
+        currentBackupFrequency = sharedPref.getString("frequency","None");
+        backupExportRestoreUtilUtils = new BackupExportRestoreUtil(getActivity());
     }
 
     @Override
@@ -71,6 +77,13 @@ public class Settings extends Fragment {
         createBackup = view.findViewById(R.id.createBackup);
         exportToExcel = view.findViewById(R.id.exportToExcel);
         restoreBackup = view.findViewById(R.id.restoreBackup);
+        restoringLayout = view.findViewById(R.id.restoringLayout);
+        backUpfrequency = view.findViewById(R.id.backUpfrequency);
+
+        backUpfrequency.setText(currentBackupFrequency);
+        backUpfrequency.setOnClickListener((v)->{
+            displayFrequencyDialogBox(new String[]{"None","Daily","Weekly","Monthly"});
+        });
 
         try {
             String versionName = getActivity().getPackageManager().getPackageInfo(getActivity().getPackageName(), 0).versionName;
@@ -174,52 +187,34 @@ public class Settings extends Fragment {
 
         createBackup.setOnClickListener((v) -> {
             if(checkStoragePermission(Manifest.permission.WRITE_EXTERNAL_STORAGE, STORAGE_PERMISSION_CODE)){
-                backupUtils.createBackUp();
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                    CharSequence name = "Channel1";
-                    String description = "Channel Desc";
-                    int importance = NotificationManager.IMPORTANCE_LOW;
-                    NotificationChannel channel = new NotificationChannel("1234", name, importance);
-                    channel.setDescription(description);
-                    // Register the channel with the system; you can't change the importance
-                    // or other notification behaviors after this
-                    NotificationManager notificationManager = getActivity().getSystemService(NotificationManager.class);
-                    notificationManager.createNotificationChannel(channel);
-                }
-                NotificationManagerCompat manager =  NotificationManagerCompat.from(getActivity());
-                NotificationCompat.Builder builder = new NotificationCompat.Builder(getActivity(),"1234");
-                builder.setContentTitle("Creating Backup")
-                        .setSmallIcon(R.drawable.check)
-                        .setPriority(NotificationCompat.PRIORITY_LOW);
-                builder.setProgress(100,0,true);
-                manager.notify(1234,builder.build());
-                try{
-                    Thread.sleep(10000);
-                }catch (Exception e){
-                    Log.d("Notification Exception",e+"");
-                }
-                //start backup
-                builder.setContentText("Backup Created Successfully");
-                builder.setProgress(0,0,false);
-                manager.notify(1234,builder.build());
-
+                getActivity().startService(new Intent(getActivity(), BackupService.class));
             }
         });
 
         exportToExcel.setOnClickListener((v)->{
             if(checkStoragePermission(Manifest.permission.WRITE_EXTERNAL_STORAGE, STORAGE_PERMISSION_CODE)){
-                backupUtils.exportToExcel();
+                getActivity().startService(new Intent(getActivity(), ExportToExcelService.class));
             }
         });
 
         restoreBackup.setOnClickListener((v)->{
-            if(checkStoragePermission(Manifest.permission.WRITE_EXTERNAL_STORAGE, STORAGE_PERMISSION_CODE)){
-                backupUtils.restoreFromBackUp();
-                SplashScreenActivity.cSymbol = sharedPref.getString("cSymbol","#");
-                age.setText(sharedPref.getInt("age",0)+"");
-                salary.setText(SplashScreenActivity.cSymbol+" "+sharedPref.getLong("salary",0));
-                currencyName.setText(sharedPref.getString("cName","#"));
-                currencySymbol.setText(SplashScreenActivity.cSymbol);
+            if(checkStoragePermission(Manifest.permission.WRITE_EXTERNAL_STORAGE, STORAGE_PERMISSION_CODE)) {
+
+                restoringLayout.setVisibility(View.VISIBLE);
+                ExecutorService executorService = Executors.newSingleThreadExecutor();
+                executorService.execute(()->{
+                    getActivity().startService(new Intent(getActivity(), RestoreService.class));
+                    while(RestoreService.isServiceRunning){}
+                    getActivity().runOnUiThread(()->{
+                        restoringLayout.setVisibility(View.GONE);
+                        SplashScreenActivity.cSymbol = sharedPref.getString("cSymbol","#");
+                        age.setText(sharedPref.getInt("age",0)+"");
+                        salary.setText(SplashScreenActivity.cSymbol+" "+sharedPref.getLong("salary",0));
+                        currencyName.setText(sharedPref.getString("cName","#"));
+                        currencySymbol.setText(SplashScreenActivity.cSymbol);
+                    });
+
+                });
             }
         });
 
@@ -260,21 +255,16 @@ public class Settings extends Fragment {
         }
     }
 
-    // This function is called when the user accepts or decline the permission.
-    // Request Code is used to check which permission called this function.
-    // This request code is provided when the user is prompt for permission.
-
-  /*  @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == STORAGE_PERMISSION_CODE) {
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-
-            }
-            else {
-                Toast.makeText(getActivity(), "Permission denied : Cannot create backup", Toast.LENGTH_SHORT).show();
-            }
-        }
-    }*/
+    public void displayFrequencyDialogBox(String[] list){
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setTitle("Select Category");
+        builder.setItems(list, (dialog, which) -> {
+            backUpfrequency.setText(list[which]);
+            editor.putString("frequency",list[which]);
+            editor.apply();
+        });
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
 
 }
