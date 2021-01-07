@@ -14,13 +14,14 @@
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
         android:layout_marginTop="96dp"
-        android:src="@color/theme_orange"
+        android:src="@color/theme_blue_variant"
         app:civ_border_color="#FF000000"
         app:civ_border_width="0dp"
         tools:layout_editor_absoluteX="137dp"
         tools:layout_editor_absoluteY="-7dp" />
 
-    <LinearLayout
+
+  <!--  <LinearLayout
         android:id="@+id/linerLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -105,5 +106,5 @@
         android:text="Continue without Signup"
         android:textAllCaps="false"
         android:textColor="@color/theme_blue" />
-
+-->
 </RelativeLayout>
