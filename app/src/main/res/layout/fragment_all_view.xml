@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/all_container"
-    tools:context=".ExpenseScreen.Fragments.AllViewFragment">
+    tools:context="com.jitender.xpensmanager.ExpenseScreen.Fragments.AllViewFragment">
 
 
     <RelativeLayout
@@ -124,6 +124,7 @@
             app:sectionSubTitleTextSize="15sp"
             app:sectionSubTitleTextColor="@color/black"
             app:timeLineColor="@color/theme_yellow"
+            android:layout_marginBottom="?attr/actionBarSize"
             app:layout_behavior="@string/appbar_scrolling_view_behavior"
             />
         <androidx.coordinatorlayout.widget.CoordinatorLayout
