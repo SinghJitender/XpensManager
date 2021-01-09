@@ -2,9 +2,14 @@ package com.example.xpensmanager.SplashScreen;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+
+import android.Manifest;
 import android.animation.ObjectAnimator;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.util.Log;
@@ -56,6 +61,7 @@ public class SplashScreenActivity extends AppCompatActivity {
                 getString(R.string.preference_file_key), getApplicationContext().MODE_PRIVATE);
         editor = sharedPref.edit();
 
+
         executorService.execute(() ->{
             mydatabase = openOrCreateDatabase(getString(R.string.database_name),MODE_PRIVATE,null);
             mydatabase.execSQL( "CREATE TABLE IF NOT EXISTS self_expense"+
@@ -81,7 +87,7 @@ public class SplashScreenActivity extends AppCompatActivity {
             moveToMainActivity();
         }
         else{
-           //do something then move to main activity
+            getPermissions();
             editor.putBoolean("initialSetup",false);
             editor.apply();
             moveToMainActivity();
@@ -93,6 +99,13 @@ public class SplashScreenActivity extends AppCompatActivity {
         Intent intent = new Intent(getBaseContext(), MainActivity.class);
         startActivity(intent);
         finish();
+    }
+
+    public void getPermissions(){
+        if (ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                == PackageManager.PERMISSION_DENIED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 101);
+        }
     }
 
 }
