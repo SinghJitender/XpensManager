@@ -6,9 +6,9 @@
     <application
         android:allowBackup="true"
         tools:replace="android:icon"
-        android:icon="@drawable/xpensmanagerlogo"
+        android:icon="@drawable/xpensmanagericon"
         android:label="@string/app_name"
-        android:roundIcon="@drawable/xpensmanagerlogo"
+        android:roundIcon="@drawable/xpensmanagericon"
         android:supportsRtl="true"
         android:theme="@style/Theme.XpensManager"
         android:requestLegacyExternalStorage="true">
