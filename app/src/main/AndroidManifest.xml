@@ -1,47 +1,53 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.xpensmanager"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.example.xpensmanager">
+
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
     <application
         android:allowBackup="true"
-        tools:replace="android:icon"
         android:icon="@drawable/xpensmanagericon"
         android:label="@string/app_name"
+        android:requestLegacyExternalStorage="true"
         android:roundIcon="@drawable/xpensmanagericon"
         android:supportsRtl="true"
         android:theme="@style/Theme.XpensManager"
-        android:requestLegacyExternalStorage="true">
+        tools:replace="android:icon">
+        <activity android:name=".SetupScreen.Setup"></activity>
         <activity android:name=".ExpenseScreen.Expense" />
         <activity
             android:name=".MainScreen.MainActivity"
-            android:label="@string/title_activity_main">
-        </activity>
+            android:label="@string/title_activity_main"></activity>
         <activity
             android:name=".SplashScreen.SplashScreenActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/title_activity_splash_screen"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen">
-           <intent-filter>
+            <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <service android:name=".BackupAndRestoreUtils.BackupService" android:exported="true"/>
-        <service android:name=".BackupAndRestoreUtils.ExportToExcelService"/>
-        <service android:name=".BackupAndRestoreUtils.RestoreService"/>
 
-        <receiver android:name=".BackupAndRestoreUtils.AutomaticBackup" android:enabled="true">
+        <service
+            android:name=".BackupAndRestoreUtils.BackupService"
+            android:exported="true" />
+        <service android:name=".BackupAndRestoreUtils.ExportToExcelService" />
+        <service android:name=".BackupAndRestoreUtils.RestoreService" />
+
+        <receiver
+            android:name=".BackupAndRestoreUtils.AutomaticBackup"
+            android:enabled="true">
             <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED"></action>
-                <action android:name="com.example.xpensmanager.START_ALARM"/>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="com.example.xpensmanager.START_ALARM" />
             </intent-filter>
         </receiver>
     </application>
-
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.INTERNET"/>
-    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
 
 </manifest>
