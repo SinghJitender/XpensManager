@@ -1,5 +1,6 @@
 package com.example.xpensmanager.MainScreen.Fragments;
 
+import android.app.Notification;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -9,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.example.xpensmanager.Database.CategoryDB;
@@ -28,7 +30,7 @@ public class Category extends Fragment {
     private static CategoryViewAdapter adapter;
     private static CategoryDB categoryDB;
     private static ArrayList<CategoryData> results;
-    private TextView emptyView;
+    public static RelativeLayout emptyView;
     private static ArrayList<Boolean> list;
     private ExecutorService mExecutor;
 
@@ -81,5 +83,10 @@ public class Category extends Fragment {
         list.clear();
         list.addAll(updateList);
         adapter.notifyDataSetChanged();
+        if(results.size() == 0) {
+            emptyView.setVisibility(View.VISIBLE);
+        }else{
+            emptyView.setVisibility(View.GONE);
+        }
     }
 }
