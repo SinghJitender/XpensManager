@@ -4,11 +4,12 @@
         <item name="android:background">@color/black_overlay</item>
     </style>
 
-    <style name="Widget.Theme.XpensManager.ButtonBar.Fullscreen" parent="">
+    <style name="Widget.Theme.XpensManager.Light.Fullscreen" parent="">
         <item name="android:background">@color/black_overlay</item>
         <item name="android:buttonBarStyle">?android:attr/buttonBarStyle</item>
+    </style>
 
-    </style> <style name="MonthPickerDialogStyle" >
+    <style name="MonthPickerDialogStyle" >
 
     <item name="monthBgColor">@color/white</item>
     <item name="monthBgSelectedColor">@color/theme_yellow</item>
