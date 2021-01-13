@@ -6,7 +6,8 @@
     android:layout_height="match_parent"
     android:id="@+id/container"
     android:background="@color/theme_light_grey"
-    tools:context=".ExpenseScreen.Expense">
+    android:forceDarkAllowed="false"
+    tools:context="com.jitender.xpensmanager.ExpenseScreen.Expense">
 
     <FrameLayout
         android:id="@+id/fragment"
