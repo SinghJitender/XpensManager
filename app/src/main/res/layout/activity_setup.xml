@@ -112,19 +112,20 @@
                         android:layout_marginTop="2dp"
                         android:layout_marginBottom="2dp"
                         android:background="@color/theme_grey"/>
+
                     <EditText
                         android:id="@+id/salary"
-                        android:gravity="center"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="What's your salary?"
-                        android:paddingLeft="10dp"
                         android:layout_marginTop="10dp"
-                        android:visibility="visible"
-                        android:background="@null"
-                        android:inputType="numberDecimal"
                         android:layout_marginBottom="10dp"
-                        android:textSize="18sp" />
+                        android:background="@null"
+                        android:gravity="center"
+                        android:hint="What's your salary?"
+                        android:inputType="numberDecimal"
+                        android:paddingLeft="10dp"
+                        android:textSize="18sp"
+                        android:visibility="visible" />
 
 
                 </LinearLayout>
@@ -375,7 +376,7 @@
             </androidx.cardview.widget.CardView>
 
             <Button
-                android:id="@+id/next"
+                android:id="@+id/completeSetup"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center"
