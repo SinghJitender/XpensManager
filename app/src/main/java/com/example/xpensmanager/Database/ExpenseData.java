@@ -150,18 +150,20 @@ public class ExpenseData {
     @Override
     public String toString() {
         return "ExpenseData{" +
-                "id='" + id + '\'' +
+                "id=" + id +
                 ", date='" + date + '\'' +
                 ", dayOfWeek='" + dayOfWeek + '\'' +
                 ", textMonth='" + textMonth + '\'' +
-                ", month='" + month + '\'' +
-                ", year='" + year + '\'' +
-                ", amount='" + amount + '\'' +
+                ", month=" + month +
+                ", year=" + year +
+                ", day=" + day +
+                ", amount=" + amount +
                 ", description='" + description + '\'' +
                 ", paidBy='" + paidBy + '\'' +
                 ", category='" + category + '\'' +
-                ", deleted='" + deleted + '\'' +
-                ", splitAmount='" + splitAmount + '\'' +
+                ", deleted=" + deleted +
+                ", splitAmount=" + splitAmount +
+                ", group='" + group + '\'' +
                 '}';
     }
 }
