@@ -8,7 +8,7 @@ android {
     buildToolsVersion "30.0.3"
 
     defaultConfig {
-        applicationId "com.example.xpensmanager"
+        applicationId "com.jitender.xpensmanager"
         minSdkVersion 21
         targetSdkVersion 30
         versionCode 1
