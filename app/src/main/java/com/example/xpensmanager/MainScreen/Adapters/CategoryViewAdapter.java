@@ -28,6 +28,7 @@ import com.example.xpensmanager.Database.CategoryData;
 import com.example.xpensmanager.Database.ExpenseDB;
 import com.example.xpensmanager.Enums.ViewType;
 import com.example.xpensmanager.ExpenseScreen.Expense;
+import com.example.xpensmanager.MainScreen.Fragments.Category;
 import com.example.xpensmanager.MainScreen.MainActivity;
 import com.example.xpensmanager.R;
 import com.example.xpensmanager.SplashScreen.SplashScreenActivity;
@@ -165,6 +166,9 @@ public class CategoryViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                                 results.remove(position);
                                 list.remove(position);
                                 notifyDataSetChanged();
+                                if(results.size()==0){
+                                    Category.emptyView.setVisibility(View.VISIBLE);
+                                }
                                 MainActivity.updateCategoryList();
                             }
                         })
