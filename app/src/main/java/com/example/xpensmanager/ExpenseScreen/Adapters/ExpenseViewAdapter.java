@@ -75,4 +75,18 @@ public class ExpenseViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     public int getItemCount() {
         return list.size();
     }
+
+    public void removeItem(int position) {
+        list.remove(position);
+        notifyDataSetChanged();
+    }
+
+    public void restoreItem(ExpenseData item, int position) {
+        list.add(position, item);
+        notifyItemInserted(position);
+    }
+
+    public ArrayList<ExpenseData> getData() {
+        return list;
+    }
 }
