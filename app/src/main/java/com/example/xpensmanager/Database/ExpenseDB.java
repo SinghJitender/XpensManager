@@ -63,6 +63,13 @@ public class ExpenseDB extends SQLiteOpenHelper {
         return db.delete(tableName, null,null);
     }
 
+    public Integer deleteExpenseById(int id) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        return db.delete(tableName,
+                "id = ? ",
+                new String[] { Integer.toString(id) });
+    }
+
     public String insertNewExpense(Date date, double amount, String description, String category, String paidBy, int splitBetween, String groupedWith) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
