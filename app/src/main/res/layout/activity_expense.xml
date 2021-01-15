@@ -8,11 +8,10 @@
     android:background="@color/theme_light_grey"
     tools:context=".ExpenseScreen.Expense">
 
-    <include
-        layout="@layout/fragment_monthly_view"
+    <FrameLayout
+        android:id="@+id/fragment"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginBottom="?attr/actionBarSize"/>
+        android:layout_height="match_parent">
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/navigation"
@@ -29,5 +28,7 @@
         app:itemRippleColor="@color/theme_blue"
         app:itemTextColor="@color/theme_blue_variant"
         app:menu="@menu/expense_view_bottom_menu" />
+    </FrameLayout>
+
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
