@@ -419,4 +419,20 @@ public class BackupExportRestoreUtil {
         return false;
     }
 
+    public boolean isBackupFilePresent(){
+        if (isExternalStorageWritable() && isExternalStorageReadable()) {
+            File dir = new File(context.getExternalFilesDir(null).getAbsolutePath(), "/XpensManager/Backup/");
+            if (!dir.exists())
+                return false;
+
+            File output = new File(dir, filename);
+            if (!output.exists()) {
+                return false;
+            }else{
+                return true;
+            }
+        }else{
+            return false;
+        }
+    }
 }
