@@ -11,9 +11,9 @@
         android:icon="@drawable/y"
         android:title="Year" />
 
-    <item
+  <!--  <item
         android:id="@+id/all"
         android:icon="@drawable/a"
-        android:title="All" />
+        android:title="All" />-->
     
 </menu>
