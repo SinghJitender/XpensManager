@@ -18,6 +18,7 @@ import com.example.xpensmanager.Database.CategoryData;
 import com.example.xpensmanager.Database.GroupDB;
 import com.example.xpensmanager.MainScreen.Adapters.CategoryViewAdapter;
 import com.example.xpensmanager.MainScreen.Adapters.GroupViewAdapter;
+import com.example.xpensmanager.MainScreen.MainActivity;
 import com.example.xpensmanager.R;
 
 import java.util.ArrayList;
@@ -33,6 +34,7 @@ public class Category extends Fragment {
     public static RelativeLayout emptyView;
     private static ArrayList<Boolean> list;
     private ExecutorService mExecutor;
+    public static boolean categoryInitializationFlag;
 
     public Category() {
         // Required empty public constructor
@@ -45,6 +47,7 @@ public class Category extends Fragment {
         results = new ArrayList<>();
         list = new ArrayList<>();
         mExecutor = Executors.newSingleThreadExecutor();
+        categoryInitializationFlag = true;
     }
 
     @Override
