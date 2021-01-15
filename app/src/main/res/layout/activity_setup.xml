@@ -13,10 +13,16 @@
         android:layout_marginBottom="10dp"
         android:background="@null"
         android:paddingLeft="20dp"
-        android:text="Initial Setup"
+        android:text="Setup"
         android:textColor="@color/theme_blue_variant"
         android:textSize="25sp"
         android:textStyle="bold"/>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:elevation="2dp"
+        android:layout_marginRight="3dp"
+        android:background="@color/theme_grey"/>
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -24,6 +30,128 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="visible"
+                android:elevation="5dp"
+                app:cardUseCompatPadding="true"
+                android:layout_margin="5dp"
+                app:cardBackgroundColor="@color/white">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="5dp"
+                    android:orientation="vertical">
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="5dp"
+                        android:orientation="horizontal"
+                        android:weightSum="20">
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="5dp"
+                            android:layout_weight="20"
+                            android:background="@null"
+                            android:paddingLeft="20dp"
+                            android:paddingRight="20dp"
+                            android:text="Restore"
+                            android:textColor="@color/theme_blue_variant"
+                            android:textSize="20sp"
+                            android:textStyle="normal"/>
+                    </LinearLayout>
+                    <TextView
+                        android:id="@+id/restoreInfo"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="3dp"
+                        android:layout_marginBottom="3dp"
+                        android:background="@null"
+                        android:textStyle="italic"
+                        android:focusedByDefault="true"
+                        android:text="This info is only stored on your device offline and used for doing expense analysis or providing suggestions."
+                        android:paddingLeft="20dp"
+                        android:textSize="12sp"/>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="5dp"
+                        android:orientation="vertical"
+                        android:layout_gravity="center"
+                        android:gravity="center">
+                        <Button
+                            android:id="@+id/restoreFromBackup"
+                            android:gravity="center"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Restore From Backup"
+                            android:layout_marginRight="10dp"
+                            android:layout_marginLeft="10dp"
+                            android:textColor="@color/white"
+                            android:backgroundTint="@color/theme_blue_variant"
+                            android:textSize="12sp" />
+
+                        <Button
+                            android:id="@+id/restoreFromFile"
+                            android:gravity="center"
+                            android:clickable="true"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Select Restore File"
+                            android:layout_marginRight="10dp"
+                            android:layout_marginLeft="10dp"
+                            android:backgroundTint="@color/theme_blue_variant"
+                            android:visibility="visible"
+                            android:textSize="12sp" />
+                    </LinearLayout>
+
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:weightSum="23"
+                android:layout_gravity="center"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:gravity="center"
+                android:orientation="horizontal">
+                <View
+                    android:layout_width="0dp"
+                    android:layout_weight="10"
+                    android:layout_height="1dp"
+                    android:layout_marginRight="3dp"
+                    android:background="@color/theme_grey"/>
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_weight="3"
+                    android:layout_height="wrap_content"
+                    android:text="OR"
+                    android:textStyle="bold"
+                    android:alpha="0.8"
+                    android:textSize="20sp"
+                    android:layout_gravity="center"
+                    android:gravity="center"/>
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_weight="10"
+                    android:layout_height="1dp"
+                    android:layout_marginLeft="3dp"
+                    android:background="@color/theme_grey"/>
+
+            </LinearLayout>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
+                android:background="@color/theme_grey"/>
+
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -162,7 +290,7 @@
                             android:layout_weight="20"
                             android:background="@null"
                             android:paddingLeft="20dp"
-                            android:text="Add Category"
+                            android:text="Add Category (Optional)"
                             android:textColor="@color/theme_blue_variant"
                             android:textSize="20sp"
                             android:textStyle="normal"/>
@@ -270,7 +398,7 @@
                             android:layout_weight="20"
                             android:background="@null"
                             android:paddingLeft="20dp"
-                            android:text="Create Group"
+                            android:text="Create Group (Optional)"
                             android:textColor="@color/theme_blue_variant"
                             android:textSize="20sp"
                             android:textStyle="normal"/>
