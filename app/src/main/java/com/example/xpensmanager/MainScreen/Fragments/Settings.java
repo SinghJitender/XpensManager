@@ -4,8 +4,10 @@ import android.Manifest;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.app.ActivityCompat;
 import androidx.core.app.AlarmManagerCompat;
@@ -27,9 +29,12 @@ import com.example.xpensmanager.BackupAndRestoreUtils.BackupExportRestoreUtil;
 import com.example.xpensmanager.BackupAndRestoreUtils.BackupService;
 import com.example.xpensmanager.BackupAndRestoreUtils.ExportToExcelService;
 import com.example.xpensmanager.BackupAndRestoreUtils.RestoreService;
+import com.example.xpensmanager.MainScreen.MainActivity;
 import com.example.xpensmanager.R;
 import com.example.xpensmanager.SplashScreen.SplashScreenActivity;
 
+import java.io.IOException;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -37,13 +42,13 @@ import java.util.concurrent.Executors;
 
 public class Settings extends Fragment {
     private static String[] combinedList = {"Rupee - ₹","Yen - ¥","Ruble - ₽","Korean Won - ₩","Dollar - $","Pound - £","Euro - €","Other - #"};
-    private TextView currencySymbol, currencyName, salary,age,version , backUpfrequency;
+    private TextView currencySymbol, currencyName, salary,age,version ,backUpfrequency, restoreInfo, lastBackUpDate;
     private SharedPreferences sharedPref;
     private SharedPreferences.Editor editor;
-    private String currentCurrencySymbol,currentCurrencyName,currentBackupFrequency;
+    private String currentCurrencySymbol,currentCurrencyName,currentBackupFrequency, currentLastBackupDate;
     private long currentSalary;
     private int currentAge;
-    private Button createBackup,exportToExcel,restoreBackup;
+    private Button createBackup,exportToExcel,restoreBackup,restoreFromFile,uploadBackup;
     private static final int STORAGE_PERMISSION_CODE = 101;
     private BackupExportRestoreUtil backupExportRestoreUtilUtils;
     private LinearLayout restoringLayout;
@@ -61,6 +66,7 @@ public class Settings extends Fragment {
         currentSalary = sharedPref.getLong("salary",0);
         currentAge = sharedPref.getInt("age",0);
         currentBackupFrequency = sharedPref.getString("frequency","None");
+        currentLastBackupDate = sharedPref.getString("lastBackupDate","None");
         backupExportRestoreUtilUtils = new BackupExportRestoreUtil(getActivity());
     }
 
@@ -77,8 +83,26 @@ public class Settings extends Fragment {
         createBackup = view.findViewById(R.id.createBackup);
         exportToExcel = view.findViewById(R.id.exportToExcel);
         restoreBackup = view.findViewById(R.id.restoreBackup);
+        restoreFromFile = view.findViewById(R.id.restoreFromFile);
         restoringLayout = view.findViewById(R.id.restoringLayout);
         backUpfrequency = view.findViewById(R.id.backUpfrequency);
+        restoreInfo = view.findViewById(R.id.restoreInfo);
+        lastBackUpDate = view.findViewById(R.id.lastBackUpDate);
+        uploadBackup = view.findViewById(R.id.uploadBackup);
+
+        uploadBackup.setOnClickListener((v)->{
+            Intent backupUpload = new Intent(Intent.ACTION_SEND);
+            backupUpload.putExtra(Intent.EXTRA_STREAM,backupExportRestoreUtilUtils.getBackupFilePath());
+            backupUpload.setType("text/plain");
+            startActivity( Intent.createChooser(backupUpload,"Upload/Share Backup"));
+        });
+
+        if(currentLastBackupDate.equals("None")){
+            lastBackUpDate.setVisibility(View.GONE);
+        }else {
+            lastBackUpDate.setVisibility(View.VISIBLE);
+            lastBackUpDate.setText("Last backup created on " + currentLastBackupDate);
+        }
 
         backUpfrequency.setText(currentBackupFrequency);
         backUpfrequency.setOnClickListener((v)->{
@@ -158,9 +182,10 @@ public class Settings extends Fragment {
                         if(tempLimit <= 0 ){
                             maxLimit.setError("Cannot be 0 or less");
                         }else{
-                           //update
+                            //update
                             editor.putLong("salary",tempLimit);
                             editor.apply();
+                            SplashScreenActivity.salary = tempLimit;
                             salary.setText(SplashScreenActivity.cSymbol+" "+tempLimit);
                             dialog.dismiss();
                         }
@@ -208,6 +233,7 @@ public class Settings extends Fragment {
                     getActivity().runOnUiThread(()->{
                         restoringLayout.setVisibility(View.GONE);
                         SplashScreenActivity.cSymbol = sharedPref.getString("cSymbol","#");
+                        SplashScreenActivity.salary = sharedPref.getLong("salary",0);
                         age.setText(sharedPref.getInt("age",0)+"");
                         salary.setText(SplashScreenActivity.cSymbol+" "+sharedPref.getLong("salary",0));
                         currencyName.setText(sharedPref.getString("cName","#"));
@@ -218,8 +244,50 @@ public class Settings extends Fragment {
             }
         });
 
+        restoreFromFile.setOnClickListener((v)->{
+            Intent chooseFile = new Intent(Intent.ACTION_GET_CONTENT);
+            chooseFile.setType("text/plain");
+            chooseFile = Intent.createChooser(chooseFile, "Select backup file");
+            startActivityForResult(chooseFile, 201);
+        });
+
 
         return view;
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        switch (requestCode){
+            case 201 :
+                if(resultCode == -1){
+                    Uri fileUri =data.getData();
+                    BackupExportRestoreUtil restoreFile = new BackupExportRestoreUtil(getActivity());
+                    try {
+                        restoringLayout.setVisibility(View.VISIBLE);
+                        String result = restoreFile.restoreFromUri(fileUri);
+                        restoringLayout.setVisibility(View.GONE);
+                        if(result.equalsIgnoreCase("Successfully restored data from backup")){
+                            //move to main activity
+                            SplashScreenActivity.cSymbol = sharedPref.getString("cSymbol","#");
+                            SplashScreenActivity.salary = sharedPref.getLong("salary",0);
+                            Intent intent = new Intent(getActivity(), MainActivity.class);
+                            startActivity(intent);
+                            getActivity().finish();
+                        }else{
+                            restoreInfo.setText(result);
+                            restoreInfo.setVisibility(View.VISIBLE);
+                            restoreInfo.setTextColor(getResources().getColor(R.color.theme_red_variant));
+                        }
+
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+                }
+                break;
+        }
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
     public void displayCurrencyDialogBox(){
