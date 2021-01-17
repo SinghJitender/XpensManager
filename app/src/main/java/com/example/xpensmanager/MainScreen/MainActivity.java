@@ -66,6 +66,7 @@ public class MainActivity extends AppCompatActivity {
     private Calendar myCalendar;
     private static ArrayList<String> groupList;
     private static ArrayList<String> categoryList;
+    private boolean homePageFlag, groupPageFlag, categoryPageFlag;
 
     //Database Objects
     private ExpenseDB expenseDB;
@@ -190,6 +191,8 @@ public class MainActivity extends AppCompatActivity {
                                             newExpenseTotalAmount.requestFocus();
                                             newExpenseSelectGroup.setText("Select Group");
                                             updateHomePageData();
+                                            updateGroupFragmentData();
+                                            updateCategoryFragmentData();
 
                                         } catch (ParseException e) {
                                             Toast.makeText(getApplicationContext(),"Error in parsing date",Toast.LENGTH_SHORT).show();
@@ -234,7 +237,7 @@ public class MainActivity extends AppCompatActivity {
                         if(limit == null || limit.equalsIgnoreCase("")){
                             newGroupLimit.setError("Field Cannot be blank");
                         }
-                         else {
+                        else {
                             if(Double.parseDouble(limit)<=0.0){
                                 newGroupLimit.setError("Cannot be 0 or less");
                             }else {
@@ -261,30 +264,30 @@ public class MainActivity extends AppCompatActivity {
         createCategory = findViewById(R.id.createCategory);
         categoryLimit = findViewById(R.id.categoryLimit);
         createCategory.setOnClickListener((v) -> {
-                    String categoryValue = categoryName.getText().toString();
-                    String categoryLimitVal = categoryLimit.getText().toString();
-                    if(categoryValue == null || categoryValue.equalsIgnoreCase("")) {
-                        categoryName.setError("Field Cannot be blank");
-                    } else {
-                        if(categoryLimitVal == null || categoryLimitVal.equalsIgnoreCase("")) {
-                            categoryLimit.setError("Field Cannot be blank");
-                        }else{
-                            if(Double.parseDouble(categoryLimitVal) <= 0.0){
-                                categoryLimit.setError("Cannot be 0 or less");
-                            }
-                            else{
-                                String result = categoryDB.insertNewCategory(categoryValue,Double.parseDouble(categoryLimitVal));
-                                Toast.makeText(getApplicationContext(),result,Toast.LENGTH_SHORT).show();
-                                if(result.contains("Created")) {
-                                    categoryName.setText("");
-                                    categoryName.requestFocus();
-                                    categoryLimit.setText("");
-                                    categoryList.add(categoryValue);
-                                    updateCategoryFragmentData();
-                                }
-                            }
+            String categoryValue = categoryName.getText().toString();
+            String categoryLimitVal = categoryLimit.getText().toString();
+            if(categoryValue == null || categoryValue.equalsIgnoreCase("")) {
+                categoryName.setError("Field Cannot be blank");
+            } else {
+                if(categoryLimitVal == null || categoryLimitVal.equalsIgnoreCase("")) {
+                    categoryLimit.setError("Field Cannot be blank");
+                }else{
+                    if(Double.parseDouble(categoryLimitVal) <= 0.0){
+                        categoryLimit.setError("Cannot be 0 or less");
+                    }
+                    else{
+                        String result = categoryDB.insertNewCategory(categoryValue,Double.parseDouble(categoryLimitVal));
+                        Toast.makeText(getApplicationContext(),result,Toast.LENGTH_SHORT).show();
+                        if(result.contains("Created")) {
+                            categoryName.setText("");
+                            categoryName.requestFocus();
+                            categoryLimit.setText("");
+                            categoryList.add(categoryValue);
+                            updateCategoryFragmentData();
                         }
                     }
+                }
+            }
         });
 
         main.setOnClickListener((v)->{
@@ -304,7 +307,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
         AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.navigation_home, R.id.navigation_group,R.id.navigation_stats, R.id.navigation_settings)
+                R.id.navigation_home, R.id.navigation_group,R.id.navigation_category,R.id.navigation_stats, R.id.navigation_settings)
                 .build();
         BottomAppBar.LayoutParams layoutParams = (BottomAppBar.LayoutParams) navView.getLayoutParams();
         //layoutParams.setBehavior(new BottomNavigationBehavior());
@@ -416,30 +419,37 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void updateHomePageData() {
-        ArrayList<ExpenseData> data = new ArrayList<>();
-        data.addAll(expenseDB.findByMonth(ExpenseDB.getMonthFromDate(new Date()), ExpenseDB.getYearFromDate(new Date())));
-        double totalSpentThisMonth = expenseDB.getMonthlyExpenseSum(ExpenseDB.getMonthFromDate(new Date()), ExpenseDB.getYearFromDate(new Date()));
-        double totalCategorySum = categoryDB.getTotalCategoryLimitSum();
-        Home.updateRecyclerView(data,totalSpentThisMonth,totalCategorySum);
-    };
+        if(Home.homeInitializationFlag) {
+            ArrayList<ExpenseData> data = new ArrayList<>();
+            data.addAll(expenseDB.findByMonth(ExpenseDB.getMonthFromDate(new Date()), ExpenseDB.getYearFromDate(new Date())));
+            double totalSpentThisMonth = expenseDB.getMonthlyExpenseSum(ExpenseDB.getMonthFromDate(new Date()), ExpenseDB.getYearFromDate(new Date()));
+            double totalCategorySum = categoryDB.getTotalCategoryLimitSum();
+            Home.updateRecyclerView(data, totalSpentThisMonth, totalCategorySum);
+        }
+    }
 
     public void updateGroupFragmentData(){
-        ArrayList<GroupData> updatedResults = new ArrayList<>();
-        ArrayList<Boolean> updateList = new ArrayList<>();
-        updatedResults.addAll(groupsDB.findAll());
-        for(int i=0;i<updatedResults.size();i++){
-            updateList.add(false);
+        if(Group.groupInitializationFlag) {
+            ArrayList<GroupData> updatedResults = new ArrayList<>();
+            ArrayList<Boolean> updateList = new ArrayList<>();
+            updatedResults.addAll(groupsDB.findAll());
+            for (int i = 0; i < updatedResults.size(); i++) {
+                updateList.add(false);
+            }
+            Group.updateGroupAdapter(updatedResults, updateList);
         }
-        Group.updateGroupAdapter(updatedResults,updateList);
-    };
+    }
 
     public void updateCategoryFragmentData(){
-        ArrayList<CategoryData> updatedResults = new ArrayList<>();
-        ArrayList<Boolean> updateList = new ArrayList<>();
-        updatedResults.addAll(categoryDB.findAll());
-        for(int i=0;i<updatedResults.size();i++){
-            updateList.add(false);
+        if(Category.categoryInitializationFlag) {
+            ArrayList<CategoryData> updatedResults = new ArrayList<>();
+            ArrayList<Boolean> updateList = new ArrayList<>();
+            updatedResults.addAll(categoryDB.findAll());
+            for (int i = 0; i < updatedResults.size(); i++) {
+                updateList.add(false);
+            }
+            Category.updateCategoryAdapter(updatedResults, updateList);
         }
-        Category.updateCategoryAdapter(updatedResults,updateList);
-    };
+    }
+
 }
