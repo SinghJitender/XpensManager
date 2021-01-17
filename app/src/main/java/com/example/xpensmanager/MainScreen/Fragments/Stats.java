@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 
 import com.example.xpensmanager.Database.ExpenseDB;
@@ -25,6 +26,7 @@ import com.hadiidbouk.charts.BarData;
 import com.hadiidbouk.charts.ChartProgressBar;
 
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -46,8 +48,9 @@ public class Stats extends Fragment {
     private ExecutorService mExecutor;
     private double totalSpends;
     private ChartProgressBar mChart, yChart, dChart;
-    private TextView overallMonthlyExpense,monthName,currentMonthAverage,weekDayName,currentWeekAverage,dayName,currentDayAverage;
+    private TextView overallMonthlyExpense,monthName,currentMonthAverage,weekDayName,currentWeekAverage,dayName,currentDayAverage,percentageOfMonthlySalary,percentageOfMonthlySalaryText;
     private TextView category1,category2,category3,category4,category5;
+    private CardView categoryChartView,groupChartView;
 
     public Stats() {
         // Required empty public constructor
@@ -90,6 +93,11 @@ public class Stats extends Fragment {
         category3 = view.findViewById(R.id.category3);
         category4 = view.findViewById(R.id.category4);
         category5 = view.findViewById(R.id.category5);
+        categoryChartView = view.findViewById(R.id.categoryChartView);
+        groupChartView = view.findViewById(R.id.groupChartView);
+        percentageOfMonthlySalary = view.findViewById(R.id.percentageOfMonthlySalary);
+        percentageOfMonthlySalaryText =  view.findViewById(R.id.percentageOfMonthlySalaryText);
+
 
         //Sum of all weekdays
         mExecutor.execute(()->{
@@ -147,6 +155,11 @@ public class Stats extends Fragment {
             Log.d("Stats",categoryList+"");
             getActivity().runOnUiThread(()->{
                 //Set Category Data
+                if(categoryList.size()>0){
+                    categoryChartView.setVisibility(View.VISIBLE);
+                }else{
+                    categoryChartView.setVisibility(View.GONE);
+                }
                 setCategoryData(categoryList,totalSpends);
                 int i = 0;
                 for(String key:categoryList.keySet()){
@@ -169,6 +182,11 @@ public class Stats extends Fragment {
             Log.d("Stats",groupList+"");
             getActivity().runOnUiThread(()->{
                 //Set Group Data
+                if(groupList.size()>0){
+                    groupChartView.setVisibility(View.VISIBLE);
+                }else{
+                    groupChartView.setVisibility(View.GONE);
+                }
                 setGroupData(groupList,totalSpends);
             });
         });
@@ -190,7 +208,7 @@ public class Stats extends Fragment {
                 dayName.setText("Average Spends On Day "+currentDay+" Of Month");
                 if(weekCount>0 && weekList.containsKey(currentDayOfWeek)){
                     //Log.d("Stats - Week Day Avg",(weekList.get(currentDayOfWeek)/weekCount)+"");
-                    currentWeekAverage.setText((weekList.get(currentDayOfWeek)/weekCount)+"");
+                    currentWeekAverage.setText(SplashScreenActivity.cSymbol+" "+(weekList.get(currentDayOfWeek)/weekCount)+"");
                 }else{
                     // No Value Present in db
                     currentWeekAverage.setText("Not enough data to calculate");
@@ -199,7 +217,7 @@ public class Stats extends Fragment {
 
                 if(monthCount>0 && yearList.containsKey(currentMonth)){
                     //Log.d("Stats - Month Avg",(yearList.get(currentMonth)/monthCount)+"");
-                    currentMonthAverage.setText((yearList.get(currentMonth)/monthCount)+"");
+                    currentMonthAverage.setText(SplashScreenActivity.cSymbol+" "+(yearList.get(currentMonth)/monthCount)+"");
                 }else{
                     // No Value Present in db
                     currentMonthAverage.setText("Not enough data to calculate");
@@ -208,7 +226,7 @@ public class Stats extends Fragment {
 
                 if(dayCount>0 && dayList.containsKey(currentDay)){
                     //Log.d("Stats - Day Avg",(dayList.get(currentDay)/dayCount)+"");
-                    currentDayAverage.setText((dayList.get(currentDay)/dayCount)+"");
+                    currentDayAverage.setText(SplashScreenActivity.cSymbol+" "+(dayList.get(currentDay)/dayCount)+"");
                 }else{
                     // No Value Present in db
                     currentDayAverage.setText("Not enough data to calculate");
@@ -217,7 +235,13 @@ public class Stats extends Fragment {
 
                 if(totalDistinctMonthCount>0){
                     Log.d("All Time Monthly Avg", (totalSpends/totalDistinctMonthCount)+"");
-                    overallMonthlyExpense.setText((totalSpends/totalDistinctMonthCount)+"");
+                    double monthlyAverageCal = (totalSpends/totalDistinctMonthCount);
+                    overallMonthlyExpense.setText(SplashScreenActivity.cSymbol+" "+monthlyAverageCal+"");
+                    if(SplashScreenActivity.salary>0){
+                        percentageOfMonthlySalary.setVisibility(View.VISIBLE);
+                        percentageOfMonthlySalaryText.setVisibility(View.VISIBLE);
+                        percentageOfMonthlySalary.setText(new DecimalFormat("##.00").format((monthlyAverageCal/SplashScreenActivity.salary*100))+"%");
+                    }
                 }else{
                     // No Value Present in db
                     overallMonthlyExpense.setText("Not enough data to calculate");
