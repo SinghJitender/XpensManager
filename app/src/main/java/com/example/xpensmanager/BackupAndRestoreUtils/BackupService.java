@@ -4,13 +4,18 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.Service;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.IBinder;
 import android.util.Log;
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
+
+import com.example.xpensmanager.Database.ExpenseDB;
 import com.example.xpensmanager.R;
+
+import java.util.Date;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -18,6 +23,8 @@ public class BackupService extends Service {
     private NotificationManagerCompat manager;
     private NotificationCompat.Builder builder;
     private ExecutorService executorService;
+    private SharedPreferences sharedPref;
+    private SharedPreferences.Editor editor;
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
@@ -49,6 +56,11 @@ public class BackupService extends Service {
             String message = backupExportRestoreUtil.createBackUp();
 
             if(message.contains("storage")){
+                sharedPref = getApplicationContext().getSharedPreferences(
+                        getString(R.string.preference_file_key), getApplicationContext().MODE_PRIVATE);
+                editor = sharedPref.edit();
+                editor.putString("lastBackupDate", ExpenseDB.dateToString(new Date()));
+                editor.apply();
                 builder.setContentTitle("Backup created successfully");
             }else{
                 builder.setContentTitle("Failed to create backup");
