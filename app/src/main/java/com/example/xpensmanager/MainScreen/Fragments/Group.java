@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
@@ -13,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.xpensmanager.Database.GroupDB;
 import com.example.xpensmanager.Database.GroupData;
 import com.example.xpensmanager.MainScreen.Adapters.GroupViewAdapter;
+import com.example.xpensmanager.MainScreen.MainActivity;
 import com.example.xpensmanager.R;
 
 import java.util.ArrayList;
@@ -24,10 +26,11 @@ public class Group extends Fragment {
     private RecyclerView recyclerView;
     private static GroupViewAdapter adapter;
     private static GroupDB groupDB;
-    private TextView emptyView;
+    public static RelativeLayout emptyView;
     private static ArrayList<GroupData> results;
     private static ArrayList<Boolean> list;
     private ExecutorService mExecutor;
+    public static boolean groupInitializationFlag;
 
     public Group() {
         // Required empty public constructor
@@ -40,6 +43,7 @@ public class Group extends Fragment {
         results = new ArrayList<>();
         list = new ArrayList<>();
         mExecutor = Executors.newSingleThreadExecutor();
+        groupInitializationFlag = true;
     }
 
     @Override
@@ -77,5 +81,10 @@ public class Group extends Fragment {
         list.clear();
         list.addAll(updateList);
         adapter.notifyDataSetChanged();
+        if(results.size() == 0) {
+            emptyView.setVisibility(View.VISIBLE);
+        }else{
+            emptyView.setVisibility(View.GONE);
+        }
     }
 }
