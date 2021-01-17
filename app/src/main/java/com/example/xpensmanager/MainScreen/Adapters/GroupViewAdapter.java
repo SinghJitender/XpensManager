@@ -28,6 +28,8 @@ import com.example.xpensmanager.Database.GroupDB;
 import com.example.xpensmanager.Database.GroupData;
 import com.example.xpensmanager.Enums.ViewType;
 import com.example.xpensmanager.ExpenseScreen.Expense;
+import com.example.xpensmanager.MainScreen.Fragments.Category;
+import com.example.xpensmanager.MainScreen.Fragments.Group;
 import com.example.xpensmanager.MainScreen.MainActivity;
 import com.example.xpensmanager.R;
 import com.example.xpensmanager.SplashScreen.SplashScreenActivity;
@@ -69,7 +71,7 @@ public class GroupViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         double currentMonthTotal = results.get(position).getTotalAmount();
         int nPeps = results.get(position).getNoOfPersons();
         ((ViewHolder) holder).title.setText(results.get(position).getTitle());
-        ((ViewHolder) holder).totalAmount.setText(SplashScreenActivity.cSymbol+ " "+currentMonthTotal);
+        ((ViewHolder) holder).totalAmount.setText(SplashScreenActivity.cSymbol+ " "+(currentMonthTotal/nPeps));
         ((ViewHolder) holder).lifeTimeSpend.setText(SplashScreenActivity.cSymbol+ " "+results.get(position).getTotalAmount());
         ((ViewHolder) holder).splitBetween.setText(nPeps<=1? nPeps+ " Person" : "Split Between "+ nPeps + " People");
         double net_amount = results.get(position).getNetAmount();
@@ -110,6 +112,17 @@ public class GroupViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             notifyItemChanged(position);
         });
         if(list.get(position)) {
+            if(results.get(position).getTitle().equalsIgnoreCase("Personal")){
+                ((ViewHolder) holder).deleteXpens.setEnabled(false);
+                ((ViewHolder) holder).deleteXpens.setAlpha(0.5f);
+                ((ViewHolder) holder).settleXpens.setEnabled(false);
+                ((ViewHolder) holder).settleXpens.setAlpha(0.5f);
+            }else{
+                ((ViewHolder) holder).deleteXpens.setEnabled(true);
+                ((ViewHolder) holder).deleteXpens.setAlpha(1f);
+                ((ViewHolder) holder).settleXpens.setEnabled(true);
+                ((ViewHolder) holder).settleXpens.setAlpha(1f);
+            }
             if(net_amount>0){
                 ((ViewHolder) holder).info.setText(results.get(position).getTitle() + " owes you "+net_amount);
             }else if (net_amount<0){
@@ -135,8 +148,15 @@ public class GroupViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                 TextView groupName = dialogView.findViewById(R.id.groupName);
                 EditText noOfPeps = dialogView.findViewById(R.id.noofpeps);
                 EditText maxLimit = dialogView.findViewById(R.id.limit);
+                if(results.get(position).getTitle().equalsIgnoreCase("Personal")){
+                    noOfPeps.setEnabled(false);
+                    noOfPeps.setAlpha(0.5f);
+                }else{
+                    noOfPeps.setEnabled(true);
+                    noOfPeps.setAlpha(1f);
+                }
                 groupName.setText(results.get(position).getTitle());
-                noOfPeps.setText(results.get(position).getNoOfPersons());
+                noOfPeps.setText(results.get(position).getNoOfPersons()+"");
                 maxLimit.setText(results.get(position).getMaxLimit()+"");
                 dialog.setView(dialogView);
                 dialogView.findViewById(R.id.update).setOnClickListener(new View.OnClickListener() {
@@ -215,6 +235,9 @@ public class GroupViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                                 results.remove(position);
                                 list.remove(position);
                                 notifyDataSetChanged();
+                                if(results.size()==0){
+                                    Group.emptyView.setVisibility(View.VISIBLE);
+                                }
                                 MainActivity.updateGroupList();
                             }
                         })
