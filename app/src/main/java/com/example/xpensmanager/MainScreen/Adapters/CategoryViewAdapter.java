@@ -67,8 +67,8 @@ public class CategoryViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         double currentMonthTotal = expenseDB.getMonthTotalForCategory(results.get(position).getCategory(), ExpenseDB.getMonthFromDate(new Date()), ExpenseDB.getYearFromDate(new Date()));
         ((ViewHolder) holder).title.setText(results.get(position).getCategory());
-        ((ViewHolder) holder).totalAmount.setText(SplashScreenActivity.cSymbol+ " "+currentMonthTotal);
-        ((ViewHolder) holder).lifeTimeSpend.setText(SplashScreenActivity.cSymbol+ " "+results.get(position).getTotalCategorySpend());
+        ((ViewHolder) holder).totalAmount.setText(SplashScreenActivity.cSymbol+ " "+ new DecimalFormat("00.00").format(currentMonthTotal));
+        ((ViewHolder) holder).lifeTimeSpend.setText(SplashScreenActivity.cSymbol+ " "+ new DecimalFormat("00.00").format(results.get(position).getTotalCategorySpend()));
         double limit = results.get(position).getLimit();
         double percentageLimit = ((currentMonthTotal/limit)*100);
         if(percentageLimit<=50){
