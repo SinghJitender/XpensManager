@@ -1,12 +1,15 @@
 package com.example.xpensmanager.MainScreen;
 
 import android.app.DatePickerDialog;
+import android.content.Context;
 import android.os.Bundle;
 import android.transition.Slide;
 import android.transition.Transition;
 import android.transition.TransitionManager;
 import android.view.Gravity;
 import android.view.View;
+import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -67,6 +70,7 @@ public class MainActivity extends AppCompatActivity {
     private static ArrayList<String> groupList;
     private static ArrayList<String> categoryList;
     private boolean homePageFlag, groupPageFlag, categoryPageFlag;
+    private int totalTimes;
 
     //Database Objects
     private ExpenseDB expenseDB;
@@ -92,7 +96,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         mExecutor = Executors.newCachedThreadPool();
-
+        totalTimes = 0;
         BottomNavigationView navView = findViewById(R.id.nav_view);
         main = findViewById(R.id.fab);
         add = findViewById(R.id.expense);
@@ -243,7 +247,7 @@ public class MainActivity extends AppCompatActivity {
                             }else {
                                 //All Checks Completed
                                 String result = groupsDB.insertNewGroup(titleValue,Integer.parseInt(noOfPersons),Double.parseDouble(limit));
-                                Toast.makeText(getApplicationContext(), result, Toast.LENGTH_SHORT).show();
+                                //Toast.makeText(getApplicationContext(), result, Toast.LENGTH_SHORT).show();
                                 if(result.contains("Created")) {
                                     newGroupTitle.setText("");
                                     newGroupLimit.setText("");
@@ -277,7 +281,7 @@ public class MainActivity extends AppCompatActivity {
                     }
                     else{
                         String result = categoryDB.insertNewCategory(categoryValue,Double.parseDouble(categoryLimitVal));
-                        Toast.makeText(getApplicationContext(),result,Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(getApplicationContext(),result,Toast.LENGTH_SHORT).show();
                         if(result.contains("Created")) {
                             categoryName.setText("");
                             categoryName.requestFocus();
@@ -314,6 +318,17 @@ public class MainActivity extends AppCompatActivity {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
         NavigationUI.setupWithNavController(navView, navController);
+    }
+
+    @Override
+    public void onBackPressed() {
+        if(totalTimes == 0){
+            totalTimes++;
+            Toast.makeText(getApplicationContext(),"Press again to exit",Toast.LENGTH_SHORT).show();
+            return;
+        }
+        finish();
+        super.onBackPressed();
     }
 
     DatePickerDialog.OnDateSetListener datePickerDialogue = (view1, year, monthOfYear, dayOfMonth) -> {
@@ -367,6 +382,7 @@ public class MainActivity extends AppCompatActivity {
         addNewExpenseView.setVisibility(View.VISIBLE);
         createnewgroup.setVisibility(View.INVISIBLE);
         createnewcategory.setVisibility(View.INVISIBLE);
+        newExpenseTotalAmount.requestFocus();
     }
 
     private void toggleGroupView(){
@@ -377,6 +393,7 @@ public class MainActivity extends AppCompatActivity {
         addNewExpenseView.setVisibility(View.INVISIBLE);
         createnewgroup.setVisibility(View.VISIBLE);
         createnewcategory.setVisibility(View.INVISIBLE);
+        newGroupTitle.requestFocus();
     }
 
     private void toggleCategoryView(){
@@ -387,6 +404,7 @@ public class MainActivity extends AppCompatActivity {
         addNewExpenseView.setVisibility(View.INVISIBLE);
         createnewgroup.setVisibility(View.INVISIBLE);
         createnewcategory.setVisibility(View.VISIBLE);
+        categoryName.requestFocus();
     }
 
     private void toggleAddView(){
