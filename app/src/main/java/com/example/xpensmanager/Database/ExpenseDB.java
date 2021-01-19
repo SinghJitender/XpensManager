@@ -660,7 +660,7 @@ public class ExpenseDB extends SQLiteOpenHelper {
         return calendar.get(Calendar.MONTH) + 1;
     }
 
-    public String dateToString(Date date){
+    public static String dateToString(Date date){
         DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
         return dateFormat.format(date);
     }
