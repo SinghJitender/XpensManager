@@ -12,6 +12,7 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
@@ -26,6 +27,7 @@ import com.example.xpensmanager.BackupAndRestoreUtils.AutomaticBackupManager;
 import com.example.xpensmanager.BackupAndRestoreUtils.BackupService;
 import com.example.xpensmanager.MainScreen.MainActivity;
 import com.example.xpensmanager.R;
+import com.example.xpensmanager.SetupScreen.Setup;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -34,6 +36,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.royrodriguez.transitionbutton.TransitionButton;
 import com.victor.loading.rotate.RotateLoading;
 
+import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -74,38 +77,29 @@ public class SplashScreenActivity extends AppCompatActivity {
             mydatabase.close();
             Log.d(LOG_TAG,"Database Ready!");
         });
+        new Handler().postDelayed(()-> {
+                boolean initialSetup = sharedPref.getBoolean("initialSetup",true);
+                cSymbol = sharedPref.getString("cSymbol","#");
+                salary = sharedPref.getLong("salary",0);
+                Log.d(LOG_TAG,"Shared Preference Values Fetched");
+                if(initialSetup == false){
+                    moveToMainActivity();
+                }
+                else{
+                    startActivity(new Intent(getApplicationContext(), Setup.class));
+                    overridePendingTransition(R.xml.slide_in, R.xml.slide_out);
+                    finish();
+                }
+        }, 300);
 
 
-
-        boolean initialSetup = sharedPref.getBoolean("initialSetup",true);
-        cSymbol = sharedPref.getString("cSymbol","#");
-        salary = sharedPref.getLong("salary",0);
-        Log.d(LOG_TAG,"Shared Preference Values Fetched");
-
-
-        if(initialSetup == false){
-            moveToMainActivity();
-        }
-        else{
-            getPermissions();
-            editor.putBoolean("initialSetup",false);
-            editor.apply();
-            moveToMainActivity();
-        }
 
     }
 
     public void moveToMainActivity(){
         Intent intent = new Intent(getBaseContext(), MainActivity.class);
         startActivity(intent);
+        overridePendingTransition(R.xml.slide_in, R.xml.slide_out);
         finish();
     }
-
-    public void getPermissions(){
-        if (ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                == PackageManager.PERMISSION_DENIED) {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 101);
-        }
-    }
-
 }
