@@ -47,6 +47,7 @@ public class GroupViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     private Context context;
     private ArrayList<Boolean> list;
     private GroupDB groupDB;
+    private ExpenseDB expenseDB;
 
     // data is passed into the constructor
     public GroupViewAdapter(Context context, ArrayList<GroupData> results, ArrayList<Boolean> list) {
@@ -55,6 +56,7 @@ public class GroupViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         this.context = context;
         this.list = list;
         groupDB = new GroupDB(context);
+        expenseDB = new ExpenseDB(context);
     }
 
     // inflates the row layout from xml when needed
@@ -68,19 +70,21 @@ public class GroupViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     // binds the data to the TextView in each row
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-        double currentMonthTotal = results.get(position).getTotalAmount();
+        double currentMonthTotal = expenseDB.getMonthTotalForGroup(results.get(position).getTitle(), ExpenseDB.getMonthFromDate(new Date()), ExpenseDB.getYearFromDate(new Date()));
+        double overallMonthTotal = results.get(position).getTotalAmount();
         int nPeps = results.get(position).getNoOfPersons();
+        double currentMonthSplitAmount = currentMonthTotal/nPeps;
         ((ViewHolder) holder).title.setText(results.get(position).getTitle());
-        ((ViewHolder) holder).totalAmount.setText(SplashScreenActivity.cSymbol+ " "+(currentMonthTotal/nPeps));
-        ((ViewHolder) holder).lifeTimeSpend.setText(SplashScreenActivity.cSymbol+ " "+results.get(position).getTotalAmount());
+        ((ViewHolder) holder).totalAmount.setText(SplashScreenActivity.cSymbol+ " "+new DecimalFormat("00.00").format(currentMonthTotal));
+        ((ViewHolder) holder).lifeTimeSpend.setText(SplashScreenActivity.cSymbol+ " "+new DecimalFormat("00.00").format(overallMonthTotal));
         ((ViewHolder) holder).splitBetween.setText(nPeps<=1? nPeps+ " Person" : "Split Between "+ nPeps + " People");
         double net_amount = results.get(position).getNetAmount();
         if(net_amount>=0){
             ((ViewHolder) holder).netAmount.setTextColor(context.getResources().getColor(R.color.theme_green));
-            ((ViewHolder) holder).netAmount.setText("+"+net_amount);
+            ((ViewHolder) holder).netAmount.setText("+"+new DecimalFormat("00.00").format(net_amount));
         }else {
             ((ViewHolder) holder).netAmount.setTextColor(context.getResources().getColor(R.color.theme_red));
-            ((ViewHolder) holder).netAmount.setText(""+net_amount);
+            ((ViewHolder) holder).netAmount.setText(""+new DecimalFormat("00.00").format(net_amount));
         }
         double limit = results.get(position).getMaxLimit();
         double percentageLimit = ((currentMonthTotal/limit)*100);
@@ -124,9 +128,9 @@ public class GroupViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                 ((ViewHolder) holder).settleXpens.setAlpha(1f);
             }
             if(net_amount>0){
-                ((ViewHolder) holder).info.setText(results.get(position).getTitle() + " owes you "+net_amount);
+                ((ViewHolder) holder).info.setText(results.get(position).getTitle() + " owes you "+new DecimalFormat("00.00").format(net_amount));
             }else if (net_amount<0){
-                ((ViewHolder) holder).info.setText("You owe "+(-1*net_amount)+" to "+results.get(position).getTitle());
+                ((ViewHolder) holder).info.setText("You owe "+new DecimalFormat("00.00").format((-1*net_amount))+" to "+results.get(position).getTitle());
             }else{
                 ((ViewHolder) holder).info.setText("No Dues");
             }
