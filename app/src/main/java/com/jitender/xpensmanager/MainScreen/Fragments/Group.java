@@ -1,24 +1,21 @@
-package com.example.xpensmanager.MainScreen.Fragments;
+package com.jitender.xpensmanager.MainScreen.Fragments;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.xpensmanager.Database.GroupDB;
-import com.example.xpensmanager.Database.GroupData;
-import com.example.xpensmanager.MainScreen.Adapters.GroupViewAdapter;
-import com.example.xpensmanager.MainScreen.MainActivity;
-import com.example.xpensmanager.R;
+import com.jitender.xpensmanager.Database.GroupDB;
+import com.jitender.xpensmanager.Database.GroupData;
+import com.jitender.xpensmanager.MainScreen.Adapters.GroupViewAdapter;
+import com.jitender.xpensmanager.R;
 
 import java.util.ArrayList;
-import java.util.Hashtable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 

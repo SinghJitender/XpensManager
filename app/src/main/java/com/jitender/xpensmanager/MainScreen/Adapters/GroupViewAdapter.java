@@ -1,4 +1,4 @@
-package com.example.xpensmanager.MainScreen.Adapters;
+package com.jitender.xpensmanager.MainScreen.Adapters;
 
 import android.content.Context;
 import android.content.DialogInterface;
@@ -23,21 +23,19 @@ import androidx.appcompat.widget.AppCompatImageButton;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.xpensmanager.Database.ExpenseDB;
-import com.example.xpensmanager.Database.GroupDB;
-import com.example.xpensmanager.Database.GroupData;
-import com.example.xpensmanager.Enums.ViewType;
-import com.example.xpensmanager.ExpenseScreen.Expense;
-import com.example.xpensmanager.MainScreen.Fragments.Category;
-import com.example.xpensmanager.MainScreen.Fragments.Group;
-import com.example.xpensmanager.MainScreen.MainActivity;
-import com.example.xpensmanager.R;
-import com.example.xpensmanager.SplashScreen.SplashScreenActivity;
+import com.jitender.xpensmanager.Database.ExpenseDB;
+import com.jitender.xpensmanager.Database.GroupDB;
+import com.jitender.xpensmanager.Database.GroupData;
+import com.jitender.xpensmanager.Enums.ViewType;
+import com.jitender.xpensmanager.ExpenseScreen.Expense;
+import com.jitender.xpensmanager.MainScreen.Fragments.Group;
+import com.jitender.xpensmanager.MainScreen.MainActivity;
+import com.jitender.xpensmanager.R;
+import com.jitender.xpensmanager.SplashScreen.SplashScreenActivity;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.Hashtable;
 
 public class GroupViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
