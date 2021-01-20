@@ -1,4 +1,4 @@
-package com.example.xpensmanager.ExpenseScreen.Adapters;
+package com.jitender.xpensmanager.ExpenseScreen.Adapters;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -8,10 +8,10 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.xpensmanager.Database.ExpenseData;
-import com.example.xpensmanager.Enums.ViewType;
-import com.example.xpensmanager.R;
-import com.example.xpensmanager.SplashScreen.SplashScreenActivity;
+import com.jitender.xpensmanager.Database.ExpenseData;
+import com.jitender.xpensmanager.Enums.ViewType;
+import com.jitender.xpensmanager.R;
+import com.jitender.xpensmanager.SplashScreen.SplashScreenActivity;
 
 import java.util.ArrayList;
 
