@@ -1,4 +1,4 @@
-package com.example.xpensmanager.BackupAndRestoreUtils;
+package com.jitender.xpensmanager.BackupAndRestoreUtils;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -6,16 +6,16 @@ import android.net.Uri;
 import android.os.Environment;
 import android.util.Log;
 import android.widget.Toast;
+import com.jitender.xpensmanager.R;
 
 import androidx.core.content.FileProvider;
 
-import com.example.xpensmanager.Database.CategoryDB;
-import com.example.xpensmanager.Database.CategoryData;
-import com.example.xpensmanager.Database.ExpenseDB;
-import com.example.xpensmanager.Database.ExpenseData;
-import com.example.xpensmanager.Database.GroupDB;
-import com.example.xpensmanager.Database.GroupData;
-import com.example.xpensmanager.R;
+import com.jitender.xpensmanager.Database.CategoryDB;
+import com.jitender.xpensmanager.Database.CategoryData;
+import com.jitender.xpensmanager.Database.ExpenseDB;
+import com.jitender.xpensmanager.Database.ExpenseData;
+import com.jitender.xpensmanager.Database.GroupDB;
+import com.jitender.xpensmanager.Database.GroupData;
 
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
@@ -24,32 +24,18 @@ import org.apache.poi.ss.usermodel.Cell;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.StringReader;
-import java.nio.charset.StandardCharsets;
-import java.security.InvalidKeyException;
-import java.security.KeyPair;
-import java.security.KeyPairGenerator;
-import java.security.NoSuchAlgorithmException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
 import java.util.Map;
-import java.util.stream.Collectors;
-
-import javax.crypto.BadPaddingException;
-import javax.crypto.Cipher;
-import javax.crypto.IllegalBlockSizeException;
-import javax.crypto.KeyGenerator;
-import javax.crypto.NoSuchPaddingException;
-import javax.crypto.SecretKey;
 
 import se.simbio.encryption.Encryption;
 
