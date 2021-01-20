@@ -1,4 +1,4 @@
-package com.example.xpensmanager.BackupAndRestoreUtils;
+package com.jitender.xpensmanager.BackupAndRestoreUtils;
 
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -12,8 +12,8 @@ import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 
-import com.example.xpensmanager.Database.ExpenseDB;
-import com.example.xpensmanager.R;
+import com.jitender.xpensmanager.Database.ExpenseDB;
+import com.jitender.xpensmanager.R;
 
 import java.util.Date;
 import java.util.concurrent.ExecutorService;
