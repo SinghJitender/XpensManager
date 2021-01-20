@@ -1,42 +1,19 @@
-package com.example.xpensmanager.SplashScreen;
+package com.jitender.xpensmanager.SplashScreen;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 
-import android.Manifest;
-import android.animation.ObjectAnimator;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
-import android.view.View;
-import android.view.animation.AccelerateDecelerateInterpolator;
-import android.view.animation.DecelerateInterpolator;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.LinearLayout;
-import android.widget.Toast;
 
-import com.example.xpensmanager.BackupAndRestoreUtils.AutomaticBackup;
-import com.example.xpensmanager.BackupAndRestoreUtils.AutomaticBackupManager;
-import com.example.xpensmanager.BackupAndRestoreUtils.BackupService;
-import com.example.xpensmanager.MainScreen.MainActivity;
-import com.example.xpensmanager.R;
-import com.example.xpensmanager.SetupScreen.Setup;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthResult;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.royrodriguez.transitionbutton.TransitionButton;
-import com.victor.loading.rotate.RotateLoading;
+import com.jitender.xpensmanager.DataTesting.LoadTesting;
+import com.jitender.xpensmanager.MainScreen.MainActivity;
+import com.jitender.xpensmanager.R;
+import com.jitender.xpensmanager.SetupScreen.Setup;
 
-import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -77,23 +54,21 @@ public class SplashScreenActivity extends AppCompatActivity {
             mydatabase.close();
             Log.d(LOG_TAG,"Database Ready!");
         });
-        new Handler().postDelayed(()-> {
-                boolean initialSetup = sharedPref.getBoolean("initialSetup",true);
-                cSymbol = sharedPref.getString("cSymbol","#");
-                salary = sharedPref.getLong("salary",0);
-                Log.d(LOG_TAG,"Shared Preference Values Fetched");
-                if(initialSetup == false){
-                    moveToMainActivity();
-                }
-                else{
-                    startActivity(new Intent(getApplicationContext(), Setup.class));
-                    overridePendingTransition(R.xml.slide_in, R.xml.slide_out);
-                    finish();
-                }
-        }, 300);
-
-
-
+        new Handler().postDelayed(()->{
+            boolean initialSetup = sharedPref.getBoolean("initialSetup",true);
+            cSymbol = sharedPref.getString("cSymbol","#");
+            salary = sharedPref.getLong("salary",0);
+            Log.d(LOG_TAG,"Shared Preference Values Fetched");
+            if(initialSetup == false){
+                moveToMainActivity();
+            }
+            else{
+                startActivity(new Intent(getApplicationContext(), Setup.class));
+                overridePendingTransition(R.xml.slide_in, R.xml.slide_out);
+                finish();
+            }
+            //new LoadTesting(getApplicationContext()).populateData();
+        },300);
     }
 
     public void moveToMainActivity(){
