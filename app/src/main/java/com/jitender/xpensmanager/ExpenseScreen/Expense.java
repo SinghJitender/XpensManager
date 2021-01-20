@@ -1,4 +1,4 @@
-package com.example.xpensmanager.ExpenseScreen;
+package com.jitender.xpensmanager.ExpenseScreen;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
@@ -7,20 +7,18 @@ import androidx.fragment.app.FragmentTransaction;
 
 import android.os.Bundle;
 
-import com.example.xpensmanager.Database.CategoryDB;
-import com.example.xpensmanager.Database.CategoryData;
-import com.example.xpensmanager.Database.ExpenseDB;
-import com.example.xpensmanager.Database.ExpenseData;
-import com.example.xpensmanager.Database.GroupDB;
-import com.example.xpensmanager.Database.GroupData;
-import com.example.xpensmanager.ExpenseScreen.Fragments.AllViewFragment;
-import com.example.xpensmanager.ExpenseScreen.Fragments.MonthlyViewFragment;
-import com.example.xpensmanager.ExpenseScreen.Fragments.YearlyViewFragment;
-import com.example.xpensmanager.MainScreen.Fragments.Category;
-import com.example.xpensmanager.MainScreen.Fragments.Group;
-import com.example.xpensmanager.MainScreen.Fragments.Home;
-import com.example.xpensmanager.MainScreen.MainActivity;
-import com.example.xpensmanager.R;
+import com.jitender.xpensmanager.Database.CategoryDB;
+import com.jitender.xpensmanager.Database.CategoryData;
+import com.jitender.xpensmanager.Database.ExpenseDB;
+import com.jitender.xpensmanager.Database.ExpenseData;
+import com.jitender.xpensmanager.Database.GroupDB;
+import com.jitender.xpensmanager.Database.GroupData;
+import com.jitender.xpensmanager.ExpenseScreen.Fragments.MonthlyViewFragment;
+import com.jitender.xpensmanager.ExpenseScreen.Fragments.YearlyViewFragment;
+import com.jitender.xpensmanager.MainScreen.Fragments.Category;
+import com.jitender.xpensmanager.MainScreen.Fragments.Group;
+import com.jitender.xpensmanager.MainScreen.Fragments.Home;
+import com.jitender.xpensmanager.R;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.util.ArrayList;
