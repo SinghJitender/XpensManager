@@ -1,4 +1,4 @@
-package com.example.xpensmanager.MainScreen.Fragments;
+package com.jitender.xpensmanager.MainScreen.Fragments;
 
 import android.graphics.Color;
 import android.os.Bundle;
@@ -11,9 +11,9 @@ import android.widget.TextView;
 import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 
-import com.example.xpensmanager.Database.ExpenseDB;
-import com.example.xpensmanager.R;
-import com.example.xpensmanager.SplashScreen.SplashScreenActivity;
+import com.jitender.xpensmanager.Database.ExpenseDB;
+import com.jitender.xpensmanager.R;
+import com.jitender.xpensmanager.SplashScreen.SplashScreenActivity;
 import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.components.Legend;
@@ -28,15 +28,12 @@ import com.hadiidbouk.charts.ChartProgressBar;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Locale;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-
-import im.dacer.androidcharts.LineView;
 
 public class Stats extends Fragment {
     private PieChart pchart,pieChartGroup;
@@ -163,8 +160,8 @@ public class Stats extends Fragment {
                 setCategoryData(categoryList,totalSpends);
                 int i = 0;
                 for(String key:categoryList.keySet()){
-                    if(i<=5) {
-                        categoryTextViewList.get(i).setText("#"+(i+1)+"  "+key+"  - " +SplashScreenActivity.cSymbol+ " "+ categoryList.get(key));
+                    if(i<5) {
+                        categoryTextViewList.get(i).setText("#"+(i+1)+"  "+key+"  - " + SplashScreenActivity.cSymbol+ " "+ categoryList.get(key));
                     }else{
                         break;
                     }
