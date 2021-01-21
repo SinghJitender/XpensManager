@@ -1,4 +1,4 @@
-package com.example.xpensmanager.MainScreen.Fragments;
+package com.jitender.xpensmanager.MainScreen.Fragments;
 
 import android.Manifest;
 import android.content.Intent;
@@ -10,7 +10,6 @@ import android.os.Bundle;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.app.ActivityCompat;
-import androidx.core.app.AlarmManagerCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
@@ -23,26 +22,23 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.example.xpensmanager.BackupAndRestoreUtils.AutomaticBackup;
-import com.example.xpensmanager.BackupAndRestoreUtils.AutomaticBackupManager;
-import com.example.xpensmanager.BackupAndRestoreUtils.BackupExportRestoreUtil;
-import com.example.xpensmanager.BackupAndRestoreUtils.BackupService;
-import com.example.xpensmanager.BackupAndRestoreUtils.ExportToExcelService;
-import com.example.xpensmanager.BackupAndRestoreUtils.RestoreService;
-import com.example.xpensmanager.MainScreen.MainActivity;
-import com.example.xpensmanager.R;
-import com.example.xpensmanager.SplashScreen.SplashScreenActivity;
+import com.jitender.xpensmanager.BackupAndRestoreUtils.BackupExportRestoreUtil;
+import com.jitender.xpensmanager.BackupAndRestoreUtils.BackupService;
+import com.jitender.xpensmanager.BackupAndRestoreUtils.ExportToExcelService;
+import com.jitender.xpensmanager.BackupAndRestoreUtils.RestoreService;
+import com.jitender.xpensmanager.MainScreen.MainActivity;
+import com.jitender.xpensmanager.R;
+import com.jitender.xpensmanager.SplashScreen.SplashScreenActivity;
 
 import java.io.IOException;
 import java.text.ParseException;
-import java.util.ArrayList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 
 public class Settings extends Fragment {
     private static String[] combinedList = {"Rupee - ₹","Yen - ¥","Ruble - ₽","Korean Won - ₩","Dollar - $","Pound - £","Euro - €","Other - #"};
-    private TextView currencySymbol, currencyName, salary,age,version ,backUpfrequency, restoreInfo, lastBackUpDate;
+    private TextView currencySymbol, currencyName, salary,age,version ,backUpfrequency, restoreInfo, lastBackUpDate,backupLocation,exportLocation;
     private SharedPreferences sharedPref;
     private SharedPreferences.Editor editor;
     private String currentCurrencySymbol,currentCurrencyName,currentBackupFrequency, currentLastBackupDate;
@@ -89,6 +85,16 @@ public class Settings extends Fragment {
         restoreInfo = view.findViewById(R.id.restoreInfo);
         lastBackUpDate = view.findViewById(R.id.lastBackUpDate);
         uploadBackup = view.findViewById(R.id.uploadBackup);
+        backupLocation = view.findViewById(R.id.backupLocation);
+        exportLocation = view.findViewById(R.id.exportLocation);
+
+        backupLocation.setOnClickListener((v)->{
+            backupLocation.setText(getActivity().getExternalFilesDir(null).getAbsolutePath()+"/XpensManager/Backup/");
+        });
+
+        exportLocation.setOnClickListener((v)-> {
+            exportLocation.setText(getActivity().getExternalFilesDir(null).getAbsolutePath() + "/XpensManager/ExcelExports/");
+        });
 
         uploadBackup.setOnClickListener((v)->{
             Intent backupUpload = new Intent(Intent.ACTION_SEND);
