@@ -75,6 +75,7 @@
                         android:focusedByDefault="true"
                         android:hint="Category"
                         android:paddingLeft="20dp"
+                        android:imeOptions="actionNext"
                         android:singleLine="true"
                         android:textSize="22sp"
                         android:textStyle="bold"/>
@@ -90,6 +91,7 @@
                         android:hint="Limit"
                         android:layout_gravity="center"
                         android:paddingLeft="10dp"
+                        android:imeOptions="actionDone"
                         android:singleLine="true"
                         android:textSize="18sp"
                         android:textStyle="normal"/>
@@ -167,6 +169,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="3dp"
                         android:layout_marginBottom="3dp"
+                        android:imeOptions="actionNext"
                         android:layout_weight="20"
                         android:background="@null"
                         android:focusedByDefault="true"
@@ -197,6 +200,7 @@
                         android:layout_marginBottom="5dp"
                         android:layout_weight="10"
                         android:background="@null"
+                        android:imeOptions="actionNext"
                         android:hint="No of persons"
                         android:inputType="number"
                         android:nextFocusForward="@id/limit"
@@ -217,6 +221,7 @@
                         android:layout_marginBottom="5dp"
                         android:layout_weight="10"
                         android:background="@null"
+                        android:imeOptions="actionDone"
                         android:hint="Spend Limit"
                         android:inputType="numberDecimal"
                         android:nextFocusForward="@id/createnewgroup"
@@ -277,7 +282,7 @@
                         android:id="@+id/addExpenseTitle"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_weight="20"
+                        android:layout_weight="19"
                         android:background="@null"
                         android:paddingLeft="20dp"
                         android:clickable="true"
@@ -290,7 +295,7 @@
                         android:id="@+id/newExpenseDate"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_weight="10"
+                        android:layout_weight="11"
                         android:background="@null"
                         android:clickable="true"
                         android:gravity="center_vertical"
@@ -314,6 +319,7 @@
                         android:layout_gravity="center_vertical"
                         android:layout_weight="20"
                         android:background="@null"
+                        android:imeOptions="actionNext"
                         android:hint="₹ Amount"
                         android:inputType="numberDecimal"
                         android:paddingLeft="20dp"
@@ -354,6 +360,7 @@
                         android:layout_marginTop="3dp"
                         android:layout_marginBottom="3dp"
                         android:layout_weight="30"
+                        android:imeOptions="actionNext"
                         android:background="@null"
                         android:nextFocusForward="@id/newExpenseSelectCategory"
                         android:hint="Description"
@@ -486,7 +493,7 @@
 
         <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
             android:id="@+id/group"
-            android:layout_width="160dp"
+            android:layout_width="170dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginBottom="5dp"
@@ -499,7 +506,7 @@
 
         <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
             android:id="@+id/category"
-            android:layout_width="160dp"
+            android:layout_width="170dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginBottom="5dp"
@@ -513,7 +520,7 @@
 
         <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
             android:id="@+id/expense"
-            android:layout_width="160dp"
+            android:layout_width="170dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginBottom="5dp"
