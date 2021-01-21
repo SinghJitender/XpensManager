@@ -1,8 +1,9 @@
-package com.example.xpensmanager.SetupScreen;
+package com.jitender.xpensmanager.SetupScreen;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
@@ -12,27 +13,22 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.example.xpensmanager.BackupAndRestoreUtils.BackupExportRestoreUtil;
-import com.example.xpensmanager.BackupAndRestoreUtils.RestoreService;
-import com.example.xpensmanager.Database.CategoryDB;
-import com.example.xpensmanager.Database.GroupDB;
-import com.example.xpensmanager.MainScreen.Fragments.Settings;
-import com.example.xpensmanager.MainScreen.MainActivity;
-import com.example.xpensmanager.R;
-import com.example.xpensmanager.SplashScreen.SplashScreenActivity;
+import com.jitender.xpensmanager.BackupAndRestoreUtils.BackupExportRestoreUtil;
+import com.jitender.xpensmanager.BackupAndRestoreUtils.RestoreService;
+import com.jitender.xpensmanager.Database.CategoryDB;
+import com.jitender.xpensmanager.Database.GroupDB;
+import com.jitender.xpensmanager.MainScreen.MainActivity;
+import com.jitender.xpensmanager.R;
+import com.jitender.xpensmanager.SplashScreen.SplashScreenActivity;
 
-import java.io.File;
 import java.io.IOException;
 import java.text.ParseException;
-import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
