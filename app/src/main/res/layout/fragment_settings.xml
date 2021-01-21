@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:background="@color/theme_light_grey"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".MainScreen.Fragments.Settings">
+    tools:context="com.jitender.xpensmanager.MainScreen.Fragments.Settings">
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -161,7 +161,7 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Back Up"
+                        android:text="Backup"
                         android:textSize="20sp"/>
                     <View
                         android:layout_width="match_parent"
@@ -206,21 +206,19 @@
                     </LinearLayout>
 
                     <LinearLayout
-                        android:layout_gravity="center"
+                        android:layout_gravity="left"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:weightSum="10"
-                        android:orientation="horizontal">
+                        android:orientation="vertical">
                         <LinearLayout
-                            android:layout_width="0dp"
+                            android:layout_width="match_parent"
                             android:layout_gravity="center"
                             android:orientation="vertical"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="7">
+                            android:layout_height="wrap_content">
                             <TextView
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:text="Back up data"
+                                android:text="Backup data"
                                 android:textSize="15sp"/>
                             <TextView
                                 android:id="@+id/lastBackUpDate"
@@ -236,12 +234,30 @@
                                 android:textSize="13sp"/>
                         </LinearLayout>
                         <Button
-                            android:layout_gravity="center"
+                            android:layout_gravity="left"
                             android:id="@+id/createBackup"
-                            android:layout_width="0dp"
+                            android:layout_width="match_parent"
                             android:layout_weight="3"
                             android:layout_height="wrap_content"
-                            android:text="Back Up"/>
+                            android:text="Create Backup"/>
+                        <Button
+                            android:layout_gravity="left"
+                            android:backgroundTint="@color/theme_blue_variant"
+                            android:id="@+id/uploadBackup"
+                            android:layout_width="match_parent"
+                            android:layout_weight="3"
+                            android:layout_height="wrap_content"
+                            android:text="Upload Backup"/>
+                        <TextView
+                            android:id="@+id/backupLocation"
+                            android:visibility="visible"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:clickable="true"
+                            android:layout_marginTop="3dp"
+                            android:layout_marginBottom="3dp"
+                            android:text="Tap to show backup location"
+                            android:textSize="13sp"/>
                     </LinearLayout>
 
                     <View
@@ -253,21 +269,21 @@
 
 
                     <LinearLayout
-                        android:layout_gravity="center"
+                        android:layout_gravity="left"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:weightSum="10"
-                        android:orientation="horizontal">
+                        android:orientation="vertical">
                         <LinearLayout
-                            android:layout_width="0dp"
-                            android:layout_gravity="center"
+                            android:layout_width="match_parent"
+                            android:layout_gravity="left"
                             android:orientation="vertical"
                             android:layout_height="wrap_content"
                             android:layout_weight="7">
                             <TextView
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:text="Export to excel"
+                                android:text="Export Data"
                                 android:textSize="15sp"/>
                             <TextView
                                 android:visibility="gone"
@@ -278,13 +294,30 @@
                         </LinearLayout>
                         <Button
                             android:id="@+id/exportToExcel"
-                            android:layout_gravity="center"
-                            android:layout_width="0dp"
+                            android:layout_gravity="left"
+                            android:layout_width="match_parent"
                             android:layout_weight="3"
                             android:layout_height="wrap_content"
                             android:backgroundTint="@color/theme_orange"
-                            android:text="Export"/>
-
+                            android:text="Export To Excel"/>
+                       <!-- <Button
+                            android:layout_gravity="left"
+                            android:backgroundTint="@color/theme_yellow"
+                            android:id="@+id/uploadExcel"
+                            android:layout_width="wrap_content"
+                            android:layout_weight="3"
+                            android:layout_height="wrap_content"
+                            android:text="Upload Excel"/>-->
+                        <TextView
+                            android:id="@+id/exportLocation"
+                            android:visibility="visible"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:clickable="true"
+                            android:layout_marginTop="3dp"
+                            android:layout_marginBottom="3dp"
+                            android:text="Tap to show export location"
+                            android:textSize="13sp"/>
                     </LinearLayout>
 
                     <View
@@ -296,38 +329,63 @@
 
 
                     <LinearLayout
-                        android:layout_gravity="center"
+                        android:layout_gravity="left"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:weightSum="10"
-                        android:orientation="horizontal">
+                        android:orientation="vertical">
                         <LinearLayout
                             android:id="@+id/restoreDetails"
-                            android:layout_width="0dp"
-                            android:layout_gravity="center"
+                            android:layout_width="match_parent"
+                            android:layout_gravity="left"
                             android:orientation="vertical"
                             android:clickable="true"
                             android:layout_height="wrap_content"
-                            android:layout_weight="7">
+                            android:layout_marginBottom="3dp">
                             <TextView
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:text="Restore from back up"
+                                android:text="Restore from backup"
                                 android:textSize="15sp"/>
                             <TextView
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
+                                android:visibility="gone"
                                 android:text="Tap here for more details"
                                 android:textSize="13sp"/>
+                            <TextView
+                                android:id="@+id/restoreInfo"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:focusedByDefault="true"
+                                android:visibility="gone"
+                                android:text=""
+                                android:textSize="12sp"
+                                android:textStyle="italic" />
                         </LinearLayout>
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_gravity="left"
+                            android:orientation="vertical"
+                            android:layout_height="wrap_content">
                         <Button
                             android:id="@+id/restoreBackup"
-                            android:layout_gravity="center"
-                            android:layout_width="0dp"
-                            android:layout_weight="3"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:layout_gravity="left"
+                            android:layout_weight="3"
                             android:backgroundTint="@color/theme_green"
-                            android:text="Restore"/>
+                            android:text="Restore From Backup" />
+
+                        <Button
+                            android:id="@+id/restoreFromFile"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="left"
+                            android:layout_weight="3"
+                            android:backgroundTint="@color/theme_green"
+                            android:text="Select File To Restore" />
+                        </LinearLayout>
                     </LinearLayout>
 
                 </LinearLayout>
