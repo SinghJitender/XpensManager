@@ -26,22 +26,25 @@ import com.jitender.xpensmanager.Database.GroupDB;
 import com.jitender.xpensmanager.MainScreen.MainActivity;
 import com.jitender.xpensmanager.R;
 import com.jitender.xpensmanager.SplashScreen.SplashScreenActivity;
+import com.whiteelephant.monthpicker.MonthPickerDialog;
 
 import java.io.IOException;
 import java.text.ParseException;
+import java.util.Calendar;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class Setup extends AppCompatActivity {
     private static String[] combinedList = {"Rupee - ₹","Yen - ¥","Ruble - ₽","Korean Won - ₩","Dollar - $","Pound - £","Euro - €","Other - #"};
-    private EditText age,salary,categoryLimit,categoryName,newGroupTitle,newGroupNoOfPersons,newGroupLimit;
+    private EditText salary,categoryLimit,categoryName,newGroupTitle,newGroupNoOfPersons,newGroupLimit;
     private Button createCategory,create,completeSetup, restoreFromBackup, restoreFromFile;
-    private TextView currency, restoreInfo;
+    private TextView currency, restoreInfo,age;
     private static GroupDB groupsDB;
     private static CategoryDB categoryDB;
     private SharedPreferences sharedPref;
     private SharedPreferences.Editor editor;
     private LinearLayout restoringLayout;
+    private Calendar today;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,6 +75,7 @@ public class Setup extends AppCompatActivity {
         categoryDB = new CategoryDB(getApplicationContext());
         groupsDB.insertNewGroup("Personal",1,20000);
 
+        today = Calendar.getInstance();
         sharedPref = getApplicationContext().getSharedPreferences(
                 getString(R.string.preference_file_key), getApplicationContext().MODE_PRIVATE);
         editor = sharedPref.edit();
@@ -141,37 +145,46 @@ public class Setup extends AppCompatActivity {
             }
         });
 
+        age.setOnClickListener( (v)->{
+            displayGroupDialogBox();
+        });
+
         completeSetup.setOnClickListener(v -> {
             String currentAge = age.getText().toString();
             String currentSalary = salary.getText().toString();
-            if(currentAge == null || currentAge.equalsIgnoreCase("")) {
+           /* if(currentAge == null || currentAge.equalsIgnoreCase("")) {
                 age.setError("Field cannot be blank");
             } else {
-                if(Integer.parseInt(currentAge)<=0 || Integer.parseInt(currentAge)>100){
+                if(Integer.parseInt(currentAge)<=0 || Integer.parseInt(currentAge)>120){
                     age.setError("You must be kidding");
                 }
-                else {
+                else {*/
                     if(currency.getText().toString().equalsIgnoreCase("") || currency.getText().toString().equalsIgnoreCase(null)  || currency.getText().toString().equalsIgnoreCase("Select Currency") ){
                         currency.setError("Please select a value");
                     }else {
-                        if (currentSalary == null || currentSalary.equalsIgnoreCase("")) {
+                       /* if (currentSalary == null || currentSalary.equalsIgnoreCase("")) {
                             salary.setError("Field cannot be blank");
                         } else {
                             if (Double.parseDouble(currentSalary) <= 0.0) {
                                 salary.setError("We're not judging, but..");
-                            } else {
-                                editor.putInt("age", Integer.parseInt(currentAge));
-                                editor.putLong("salary", Long.parseLong(currentSalary));
+                            } else {*/
+                                int tempAge=1,tempSalary=0;
+                                if(currentAge !=null && !currentAge.equalsIgnoreCase(""))
+                                    tempAge = Integer.parseInt(currentAge);
+                                if(currentSalary !=null && !currentSalary.equalsIgnoreCase(""))
+                                    tempSalary = Integer.parseInt(currentSalary);
+                                editor.putInt("age", tempAge);
+                                editor.putLong("salary", tempSalary);
                                 editor.putBoolean("initialSetup", false);
                                 editor.apply();
                                 Intent intent = new Intent(getBaseContext(), MainActivity.class);
                                 startActivity(intent);
                                 finish();
                             }
-                        }
-                    }
-                }
-            }
+                     //   }
+                   // }
+                //}
+            //}
 
         });
 
@@ -281,6 +294,8 @@ public class Setup extends AppCompatActivity {
         builder.setTitle("Select Currency");
         builder.setItems(combinedList, (dialog, which) -> {
             currency.setText(combinedList[which]);
+            if(currency.getError()!=null)
+                currency.setError(null);
             String symbol = combinedList[which].split("-")[1];
             String name = combinedList[which].split("-")[0];
             editor.putString("cSymbol",symbol);
@@ -311,4 +326,17 @@ public class Setup extends AppCompatActivity {
             });
         }
     };
+
+    public void displayGroupDialogBox(){
+        MonthPickerDialog.Builder builder = new MonthPickerDialog.Builder(this,
+                (selectedMonth, selectedYear) -> {
+                    age.setText(selectedYear+"");
+                }, today.get(Calendar.YEAR), today.get(Calendar.MONTH));
+        builder.setTitle("Select date of birth")
+                .setYearRange(1920, today.get(Calendar.YEAR))
+                .showYearOnly()
+                .setOnMonthChangedListener(selectedMonth -> { /* on month selected*/ })
+                .setOnYearChangedListener(selectedYear -> { /* on year selected*/ })
+                .build().show();
+    }
 }
