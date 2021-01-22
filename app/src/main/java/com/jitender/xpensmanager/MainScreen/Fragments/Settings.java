@@ -29,9 +29,11 @@ import com.jitender.xpensmanager.BackupAndRestoreUtils.RestoreService;
 import com.jitender.xpensmanager.MainScreen.MainActivity;
 import com.jitender.xpensmanager.R;
 import com.jitender.xpensmanager.SplashScreen.SplashScreenActivity;
+import com.whiteelephant.monthpicker.MonthPickerDialog;
 
 import java.io.IOException;
 import java.text.ParseException;
+import java.util.Calendar;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -48,6 +50,7 @@ public class Settings extends Fragment {
     private static final int STORAGE_PERMISSION_CODE = 101;
     private BackupExportRestoreUtil backupExportRestoreUtilUtils;
     private LinearLayout restoringLayout;
+    private Calendar today;
 
     public Settings() {}
 
@@ -88,6 +91,8 @@ public class Settings extends Fragment {
         backupLocation = view.findViewById(R.id.backupLocation);
         exportLocation = view.findViewById(R.id.exportLocation);
 
+        today = Calendar.getInstance();
+
         backupLocation.setOnClickListener((v)->{
             backupLocation.setText(getActivity().getExternalFilesDir(null).getAbsolutePath()+"/XpensManager/Backup/");
         });
@@ -126,45 +131,7 @@ public class Settings extends Fragment {
 
         age.setText(currentAge+"");
         age.setOnClickListener((v)->{
-            LayoutInflater factory = LayoutInflater.from(getActivity());
-            final View dialogView = factory.inflate(R.layout.update_details_dialog, null);
-            final AlertDialog dialog = new AlertDialog.Builder(getActivity()).create();
-            TextView title = dialogView.findViewById(R.id.title);
-            EditText maxLimit = dialogView.findViewById(R.id.categoryLimit);
-            title.setText("Update Age");
-            maxLimit.setText(currentAge+"");
-            maxLimit.setInputType(EditorInfo.TYPE_CLASS_NUMBER);
-            dialog.setView(dialogView);
-            dialogView.findViewById(R.id.update).setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    //your business logic
-                    if(maxLimit.getText().toString().equalsIgnoreCase("") || maxLimit.getText().toString() == null) {
-                        maxLimit.setError("Cannot be blank");
-                    }else{
-                        int tempLimit = Integer.parseInt(maxLimit.getText().toString());
-                        if(tempLimit <= 0 ){
-                            maxLimit.setError("Cannot be 0 or less");
-                        }
-                        else if(tempLimit>100){
-                            maxLimit.setError("Woah! Which planet are you from?");
-                        }else{
-                            //update
-                            editor.putInt("age",tempLimit);
-                            editor.apply();
-                            age.setText(tempLimit+"");
-                            dialog.dismiss();
-                        }
-                    }
-                }
-            });
-            dialogView.findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    dialog.dismiss();
-                }
-            });
-            dialog.show();
+            displayGroupDialogBox();
         });
 
         salary.setText(currentCurrencySymbol+" "+currentSalary);
@@ -176,6 +143,7 @@ public class Settings extends Fragment {
             EditText maxLimit = dialogView.findViewById(R.id.categoryLimit);
             title.setText("Update Salary");
             maxLimit.setText(currentSalary+"");
+            maxLimit.setInputType(EditorInfo.TYPE_CLASS_NUMBER);
             dialog.setView(dialogView);
             dialogView.findViewById(R.id.update).setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -339,6 +307,21 @@ public class Settings extends Fragment {
         });
         AlertDialog dialog = builder.create();
         dialog.show();
+    }
+
+    public void displayGroupDialogBox(){
+        MonthPickerDialog.Builder builder = new MonthPickerDialog.Builder(getActivity(),
+                (selectedMonth, selectedYear) -> {
+                    age.setText(selectedYear+"");
+                    editor.putInt("age",selectedYear);
+                    editor.apply();
+                }, today.get(Calendar.YEAR), today.get(Calendar.MONTH));
+        builder.setTitle("Select date of birth")
+                .setYearRange(1920, today.get(Calendar.YEAR))
+                .showYearOnly()
+                .setOnMonthChangedListener(selectedMonth -> { /* on month selected*/ })
+                .setOnYearChangedListener(selectedYear -> { /* on year selected*/ })
+                .build().show();
     }
 
 }
