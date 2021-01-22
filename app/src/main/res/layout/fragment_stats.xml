@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:background="@color/theme_light_grey"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".MainScreen.Fragments.Stats">
+    tools:context="com.jitender.xpensmanager.MainScreen.Fragments.Stats">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -119,18 +119,21 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:text="85,300.00"/>
-                               <!-- <TextView
+                                <TextView
                                     android:id="@+id/percentageOfMonthlySalary"
                                     android:textStyle="bold"
                                     android:textSize="20sp"
+                                    android:visibility="gone"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:text="30%"/>
                                 <TextView
+                                    android:id="@+id/percentageOfMonthlySalaryText"
                                     android:textSize="15sp"
+                                    android:visibility="gone"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:text="of your salary"/>-->
+                                    android:text="of your salary"/>
 
                             </LinearLayout>
 
