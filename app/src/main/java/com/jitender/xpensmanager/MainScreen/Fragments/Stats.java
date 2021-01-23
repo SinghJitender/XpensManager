@@ -6,9 +6,11 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.cardview.widget.CardView;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.fragment.app.Fragment;
 
 import com.jitender.xpensmanager.Database.ExpenseDB;
@@ -48,6 +50,8 @@ public class Stats extends Fragment {
     private TextView overallMonthlyExpense,monthName,currentMonthAverage,weekDayName,currentWeekAverage,dayName,currentDayAverage,percentageOfMonthlySalary,percentageOfMonthlySalaryText;
     private TextView category1,category2,category3,category4,category5;
     private CardView categoryChartView,groupChartView;
+    private LinearLayout mainLinearLayout;
+    private CoordinatorLayout emptyView;
 
     public Stats() {
         // Required empty public constructor
@@ -94,159 +98,171 @@ public class Stats extends Fragment {
         groupChartView = view.findViewById(R.id.groupChartView);
         percentageOfMonthlySalary = view.findViewById(R.id.percentageOfMonthlySalary);
         percentageOfMonthlySalaryText =  view.findViewById(R.id.percentageOfMonthlySalaryText);
+        mainLinearLayout = view.findViewById(R.id.mainLinearLayout);
+        emptyView = view.findViewById(R.id.frameLayout);
 
+        if(expenseDB.getExpenseCount()<=0){
+            mainLinearLayout.setVisibility(View.GONE);
+            emptyView.setVisibility(View.VISIBLE);
+        }else{
+            mainLinearLayout.setVisibility(View.VISIBLE);
+            emptyView.setVisibility(View.GONE);
 
-        //Sum of all weekdays
-        mExecutor.execute(()->{
-            if(weekList.size()>0){
-                weekList.clear();
-            }
-            weekList = expenseDB.getSumForAllWeekDays();
-            Log.d("Stats",weekList+"");
-            getActivity().runOnUiThread(()->{
-                //Weekly Chart View
-                mChart.setDataList(setWeeklyChart(weekList,totalSpends));
-                mChart.setMaxValue(100);
-                mChart.build();
+            //Sum of all weekdays
+            mExecutor.execute(()->{
+                if(weekList.size()>0){
+                    weekList.clear();
+                }
+                weekList = expenseDB.getSumForAllWeekDays();
+                Log.d("Stats",weekList+"");
+                getActivity().runOnUiThread(()->{
+                    //Weekly Chart View
+                    mChart.setDataList(setWeeklyChart(weekList,totalSpends));
+                    mChart.setMaxValue(100);
+                    mChart.build();
+                });
             });
-        });
 
-        //Sum of all months
-        mExecutor.execute(()->{
-            if(yearList.size()>0){
-                yearList.clear();
-            }
-            yearList = expenseDB.getSumForAllMonths();
-            Log.d("Stats",yearList+"");
-            getActivity().runOnUiThread(()->{
-                //Yearly Chart View
-                yChart.setDataList(setYearlyChart(yearList,totalSpends));
-                yChart.setMaxValue(100);
-                yChart.build();
+            //Sum of all months
+            mExecutor.execute(()->{
+                if(yearList.size()>0){
+                    yearList.clear();
+                }
+                yearList = expenseDB.getSumForAllMonths();
+                Log.d("Stats",yearList+"");
+                getActivity().runOnUiThread(()->{
+                    //Yearly Chart View
+                    yChart.setDataList(setYearlyChart(yearList,totalSpends));
+                    yChart.setMaxValue(100);
+                    yChart.build();
+                });
             });
-        });
 
-        //Sum of all days
-        mExecutor.execute(()->{
-            if(dayList.size()>0){
-                dayList.clear();
-            }
-            dayList = expenseDB.getSumForAllDays();
-            Log.d("Stats",dayList+"");
-            getActivity().runOnUiThread(()->{
-                //Each Day Chart View
-                dChart.setDataList(setDailyChart(dayList,totalSpends));
-                dChart.setMaxValue(100);
-                dChart.build();
+            //Sum of all days
+            mExecutor.execute(()->{
+                if(dayList.size()>0){
+                    dayList.clear();
+                }
+                dayList = expenseDB.getSumForAllDays();
+                Log.d("Stats",dayList+"");
+                getActivity().runOnUiThread(()->{
+                    //Each Day Chart View
+                    dChart.setDataList(setDailyChart(dayList,totalSpends));
+                    dChart.setMaxValue(100);
+                    dChart.build();
+                });
             });
-        });
 
-        //Sum of all categories
-        mExecutor.execute(()->{
-            if(categoryList.size()>0){
-                categoryList.clear();
-            }
-            categoryList = expenseDB.getSumByCategory();
-            ArrayList<TextView> categoryTextViewList = new ArrayList<>();
-            categoryTextViewList.add(category1);categoryTextViewList.add(category2);categoryTextViewList.add(category3);categoryTextViewList.add(category4);categoryTextViewList.add(category5);
-            Log.d("Stats",categoryList+"");
-            getActivity().runOnUiThread(()->{
-                //Set Category Data
+            //Sum of all categories
+            mExecutor.execute(()->{
                 if(categoryList.size()>0){
-                    categoryChartView.setVisibility(View.VISIBLE);
-                }else{
-                    categoryChartView.setVisibility(View.GONE);
+                    categoryList.clear();
                 }
-                setCategoryData(categoryList,totalSpends);
-                int i = 0;
-                for(String key:categoryList.keySet()){
-                    if(i<5) {
-                        categoryTextViewList.get(i).setText("#"+(i+1)+"  "+key+"  - " + SplashScreenActivity.cSymbol+ " "+ categoryList.get(key));
+                categoryList = expenseDB.getSumByCategory();
+                ArrayList<TextView> categoryTextViewList = new ArrayList<>();
+                categoryTextViewList.add(category1);categoryTextViewList.add(category2);categoryTextViewList.add(category3);categoryTextViewList.add(category4);categoryTextViewList.add(category5);
+                Log.d("Stats",categoryList+"");
+                getActivity().runOnUiThread(()->{
+                    //Set Category Data
+                    if(categoryList.size()>0){
+                        categoryChartView.setVisibility(View.VISIBLE);
                     }else{
-                        break;
+                        categoryChartView.setVisibility(View.GONE);
                     }
-                    i++;
-                }
+                    setCategoryData(categoryList,totalSpends);
+                    int i = 0;
+                    for(String key:categoryList.keySet()){
+                        if(i<5) {
+                            categoryTextViewList.get(i).setText("#"+(i+1)+"  "+key+"  - " + SplashScreenActivity.cSymbol+ " "+ categoryList.get(key));
+                        }else{
+                            break;
+                        }
+                        i++;
+                    }
+                });
             });
-        });
 
-        //Sum of all groups
-        mExecutor.execute(()->{
-            if(groupList.size()>0){
-                groupList.clear();
-            }
-            groupList = expenseDB.getSumByGroup();
-            Log.d("Stats",groupList+"");
-            getActivity().runOnUiThread(()->{
-                //Set Group Data
+            //Sum of all groups
+            mExecutor.execute(()->{
                 if(groupList.size()>0){
-                    groupChartView.setVisibility(View.VISIBLE);
-                }else{
-                    groupChartView.setVisibility(View.GONE);
+                    groupList.clear();
                 }
-                setGroupData(groupList,totalSpends);
-            });
-        });
-
-        //Text Stats
-        mExecutor.execute(()->{
-            Date date = new Date();
-            Locale locale = Locale.ENGLISH;
-            String currentDayOfWeek = ExpenseDB.getDayOfWeek(date, locale);
-            String currentMonth = ExpenseDB.getNameOfMonth(date,locale);
-            int currentDay = ExpenseDB.getDayFromDate(date);
-            weekCount = expenseDB.getCountOfDistinctWeekDaysRecords(currentDayOfWeek);
-            monthCount = expenseDB.getCountOfDistinctMonthRecords(currentMonth);
-            dayCount = expenseDB.getCountOfDistinctDayRecords(currentDay);
-            totalDistinctMonthCount = expenseDB.getCountOfAllMonthRecords();
-            getActivity().runOnUiThread(()->{
-                monthName.setText("Average Spending In "+currentMonth);
-                weekDayName.setText("Average Expenditure On "+currentDayOfWeek+"");
-                dayName.setText("Average Spends On Day "+currentDay+" Of Month");
-                if(weekCount>0 && weekList.containsKey(currentDayOfWeek)){
-                    //Log.d("Stats - Week Day Avg",(weekList.get(currentDayOfWeek)/weekCount)+"");
-                    currentWeekAverage.setText(SplashScreenActivity.cSymbol+" "+(weekList.get(currentDayOfWeek)/weekCount)+"");
-                }else{
-                    // No Value Present in db
-                    currentWeekAverage.setText("Not enough data to calculate");
-                    currentWeekAverage.setTextSize(10f);
-                }
-
-                if(monthCount>0 && yearList.containsKey(currentMonth)){
-                    //Log.d("Stats - Month Avg",(yearList.get(currentMonth)/monthCount)+"");
-                    currentMonthAverage.setText(SplashScreenActivity.cSymbol+" "+(yearList.get(currentMonth)/monthCount)+"");
-                }else{
-                    // No Value Present in db
-                    currentMonthAverage.setText("Not enough data to calculate");
-                    currentMonthAverage.setTextSize(10f);
-                }
-
-                if(dayCount>0 && dayList.containsKey(currentDay)){
-                    //Log.d("Stats - Day Avg",(dayList.get(currentDay)/dayCount)+"");
-                    currentDayAverage.setText(SplashScreenActivity.cSymbol+" "+(dayList.get(currentDay)/dayCount)+"");
-                }else{
-                    // No Value Present in db
-                    currentDayAverage.setText("Not enough data to calculate");
-                    currentDayAverage.setTextSize(10f);
-                }
-
-                if(totalDistinctMonthCount>0){
-                    Log.d("All Time Monthly Avg", (totalSpends/totalDistinctMonthCount)+"");
-                    double monthlyAverageCal = (totalSpends/totalDistinctMonthCount);
-                    overallMonthlyExpense.setText(SplashScreenActivity.cSymbol+" "+monthlyAverageCal+"");
-                    if(SplashScreenActivity.salary>0){
-                        percentageOfMonthlySalary.setVisibility(View.VISIBLE);
-                        percentageOfMonthlySalaryText.setVisibility(View.VISIBLE);
-                        percentageOfMonthlySalary.setText(new DecimalFormat("##.00").format((monthlyAverageCal/SplashScreenActivity.salary*100))+"%");
+                groupList = expenseDB.getSumByGroup();
+                Log.d("Stats",groupList+"");
+                getActivity().runOnUiThread(()->{
+                    //Set Group Data
+                    if(groupList.size()>0){
+                        groupChartView.setVisibility(View.VISIBLE);
+                    }else{
+                        groupChartView.setVisibility(View.GONE);
                     }
-                }else{
-                    // No Value Present in db
-                    overallMonthlyExpense.setText("Not enough data to calculate");
-                }
+                    setGroupData(groupList,totalSpends);
+                });
             });
 
+            //Text Stats
+            mExecutor.execute(()->{
+                Date date = new Date();
+                Locale locale = Locale.ENGLISH;
+                String currentDayOfWeek = ExpenseDB.getDayOfWeek(date, locale);
+                String currentMonth = ExpenseDB.getNameOfMonth(date,locale);
+                int currentDay = ExpenseDB.getDayFromDate(date);
+                weekCount = expenseDB.getCountOfDistinctWeekDaysRecords(currentDayOfWeek);
+                monthCount = expenseDB.getCountOfDistinctMonthRecords(currentMonth);
+                dayCount = expenseDB.getCountOfDistinctDayRecords(currentDay);
+                totalDistinctMonthCount = expenseDB.getCountOfAllMonthRecords();
+                getActivity().runOnUiThread(()->{
+                    monthName.setText("Average Spending In "+currentMonth);
+                    weekDayName.setText("Average Expenditure On "+currentDayOfWeek+"");
+                    dayName.setText("Average Spends On Day "+currentDay+" Of Month");
+                    if(weekCount>0 && weekList.containsKey(currentDayOfWeek)){
+                        //Log.d("Stats - Week Day Avg",(weekList.get(currentDayOfWeek)/weekCount)+"");
+                        currentWeekAverage.setText(SplashScreenActivity.cSymbol+" "+(weekList.get(currentDayOfWeek)/weekCount)+"");
+                    }else{
+                        // No Value Present in db
+                        currentWeekAverage.setText("Not enough data to calculate");
+                        currentWeekAverage.setTextSize(10f);
+                    }
 
-        });
+                    if(monthCount>0 && yearList.containsKey(currentMonth)){
+                        //Log.d("Stats - Month Avg",(yearList.get(currentMonth)/monthCount)+"");
+                        currentMonthAverage.setText(SplashScreenActivity.cSymbol+" "+(yearList.get(currentMonth)/monthCount)+"");
+                    }else{
+                        // No Value Present in db
+                        currentMonthAverage.setText("Not enough data to calculate");
+                        currentMonthAverage.setTextSize(10f);
+                    }
+
+                    if(dayCount>0 && dayList.containsKey(currentDay)){
+                        //Log.d("Stats - Day Avg",(dayList.get(currentDay)/dayCount)+"");
+                        currentDayAverage.setText(SplashScreenActivity.cSymbol+" "+(dayList.get(currentDay)/dayCount)+"");
+                    }else{
+                        // No Value Present in db
+                        currentDayAverage.setText("Not enough data to calculate");
+                        currentDayAverage.setTextSize(10f);
+                    }
+
+                    if(totalDistinctMonthCount>0){
+                        Log.d("All Time Monthly Avg", (totalSpends/totalDistinctMonthCount)+"");
+                        double monthlyAverageCal = (totalSpends/totalDistinctMonthCount);
+                        overallMonthlyExpense.setText(SplashScreenActivity.cSymbol+" "+monthlyAverageCal+"");
+                        if(SplashScreenActivity.salary>0){
+                            percentageOfMonthlySalary.setVisibility(View.VISIBLE);
+                            percentageOfMonthlySalaryText.setVisibility(View.VISIBLE);
+                            percentageOfMonthlySalary.setText(new DecimalFormat("##.00").format((monthlyAverageCal/SplashScreenActivity.salary*100))+"%");
+                        }
+                    }else{
+                        // No Value Present in db
+                        overallMonthlyExpense.setText("Not enough data to calculate");
+                    }
+                });
+
+
+            });
+        }
+
+
+
 
        /* lineView.setDrawDotLine(true); //optional
         lineView.setShowPopup(LineView.SHOW_POPUPS_MAXMIN_ONLY); //optional
@@ -459,4 +475,5 @@ public class Stats extends Fragment {
         pieChartGroup.setDrawEntryLabels(false);
         pieChartGroup.invalidate();
     }
+
 }
