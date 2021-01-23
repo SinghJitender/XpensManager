@@ -22,6 +22,7 @@ import android.widget.TextView;
 import com.jitender.xpensmanager.Database.CategoryDB;
 import com.jitender.xpensmanager.Database.ExpenseDB;
 import com.jitender.xpensmanager.Database.GroupDB;
+import com.jitender.xpensmanager.Database.PaymentsDB;
 import com.jitender.xpensmanager.Enums.ViewType;
 import com.jitender.xpensmanager.Database.ExpenseData;
 import com.jitender.xpensmanager.ExpenseScreen.Adapters.ExpenseViewAdapter;
@@ -49,6 +50,7 @@ public class YearlyViewFragment extends Fragment {
     private ExpenseDB expenseDB;
     private CategoryDB categoryDB;
     private GroupDB groupsDB;
+    private PaymentsDB paymentsDB;
     private String tableName,groupBy,filterType;
     private int filterValue;
     private ArrayList<ExpenseData> expenseData;
@@ -97,6 +99,7 @@ public class YearlyViewFragment extends Fragment {
         expenseDB = new ExpenseDB(getActivity());
         groupsDB = new GroupDB(getActivity());
         categoryDB = new CategoryDB(getActivity());
+        paymentsDB = new PaymentsDB(getActivity());
 
         today = Calendar.getInstance();
         currentYearName.setText(today.get(Calendar.YEAR)+"");
@@ -118,6 +121,10 @@ public class YearlyViewFragment extends Fragment {
             if(filterType.equalsIgnoreCase("category")) {
                 expenseData = expenseDB.findByYearAndCategory(groupBy,filterValue);
                 double totalSpendsThisYear = expenseDB.getYearlyExpenseSumByCategory(ExpenseDB.getYearFromDate(new Date()),groupBy);
+                currentYearTotalSpends.setText(SplashScreenActivity.cSymbol+ " "+totalSpendsThisYear);
+            }else if(filterType.equalsIgnoreCase("payment")) {
+                expenseData = expenseDB.findByYearAndPayment(groupBy,filterValue);
+                double totalSpendsThisYear = expenseDB.getYearlyExpenseSumByPayment(ExpenseDB.getYearFromDate(new Date()),groupBy);
                 currentYearTotalSpends.setText(SplashScreenActivity.cSymbol+ " "+totalSpendsThisYear);
             }else{
                 expenseData = expenseDB.findByYearAndGroup(groupBy,filterValue);
@@ -169,6 +176,7 @@ public class YearlyViewFragment extends Fragment {
                                     double netAmount = groupsDB.getNetAmountByTitle(item.getGroup());
                                     double totalAmount = groupsDB.getTotalAmountByTitle(item.getGroup());
                                     double totalCategoryAmount = categoryDB.getTotalAmountByTitle(item.getCategory());
+                                    double totalPaymentAmount = paymentsDB.getTotalAmountByMode(item.getModeOfPayment());
                                     totalAmount = totalAmount - item.getAmount();
                                     if(item.getPaidBy().equalsIgnoreCase("Me")) {
                                         netAmount = netAmount - (item.getAmount()-item.getSplitAmount());
@@ -177,6 +185,7 @@ public class YearlyViewFragment extends Fragment {
                                     }
                                     groupsDB.updateGroupAmountByTitle(item.getGroup(),netAmount,totalAmount);
                                     categoryDB.updateCategoryAmountByTitle(item.getCategory(),(totalCategoryAmount-item.getSplitAmount()));
+                                    paymentsDB.updatePaymentLimitByModeName(item.getModeOfPayment(),(totalPaymentAmount - item.getSplitAmount()));
                                     expenseDB.deleteExpenseById(item.getId());
                                     if(groupBy.equalsIgnoreCase("None")) {
                                         double totalSpendsThisYear = expenseDB.getYearlyExpenseSum(ExpenseDB.getYearFromDate(new Date()));
@@ -185,6 +194,9 @@ public class YearlyViewFragment extends Fragment {
                                     else{
                                         if(filterType.equalsIgnoreCase("category")) {
                                             double totalSpendsThisYear = expenseDB.getYearlyExpenseSumByCategory(ExpenseDB.getYearFromDate(new Date()),groupBy);
+                                            currentYearTotalSpends.setText(SplashScreenActivity.cSymbol+ " "+totalSpendsThisYear);
+                                        }else if(filterType.equalsIgnoreCase("payment")) {
+                                            double totalSpendsThisYear = expenseDB.getYearlyExpenseSumByPayment(ExpenseDB.getYearFromDate(new Date()),groupBy);
                                             currentYearTotalSpends.setText(SplashScreenActivity.cSymbol+ " "+totalSpendsThisYear);
                                         }else{
                                             double totalSpendsThisYear = expenseDB.getYearlyExpenseSumByGroup(ExpenseDB.getYearFromDate(new Date()),groupBy);
@@ -244,6 +256,10 @@ public class YearlyViewFragment extends Fragment {
                             if (filterType.equalsIgnoreCase("category")) {
                                 expenseData.addAll(expenseDB.findByYearAndCategory(groupBy, selectedYear));
                                 double totalSpendsThisYear = expenseDB.getYearlyExpenseSumByCategory(selectedYear,groupBy);
+                                currentYearTotalSpends.setText(SplashScreenActivity.cSymbol+ " "+totalSpendsThisYear);
+                            }else if(filterType.equalsIgnoreCase("payment")) {
+                                expenseData.addAll(expenseDB.findByYearAndPayment(groupBy,selectedYear));
+                                double totalSpendsThisYear = expenseDB.getYearlyExpenseSumByPayment(selectedYear,groupBy);
                                 currentYearTotalSpends.setText(SplashScreenActivity.cSymbol+ " "+totalSpendsThisYear);
                             } else {
                                 expenseData.addAll(expenseDB.findByYearAndGroup(groupBy, selectedYear));
