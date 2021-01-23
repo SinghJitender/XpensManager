@@ -141,6 +141,12 @@ public class BackupExportRestoreUtil {
         cell.setCellValue("Group");
         cell = row.createCell(7);
         cell.setCellValue("Paid By");
+        cell = row.createCell(8);
+        cell.setCellValue("Mode of Payment");
+        cell = row.createCell(9);
+        cell.setCellValue("Settled");
+        cell = row.createCell(10);
+        cell.setCellValue("Settled Amount");
         for(int i=0;i<expenseData.size();i++){
             row = expenseSheet.createRow(i+1);
             cell = row.createCell(0);
@@ -166,6 +172,15 @@ public class BackupExportRestoreUtil {
 
             cell = row.createCell(7);
             cell.setCellValue(expenseData.get(i).getPaidBy());
+
+            cell = row.createCell(8);
+            cell.setCellValue(expenseData.get(i).getModeOfPayment());
+
+            cell = row.createCell(9);
+            cell.setCellValue(expenseData.get(i).getSettled());
+
+            cell = row.createCell(10);
+            cell.setCellValue(expenseData.get(i).getSettledAmount());
 
         }
 
@@ -330,6 +345,14 @@ public class BackupExportRestoreUtil {
         return uri;
     }
 
+    public Uri getBackupPath() {
+        File dir = new File(context.getExternalFilesDir(null).getAbsolutePath(), "/XpensManager/");
+        Log.d("File Path",dir.getAbsolutePath());
+        Uri uri = FileProvider.getUriForFile(context,context.getApplicationContext().getPackageName()+".provider",dir);//Uri.fromFile(output);
+        Log.d("URI Path",uri.getPath());
+        return uri;
+    }
+
     public String restoreFromFile(File output) throws IOException,ParseException {
         try {
             BufferedReader result = new BufferedReader(new FileReader(output));
@@ -356,7 +379,7 @@ public class BackupExportRestoreUtil {
             return restore(temp);
         }catch (Exception e) {
             Log.d("Restore Error",e.toString());
-            return "Unable to restore. Some error while reading from file";
+            return "Unable to restore. Corrupted File";
         }
     }
 
@@ -391,7 +414,8 @@ public class BackupExportRestoreUtil {
                         System.out.println(line);
                         String[] actualData = line.split("\\|\\|");
                         if (flag == 0)
-                            expenseDB.insertNewExpenseFromBackup(new SimpleDateFormat("dd/MM/yyyy").parse(actualData[1]), Double.parseDouble(actualData[2]), actualData[3], actualData[5], actualData[4], Double.parseDouble(actualData[6]), actualData[7]);
+                            expenseDB.insertNewExpenseFromBackup(new SimpleDateFormat("dd/MM/yyyy").parse(actualData[1]), Double.parseDouble(actualData[2]),
+                                    actualData[3], actualData[5], actualData[4], Double.parseDouble(actualData[6]), actualData[7],actualData[8],actualData[9], Double.parseDouble(actualData[10]));
                         else if (flag == 1)
                             groupDB.insertNewGroupFromBackup(actualData[1], Integer.parseInt(actualData[2]), Double.parseDouble(actualData[3]), Double.parseDouble(actualData[4]), Double.parseDouble(actualData[5]));
                         else if (flag == 2)
