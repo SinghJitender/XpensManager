@@ -1,4 +1,4 @@
-package com.jitender.xpensmanager.MainScreen.Fragments;
+package com.jitender.xpensmanager.SettingScreen;
 
 import android.Manifest;
 import android.content.Intent;
@@ -9,19 +9,20 @@ import android.os.Bundle;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
-import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.google.android.material.snackbar.Snackbar;
 import com.jitender.xpensmanager.BackupAndRestoreUtils.BackupExportRestoreUtil;
 import com.jitender.xpensmanager.BackupAndRestoreUtils.BackupService;
 import com.jitender.xpensmanager.BackupAndRestoreUtils.ExportToExcelService;
@@ -38,7 +39,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 
-public class Settings extends Fragment {
+public class Settings extends AppCompatActivity {
     private static String[] combinedList = {"Rupee - ₹","Yen - ¥","Ruble - ₽","Korean Won - ₩","Dollar - $","Pound - £","Euro - €","Other - #"};
     private TextView currencySymbol, currencyName, salary,age,version ,backUpfrequency, restoreInfo, lastBackUpDate,backupLocation,exportLocation;
     private SharedPreferences sharedPref;
@@ -51,54 +52,53 @@ public class Settings extends Fragment {
     private BackupExportRestoreUtil backupExportRestoreUtilUtils;
     private LinearLayout restoringLayout;
     private Calendar today;
-
+    private CoordinatorLayout framelayout;
     public Settings() {}
 
+
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState){
+        // Inflate the layout for this fragment
         super.onCreate(savedInstanceState);
-        sharedPref = getActivity().getSharedPreferences(
-                getString(R.string.preference_file_key), getActivity().MODE_PRIVATE);
+        setContentView(R.layout.activity_settings);
+        sharedPref = getSharedPreferences(
+                getString(R.string.preference_file_key), MODE_PRIVATE);
         editor = sharedPref.edit();
         currentCurrencySymbol = sharedPref.getString("cSymbol","#");
         currentCurrencyName = sharedPref.getString("cName","Others");
         currentSalary = sharedPref.getLong("salary",0);
-        currentAge = sharedPref.getInt("age",0);
+        currentAge = sharedPref.getInt("age",2000);
         currentBackupFrequency = sharedPref.getString("frequency","None");
         currentLastBackupDate = sharedPref.getString("lastBackupDate","None");
-        backupExportRestoreUtilUtils = new BackupExportRestoreUtil(getActivity());
-    }
+        backupExportRestoreUtilUtils = new BackupExportRestoreUtil(getApplicationContext());
+        currencySymbol = findViewById(R.id.currencySymbol);
+        currencyName = findViewById(R.id.currencyName);
+        salary = findViewById(R.id.salary);
+        age = findViewById(R.id.age);
+        version = findViewById(R.id.version);
+        createBackup = findViewById(R.id.createBackup);
+        exportToExcel = findViewById(R.id.exportToExcel);
+        restoreBackup = findViewById(R.id.restoreBackup);
+        restoreFromFile = findViewById(R.id.restoreFromFile);
+        restoringLayout = findViewById(R.id.restoringLayout);
+        backUpfrequency = findViewById(R.id.backUpfrequency);
+        restoreInfo = findViewById(R.id.restoreInfo);
+        lastBackUpDate = findViewById(R.id.lastBackUpDate);
+        uploadBackup = findViewById(R.id.uploadBackup);
+        backupLocation = findViewById(R.id.backupLocation);
+        exportLocation = findViewById(R.id.exportLocation);
+        framelayout = findViewById(R.id.frameLayout);
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        View view =  inflater.inflate(R.layout.fragment_settings, container, false);
-        currencySymbol = view.findViewById(R.id.currencySymbol);
-        currencyName = view.findViewById(R.id.currencyName);
-        salary = view.findViewById(R.id.salary);
-        age = view.findViewById(R.id.age);
-        version = view.findViewById(R.id.version);
-        createBackup = view.findViewById(R.id.createBackup);
-        exportToExcel = view.findViewById(R.id.exportToExcel);
-        restoreBackup = view.findViewById(R.id.restoreBackup);
-        restoreFromFile = view.findViewById(R.id.restoreFromFile);
-        restoringLayout = view.findViewById(R.id.restoringLayout);
-        backUpfrequency = view.findViewById(R.id.backUpfrequency);
-        restoreInfo = view.findViewById(R.id.restoreInfo);
-        lastBackUpDate = view.findViewById(R.id.lastBackUpDate);
-        uploadBackup = view.findViewById(R.id.uploadBackup);
-        backupLocation = view.findViewById(R.id.backupLocation);
-        exportLocation = view.findViewById(R.id.exportLocation);
+        checkBackupButtonEnable();
 
         today = Calendar.getInstance();
 
         backupLocation.setOnClickListener((v)->{
-            backupLocation.setText(getActivity().getExternalFilesDir(null).getAbsolutePath()+"/XpensManager/Backup/");
+            backupLocation.setText((getApplicationContext().getExternalFilesDir(null).getAbsolutePath() + "/XpensManager/Backup/").replace("/storage/emulated/0","/storage"));
         });
 
         exportLocation.setOnClickListener((v)-> {
-            exportLocation.setText(getActivity().getExternalFilesDir(null).getAbsolutePath() + "/XpensManager/ExcelExports/");
+            exportLocation.setText((getApplicationContext().getExternalFilesDir(null).getAbsolutePath() + "/XpensManager/ExcelExports/").replace("/storage/emulated/0","/storage"));
         });
 
         uploadBackup.setOnClickListener((v)->{
@@ -121,8 +121,8 @@ public class Settings extends Fragment {
         });
 
         try {
-            String versionName = getActivity().getPackageManager().getPackageInfo(getActivity().getPackageName(), 0).versionName;
-            int versionCode = getActivity().getPackageManager().getPackageInfo(getActivity().getPackageName(), 0).versionCode;
+            String versionName = getApplicationContext().getPackageManager().getPackageInfo(getApplicationContext().getPackageName(), 0).versionName;
+            int versionCode = getApplicationContext().getPackageManager().getPackageInfo(getApplicationContext().getPackageName(), 0).versionCode;
             version.setText(versionCode+"."+versionName);
         } catch (Exception e) {
             version.setVisibility(View.GONE);
@@ -136,18 +136,16 @@ public class Settings extends Fragment {
 
         salary.setText(currentCurrencySymbol+" "+currentSalary);
         salary.setOnClickListener((v)->{
-            LayoutInflater factory = LayoutInflater.from(getActivity());
+            LayoutInflater factory = LayoutInflater.from(this);
             final View dialogView = factory.inflate(R.layout.update_details_dialog, null);
-            final AlertDialog dialog = new AlertDialog.Builder(getActivity()).create();
+            final AlertDialog dialog = new AlertDialog.Builder(getApplicationContext()).create();
             TextView title = dialogView.findViewById(R.id.title);
             EditText maxLimit = dialogView.findViewById(R.id.categoryLimit);
             title.setText("Update Salary");
             maxLimit.setText(currentSalary+"");
             maxLimit.setInputType(EditorInfo.TYPE_CLASS_NUMBER);
             dialog.setView(dialogView);
-            dialogView.findViewById(R.id.update).setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
+            dialogView.findViewById(R.id.update).setOnClickListener((y)-> {
                     //your business logic
                     if(maxLimit.getText().toString().equalsIgnoreCase("") || maxLimit.getText().toString() == null) {
                         maxLimit.setError("Cannot be blank");
@@ -164,13 +162,9 @@ public class Settings extends Fragment {
                             dialog.dismiss();
                         }
                     }
-                }
             });
-            dialogView.findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    dialog.dismiss();
-                }
+            dialogView.findViewById(R.id.cancel).setOnClickListener((x)-> {
+                dialog.dismiss();
             });
             dialog.show();
         });
@@ -186,13 +180,15 @@ public class Settings extends Fragment {
 
         createBackup.setOnClickListener((v) -> {
             if(checkStoragePermission(Manifest.permission.WRITE_EXTERNAL_STORAGE, STORAGE_PERMISSION_CODE)){
-                getActivity().startService(new Intent(getActivity(), BackupService.class));
+                getApplicationContext().startService(new Intent(getApplicationContext(), BackupService.class));
+                Snackbar.make(framelayout, "Creating Backup...",2000).show();
             }
         });
 
         exportToExcel.setOnClickListener((v)->{
             if(checkStoragePermission(Manifest.permission.WRITE_EXTERNAL_STORAGE, STORAGE_PERMISSION_CODE)){
-                getActivity().startService(new Intent(getActivity(), ExportToExcelService.class));
+                getApplicationContext().startService(new Intent(getApplicationContext(), ExportToExcelService.class));
+                Snackbar.make(framelayout, "Exporting to excel...",2000).show();
             }
         });
 
@@ -202,13 +198,13 @@ public class Settings extends Fragment {
                 restoringLayout.setVisibility(View.VISIBLE);
                 ExecutorService executorService = Executors.newSingleThreadExecutor();
                 executorService.execute(()->{
-                    getActivity().startService(new Intent(getActivity(), RestoreService.class));
+                    getApplicationContext().startService(new Intent(getApplicationContext(), RestoreService.class));
                     while(RestoreService.isServiceRunning){}
-                    getActivity().runOnUiThread(()->{
+                    runOnUiThread(()->{
                         restoringLayout.setVisibility(View.GONE);
                         SplashScreenActivity.cSymbol = sharedPref.getString("cSymbol","#");
                         SplashScreenActivity.salary = sharedPref.getLong("salary",0);
-                        age.setText(sharedPref.getInt("age",0)+"");
+                        age.setText(sharedPref.getInt("age",2000)+"");
                         salary.setText(SplashScreenActivity.cSymbol+" "+sharedPref.getLong("salary",0));
                         currencyName.setText(sharedPref.getString("cName","#"));
                         currencySymbol.setText(SplashScreenActivity.cSymbol);
@@ -224,9 +220,7 @@ public class Settings extends Fragment {
             chooseFile = Intent.createChooser(chooseFile, "Select backup file");
             startActivityForResult(chooseFile, 201);
         });
-
-
-        return view;
+        
     }
 
     @Override
@@ -235,7 +229,7 @@ public class Settings extends Fragment {
             case 201 :
                 if(resultCode == -1){
                     Uri fileUri =data.getData();
-                    BackupExportRestoreUtil restoreFile = new BackupExportRestoreUtil(getActivity());
+                    BackupExportRestoreUtil restoreFile = new BackupExportRestoreUtil(getApplicationContext());
                     try {
                         restoringLayout.setVisibility(View.VISIBLE);
                         String result = restoreFile.restoreFromUri(fileUri);
@@ -244,9 +238,9 @@ public class Settings extends Fragment {
                             //move to main activity
                             SplashScreenActivity.cSymbol = sharedPref.getString("cSymbol","#");
                             SplashScreenActivity.salary = sharedPref.getLong("salary",0);
-                            Intent intent = new Intent(getActivity(), MainActivity.class);
+                            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                             startActivity(intent);
-                            getActivity().finish();
+                            finish();
                         }else{
                             restoreInfo.setText(result);
                             restoreInfo.setVisibility(View.VISIBLE);
@@ -265,7 +259,7 @@ public class Settings extends Fragment {
     }
 
     public void displayCurrencyDialogBox(){
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        AlertDialog.Builder builder = new AlertDialog.Builder(getApplicationContext());
         builder.setTitle("Select Currency");
         builder.setItems(combinedList, (dialog, which) -> {
             String symbol = combinedList[which].split("-")[1];
@@ -283,11 +277,11 @@ public class Settings extends Fragment {
     }
 
     public boolean checkStoragePermission(String permission, int requestCode) {
-        if (ContextCompat.checkSelfPermission(getActivity(), permission)
+        if (ContextCompat.checkSelfPermission(getApplicationContext(), permission)
                 == PackageManager.PERMISSION_DENIED) {
 
             // Requesting the permission
-            ActivityCompat.requestPermissions(getActivity(),
+            ActivityCompat.requestPermissions(this,
                     new String[] { permission },
                     requestCode);
             return false;
@@ -298,7 +292,7 @@ public class Settings extends Fragment {
     }
 
     public void displayFrequencyDialogBox(String[] list){
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        AlertDialog.Builder builder = new AlertDialog.Builder(getApplicationContext());
         builder.setTitle("Select Category");
         builder.setItems(list, (dialog, which) -> {
             backUpfrequency.setText(list[which]);
@@ -310,7 +304,7 @@ public class Settings extends Fragment {
     }
 
     public void displayGroupDialogBox(){
-        MonthPickerDialog.Builder builder = new MonthPickerDialog.Builder(getActivity(),
+        MonthPickerDialog.Builder builder = new MonthPickerDialog.Builder(getApplicationContext(),
                 (selectedMonth, selectedYear) -> {
                     age.setText(selectedYear+"");
                     editor.putInt("age",selectedYear);
@@ -322,6 +316,20 @@ public class Settings extends Fragment {
                 .setOnMonthChangedListener(selectedMonth -> { /* on month selected*/ })
                 .setOnYearChangedListener(selectedYear -> { /* on year selected*/ })
                 .build().show();
+    }
+
+    public void checkBackupButtonEnable(){
+        if(backupExportRestoreUtilUtils.isBackupFilePresent()){
+            restoreBackup.setEnabled(true);
+            uploadBackup.setEnabled(true);
+            restoreBackup.setAlpha(1.0f);
+            uploadBackup.setAlpha(1.0f);
+        }else{
+            restoreBackup.setEnabled(false);
+            restoreBackup.setAlpha(0.5f);
+            uploadBackup.setEnabled(false);
+            uploadBackup.setAlpha(0.5f);
+        }
     }
 
 }
