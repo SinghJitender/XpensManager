@@ -55,10 +55,12 @@ public class ExpenseViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             ((ViewHolder) holder).amount.setText(SplashScreenActivity.cSymbol+ " "+list.get(position).getAmount()+ " split with "+list.get(position).getGroup()+ " paid by "+list.get(position).getPaidBy());
         }
         ((ViewHolder) holder).category.setText(list.get(position).getCategory());
+        ((ViewHolder) holder).payment.setText(list.get(position).getModeOfPayment());
+
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        TextView description, splitamount, date,amount,category;
+        TextView description, splitamount, date,amount,category,payment;
 
         ViewHolder(View itemView) {
             super(itemView);
@@ -67,6 +69,7 @@ public class ExpenseViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             amount = itemView.findViewById(R.id.amount);
             category = itemView.findViewById(R.id.category);
             date = itemView.findViewById(R.id.date);
+            payment = itemView.findViewById(R.id.payment);
         }
 
     }
