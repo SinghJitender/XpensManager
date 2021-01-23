@@ -6,6 +6,7 @@ import android.util.Log;
 import com.jitender.xpensmanager.Database.CategoryDB;
 import com.jitender.xpensmanager.Database.ExpenseDB;
 import com.jitender.xpensmanager.Database.GroupDB;
+import com.jitender.xpensmanager.Database.PaymentsDB;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -16,6 +17,7 @@ public class LoadTesting {
     String[] category = {"Fruits","Fuel","Vegetables","Grocery","Travel","Bills"};
     double[] categoryLimit = {3000,2000,2000,4000,2000,3000};
     String[] group = {"Personal","Bangalore Flat","Trio","Quads","Penta","Hexa","Decimala"};
+    String[] payment = {"Cash","PhonePe","GPay","HDFC Credit Card","HDFC Debit Card","Yes Bank Debit Card","ICICI Debit Card","SBI Debit Card","BOI Debit Card"};
     double[] groupLimit = {20000,13000,10000,5000,3000,2000,1000};
     int[] groupPeps = {1,2,3,4,5,6,10};
     String[] paidBy = {"Me","Others"};
@@ -27,16 +29,19 @@ public class LoadTesting {
     private ExpenseDB expenseDB;
     private static GroupDB groupsDB;
     private static CategoryDB categoryDB;
+    private PaymentsDB paymentsDB;
 
     public LoadTesting(Context context){
         expenseDB = new ExpenseDB(context);
         groupsDB = new GroupDB(context);
         categoryDB = new CategoryDB(context);
+        paymentsDB = new PaymentsDB(context);
     }
 
     public void populateData(){
         populateCategory();
         populateGroup();
+        populatePayment();
         try {
             populateExpenses();
         }catch (Exception e){
@@ -56,17 +61,23 @@ public class LoadTesting {
         }
     }
 
+    private void populatePayment(){
+        for(int i=0;i<payment.length;i++){
+            paymentsDB.insertNewPaymentMode(payment[i],2000);
+        }
+    }
+
     private void populateExpenses() throws ParseException {
         Random r = new Random();
-        int noOfRecords = 10000;
+        int noOfRecords = 50000;
         String expenseDescription = "Test Description";
         for(int i=0;i<noOfRecords;i++){
-            double expenseAmount = r.nextInt(50)+10;
+            double expenseAmount = r.nextInt(50)+50;
             int groupIndex = r.nextInt(group.length);
             //String date = (int)(r.nextInt(27)+1)+"/"+(int)(r.nextInt(12)+1)+"/"+year[r.nextInt(year.length)];
             String date = day[r.nextInt(day.length)]+"/"+month[r.nextInt(month.length)]+"/"+year[r.nextInt(year.length)];
             expenseDB.insertNewExpense(new SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH).parse(date),expenseAmount,expenseDescription,category[r.nextInt(category.length)],
-                    paidBy[r.nextInt(paidBy.length)],groupPeps[groupIndex],group[groupIndex]);
+                    paidBy[r.nextInt(paidBy.length)],groupPeps[groupIndex],group[groupIndex],payment[r.nextInt(payment.length)],"false",0.0);
         }
     }
 }
