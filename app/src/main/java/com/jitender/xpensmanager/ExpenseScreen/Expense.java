@@ -13,11 +13,14 @@ import com.jitender.xpensmanager.Database.ExpenseDB;
 import com.jitender.xpensmanager.Database.ExpenseData;
 import com.jitender.xpensmanager.Database.GroupDB;
 import com.jitender.xpensmanager.Database.GroupData;
+import com.jitender.xpensmanager.Database.PaymentsDB;
+import com.jitender.xpensmanager.Database.PaymentsData;
 import com.jitender.xpensmanager.ExpenseScreen.Fragments.MonthlyViewFragment;
 import com.jitender.xpensmanager.ExpenseScreen.Fragments.YearlyViewFragment;
 import com.jitender.xpensmanager.MainScreen.Fragments.Category;
 import com.jitender.xpensmanager.MainScreen.Fragments.Group;
 import com.jitender.xpensmanager.MainScreen.Fragments.Home;
+import com.jitender.xpensmanager.MainScreen.Fragments.Payment;
 import com.jitender.xpensmanager.R;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
@@ -35,6 +38,7 @@ public class Expense extends AppCompatActivity{
     private ExpenseDB expenseDB;
     private static GroupDB groupsDB;
     private static CategoryDB categoryDB;
+    private static PaymentsDB paymentsDB;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +51,7 @@ public class Expense extends AppCompatActivity{
         expenseDB = new ExpenseDB(getApplicationContext());
         groupsDB = new GroupDB(getApplicationContext());
         categoryDB = new CategoryDB(getApplicationContext());
+        paymentsDB = new PaymentsDB(getApplicationContext());
         fragment1 = new MonthlyViewFragment();
         fragment2 = new YearlyViewFragment();
         //fragment3 = new AllViewFragment();
@@ -86,6 +91,8 @@ public class Expense extends AppCompatActivity{
             updateGroupFragmentData();
         else if(filterType.equalsIgnoreCase("category"))
             updateCategoryFragmentData();
+        else if(filterType.equalsIgnoreCase("payment"))
+            updatePaymentFragmentData();
         super.onBackPressed();
     }
 
@@ -115,6 +122,16 @@ public class Expense extends AppCompatActivity{
                 updateList.add(false);
             }
             Category.updateCategoryAdapter(updatedResults, updateList);
+    }
+
+    public void updatePaymentFragmentData(){
+        ArrayList<PaymentsData> updatedResults = new ArrayList<>();
+        ArrayList<Boolean> updateList = new ArrayList<>();
+        updatedResults.addAll(paymentsDB.findAll());
+        for (int i = 0; i < updatedResults.size(); i++) {
+            updateList.add(false);
+        }
+        Payment.updatePaymentAdapter(updatedResults, updateList);
     }
 
     BottomNavigationView.OnNavigationItemSelectedListener navigationItemSelectedListener= ((item) -> {
