@@ -168,7 +168,7 @@ public class Setup extends AppCompatActivity {
                             if (Double.parseDouble(currentSalary) <= 0.0) {
                                 salary.setError("We're not judging, but..");
                             } else {*/
-                                int tempAge=1,tempSalary=0;
+                                int tempAge=2000,tempSalary=0;
                                 if(currentAge !=null && !currentAge.equalsIgnoreCase(""))
                                     tempAge = Integer.parseInt(currentAge);
                                 if(currentSalary !=null && !currentSalary.equalsIgnoreCase(""))
