@@ -250,14 +250,11 @@
         </androidx.cardview.widget.CardView>
 
         <androidx.cardview.widget.CardView
-            xmlns:android="http://schemas.android.com/apk/res/android"
-            xmlns:app="http://schemas.android.com/apk/res-auto"
             android:id="@+id/addNewExpenseView"
             android:layout_width="match_parent"
             android:layout_height="280dp"
             android:visibility="invisible"
-            app:cardBackgroundColor="@color/white"
-            app:cardElevation="5dp">
+            app:cardBackgroundColor="@color/white">
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -385,18 +382,18 @@
                 <TextView
                     android:id="@+id/newExpenseSelectCategory"
                     android:layout_width="0dp"
-                    android:layout_weight="15"
+                    android:layout_weight="10"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
-                    android:layout_marginTop="3dp"
-                    android:layout_marginBottom="3dp"
+                    android:paddingTop="7dp"
+                    android:paddingBottom="7dp"
                     android:background="@null"
-                    android:text="Select Category"
+                    android:text="Category"
+                    android:gravity="center"
                     android:textColor="@color/theme_blue_variant"
                     android:nextFocusForward="@id/newExpenseSelectGroup"
-                    android:paddingStart="20dp"
                     android:singleLine="true"
-                    android:textSize="20sp"/>
+                    android:textSize="14sp"/>
 
                 <View
                     android:layout_width="1dp"
@@ -408,18 +405,40 @@
                 <TextView
                     android:id="@+id/newExpenseSelectGroup"
                     android:layout_width="0dp"
-                    android:layout_weight="15"
+                    android:layout_weight="10"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
-                    android:layout_marginTop="3dp"
-                    android:layout_marginBottom="3dp"
+                    android:paddingTop="7dp"
+                    android:paddingBottom="7dp"
                     android:background="@null"
                     android:nextFocusForward="@id/newExpenseAdd"
-                    android:text="Select Group"
+                    android:text="Group"
+                    android:gravity="center"
                     android:textColor="@color/theme_blue_variant"
-                    android:paddingStart="20dp"
                     android:singleLine="true"
-                    android:textSize="20sp"/>
+                    android:textSize="14sp"/>
+                <View
+                    android:layout_width="1dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="1dp"
+                    android:layout_marginBottom="1dp"
+                    android:background="@color/theme_grey"/>
+
+                <TextView
+                    android:id="@+id/newExpenseSelectMode"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center_vertical"
+                    android:layout_weight="10"
+                    android:background="@null"
+                    android:gravity="center"
+                    android:nextFocusForward="@id/newExpenseSelectGroup"
+                    android:paddingTop="7dp"
+                    android:paddingBottom="7dp"
+                    android:singleLine="true"
+                    android:text="Payment Mode"
+                    android:textColor="@color/theme_blue_variant"
+                    android:textSize="14sp" />
             </LinearLayout>
                 <View
                     android:layout_width="match_parent"
@@ -439,6 +458,108 @@
                     android:text="Add"
                     />
 
+
+            </LinearLayout>
+
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/createnewpaymentmode"
+            android:layout_width="match_parent"
+            android:layout_height="280dp"
+            android:visibility="invisible"
+            app:cardBackgroundColor="@color/white">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:layout_margin="5dp"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="5dp"
+                    android:orientation="horizontal"
+                    android:weightSum="20">
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="5dp"
+                        android:layout_weight="20"
+                        android:background="@null"
+                        android:paddingLeft="20dp"
+                        android:text="Add New Payment Mode"
+                        android:textColor="@color/theme_blue_variant"
+                        android:textSize="25sp"
+                        android:textStyle="bold"/>
+                </LinearLayout>
+                <TextView
+                    android:id="@+id/modeText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="3dp"
+                    android:layout_marginBottom="3dp"
+                    android:background="@null"
+                    android:focusedByDefault="true"
+                    android:text="This will help you analyze the mode of payment you usually pay through.\nNote : Payment mode should be unique. "
+                    android:paddingLeft="20dp"
+                    android:textSize="16sp"/>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="5dp"
+                    android:weightSum="20">
+                    <EditText
+                        android:id="@+id/modeName"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="3dp"
+                        android:layout_marginBottom="3dp"
+                        android:layout_weight="14"
+                        android:background="@null"
+                        android:focusedByDefault="true"
+                        android:hint="Payment Mode"
+                        android:paddingLeft="20dp"
+                        android:imeOptions="actionNext"
+                        android:singleLine="true"
+                        android:textSize="22sp"
+                        android:textStyle="bold"/>
+                    <EditText
+                        android:id="@+id/modeLimit"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="3dp"
+                        android:layout_marginBottom="3dp"
+                        android:layout_weight="6"
+                        android:background="@null"
+                        android:inputType="numberDecimal"
+                        android:hint="Limit"
+                        android:layout_gravity="center"
+                        android:paddingLeft="10dp"
+                        android:imeOptions="actionDone"
+                        android:singleLine="true"
+                        android:textSize="18sp"
+                        android:textStyle="normal"/>
+                </LinearLayout>
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.5dp"
+                    android:layout_marginTop="2dp"
+                    android:layout_marginBottom="2dp"
+                    android:background="@color/theme_grey"/>
+                <Button
+                    android:id="@+id/createPaymentMode"
+                    android:layout_width="250dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="10dp"
+                    android:backgroundTint="@color/theme_blue_variant"
+                    android:text="Save"
+                    />
 
             </LinearLayout>
 
@@ -490,6 +611,19 @@
         android:elevation="5dp"
         android:orientation="vertical"
         android:paddingBottom="30dp">
+
+        <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+            android:id="@+id/mode"
+            android:layout_width="170dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginBottom="5dp"
+            android:backgroundTint="@color/theme_blue_variant"
+            android:text="Payment Mode"
+            android:visibility="invisible"
+            app:borderWidth="0dp"
+            app:icon="@drawable/plus"
+            app:rippleColor="@color/white"/>
 
         <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
             android:id="@+id/group"
