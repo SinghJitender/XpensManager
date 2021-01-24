@@ -6,6 +6,7 @@
     android:layout_height="match_parent"
     android:layout_gravity="center"
     android:gravity="center"
+    android:background="@xml/repeatshattered"
     tools:context="com.jitender.xpensmanager.SetupScreen.Setup">
 
     <LinearLayout
@@ -287,7 +288,7 @@
 
               <!--  </androidx.cardview.widget.CardView>-->
 
-                <androidx.cardview.widget.CardView
+              <!--  <androidx.cardview.widget.CardView
                     xmlns:android="http://schemas.android.com/apk/res/android"
                     xmlns:app="http://schemas.android.com/apk/res-auto"
                     android:id="@+id/createnewcategory"
@@ -297,14 +298,14 @@
                     android:elevation="5dp"
                     app:cardUseCompatPadding="true"
                     android:layout_margin="5dp"
-                    app:cardBackgroundColor="@color/white">
+                    app:cardBackgroundColor="@color/white">-->
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:gravity="center"
                         android:layout_margin="5dp"
+                        android:visibility="gone"
                         android:orientation="vertical">
-
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -393,8 +394,8 @@
                             />
 
                     </LinearLayout>
-
-                </androidx.cardview.widget.CardView>
+<!--
+                </androidx.cardview.widget.CardView>-->
 
                 <androidx.cardview.widget.CardView
                     xmlns:android="http://schemas.android.com/apk/res/android"
