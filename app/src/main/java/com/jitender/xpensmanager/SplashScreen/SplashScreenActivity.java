@@ -46,11 +46,14 @@ public class SplashScreenActivity extends AppCompatActivity {
             mydatabase = openOrCreateDatabase(getString(R.string.database_name),MODE_PRIVATE,null);
             mydatabase.execSQL( "CREATE TABLE IF NOT EXISTS self_expense"+
                     "(id INTEGER PRIMARY KEY AUTOINCREMENT, date VARCHAR, dayOfWeek VARCHAR, textMonth INTEGER, month VARCHAR, year INTEGER, day INTEGER," +
-                    "amount REAL, description VARCHAR, paidBy VARCHAR, category VARCHAR, deleted INTEGER, splitAmount REAL, groupedWith VARCHAR)");
+                    "amount REAL, description VARCHAR, paidBy VARCHAR, category VARCHAR, deleted INTEGER, splitAmount REAL, groupedWith VARCHAR, " +
+                    "expenseSettled VARCHAR, settledAmount REAL, modeOfPayment VARCHAR)");
             mydatabase.execSQL( "CREATE TABLE IF NOT EXISTS groups " +
                     "(id INTEGER PRIMARY KEY AUTOINCREMENT, title VARCHAR UNIQUE, noOfPersons INTEGER, maxLimit REAL, netAmount REAL, totalAmount REAL)");
             mydatabase.execSQL( "CREATE TABLE IF NOT EXISTS category"+
                     "(id INTEGER PRIMARY KEY AUTOINCREMENT, categoryname VARCHAR UNIQUE, categorylimit REAL,totalcategoryspend REAL)");
+            mydatabase.execSQL( "CREATE TABLE IF NOT EXISTS payments"+
+                    "(id INTEGER PRIMARY KEY AUTOINCREMENT, modename VARCHAR UNIQUE, modelimit REAL,totalmodespend REAL)");
             mydatabase.close();
             Log.d(LOG_TAG,"Database Ready!");
         });
