@@ -138,7 +138,7 @@ public class Settings extends AppCompatActivity {
         salary.setOnClickListener((v)->{
             LayoutInflater factory = LayoutInflater.from(this);
             final View dialogView = factory.inflate(R.layout.update_details_dialog, null);
-            final AlertDialog dialog = new AlertDialog.Builder(getApplicationContext()).create();
+            final AlertDialog dialog = new AlertDialog.Builder(this).create();
             TextView title = dialogView.findViewById(R.id.title);
             EditText maxLimit = dialogView.findViewById(R.id.categoryLimit);
             title.setText("Update Salary");
@@ -259,7 +259,7 @@ public class Settings extends AppCompatActivity {
     }
 
     public void displayCurrencyDialogBox(){
-        AlertDialog.Builder builder = new AlertDialog.Builder(getApplicationContext());
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Select Currency");
         builder.setItems(combinedList, (dialog, which) -> {
             String symbol = combinedList[which].split("-")[1];
@@ -292,7 +292,7 @@ public class Settings extends AppCompatActivity {
     }
 
     public void displayFrequencyDialogBox(String[] list){
-        AlertDialog.Builder builder = new AlertDialog.Builder(getApplicationContext());
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Select Category");
         builder.setItems(list, (dialog, which) -> {
             backUpfrequency.setText(list[which]);
@@ -304,7 +304,7 @@ public class Settings extends AppCompatActivity {
     }
 
     public void displayGroupDialogBox(){
-        MonthPickerDialog.Builder builder = new MonthPickerDialog.Builder(getApplicationContext(),
+        MonthPickerDialog.Builder builder = new MonthPickerDialog.Builder(this,
                 (selectedMonth, selectedYear) -> {
                     age.setText(selectedYear+"");
                     editor.putInt("age",selectedYear);
