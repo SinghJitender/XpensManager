@@ -17,13 +17,18 @@
         android:title="@string/title_category" />
 
     <item
+        android:id="@+id/navigation_payment"
+        android:icon="@drawable/card"
+        android:title="@string/title_payment" />
+
+    <item
         android:id="@+id/navigation_stats"
         android:icon="@drawable/stats"
         android:title="@string/title_stats" />
 
-    <item
+    <!--<item
         android:id="@+id/navigation_settings"
         android:icon="@drawable/settings"
-        android:title="@string/title_notifications" />
+        android:title="@string/title_notifications" />-->
 
 </menu>
