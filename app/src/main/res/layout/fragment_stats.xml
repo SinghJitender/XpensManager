@@ -7,14 +7,52 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context="com.jitender.xpensmanager.MainScreen.Fragments.Stats">
 
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:id="@+id/frameLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="30dp"
+        >
+        <RelativeLayout
+            android:id="@+id/emptyView"
+            android:layout_below="@id/cardview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:id="@+id/emptyImage"
+                android:layout_width="350dp"
+                android:layout_height="350dp"
+                android:layout_centerInParent="true"
+                android:alpha="0.7"
+                android:scaleType="centerCrop"
+                android:src="@drawable/empty_state" />
+
+            <TextView
+                android:id="@+id/emptyText"
+                android:layout_width="350dp"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/emptyImage"
+                android:layout_centerInParent="true"
+                android:layout_centerVertical="true"
+                android:layout_marginTop="-50dp"
+                android:gravity="center"
+                android:textSize="17sp"
+                android:alpha="0.7"
+                android:text="Nothing to show yet \nAdd a few expenses" />
+        </RelativeLayout>
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scrollbars="none">
         <LinearLayout
+            android:id="@+id/mainLinearLayout"
             android:layout_width="match_parent"
             android:orientation="vertical"
             android:padding="10dp"
+            android:visibility="invisible"
             android:layout_height="match_parent">
 
             <androidx.cardview.widget.CardView
@@ -133,7 +171,7 @@
                                     android:visibility="gone"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:text="of your salary"/>
+                                    android:text="of your earnings"/>
 
                             </LinearLayout>
 
