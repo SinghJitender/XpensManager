@@ -24,6 +24,12 @@
         tools:layout="@layout/fragment_category" />
 
     <fragment
+        android:id="@+id/navigation_payment"
+        android:name="com.jitender.xpensmanager.MainScreen.Fragments.Payment"
+        android:label="@string/title_payment"
+        tools:layout="@layout/fragment_payment" />
+
+    <fragment
         android:id="@+id/navigation_stats"
         android:name="com.jitender.xpensmanager.MainScreen.Fragments.Stats"
         android:label="@string/title_stats"
@@ -31,7 +37,7 @@
 
     <fragment
         android:id="@+id/navigation_settings"
-        android:name="com.jitender.xpensmanager.MainScreen.Fragments.Settings"
+        android:name="com.jitender.xpensmanager.SettingScreen.Settings"
         android:label="@string/title_notifications"
-        tools:layout="@layout/fragment_settings" />
+        tools:layout="@layout/activity_settings" />
 </navigation>
