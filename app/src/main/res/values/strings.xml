@@ -21,6 +21,7 @@
     <string name="title_home">Home</string>
     <string name="title_stats">Stats</string>
     <string name="title_category">Category</string>
+    <string name="title_payment">Payment</string>
     <string name="title_group">Group</string>
     <string name="title_notifications">Settings</string>
     <string name="add_own_expense"><u>Add Own Expense</u></string>
