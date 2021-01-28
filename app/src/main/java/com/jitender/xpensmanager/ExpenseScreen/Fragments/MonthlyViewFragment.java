@@ -39,6 +39,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.concurrent.Executors;
 
 import xyz.sangcomz.stickytimelineview.TimeLineRecyclerView;
 import xyz.sangcomz.stickytimelineview.callback.SectionCallback;
@@ -208,19 +209,15 @@ public class MonthlyViewFragment extends Fragment {
                                 if (event == Snackbar.Callback.DISMISS_EVENT_TIMEOUT || event == Snackbar.Callback.DISMISS_EVENT_SWIPE ||
                                         event == Snackbar.Callback.DISMISS_EVENT_MANUAL || event == Snackbar.Callback.DISMISS_EVENT_CONSECUTIVE) {
                                     // Snackbar closed on its own or swiped to close
-                                    double netAmount = groupDB.getNetAmountByTitle(item.getGroup());
-                                    double totalAmount = groupDB.getTotalAmountByTitle(item.getGroup());
                                     double totalCategoryAmount = categoryDB.getTotalAmountByTitle(item.getCategory());
                                     double totalPaymentAmount = paymentsDB.getTotalAmountByMode(item.getModeOfPayment());
-                                    totalAmount = totalAmount - item.getAmount();
-                                    if(item.getPaidBy().equalsIgnoreCase("Me")) {
-                                        netAmount = netAmount - (item.getAmount()-item.getSplitAmount());
-                                    }else{
-                                        netAmount = netAmount + item.getSplitAmount();
-                                    }
-                                    groupDB.updateGroupAmountByTitle(item.getGroup(),netAmount,totalAmount);
-                                    categoryDB.updateCategoryAmountByTitle(item.getCategory(),(totalCategoryAmount-item.getSplitAmount()));
-                                    paymentsDB.updatePaymentLimitByModeName(item.getModeOfPayment(),(totalPaymentAmount - item.getSplitAmount()));
+                                    Executors.newSingleThreadExecutor().execute(()->{
+                                        double totalSettleAmount = expenseDB.getExpenseSettledAmountByGroup(item.getGroup());
+                                        double groupTotalAmount = expenseDB.getAllExpenseTotalSumByGroup(item.getGroup());
+                                        groupDB.updateGroupAmountByTitle(item.getGroup(),totalSettleAmount,groupTotalAmount);
+                                        categoryDB.updateCategoryAmountByTitle(item.getCategory(),(totalCategoryAmount-item.getSplitAmount()));
+                                        paymentsDB.updatePaymentAmountByMode(item.getModeOfPayment(),(totalPaymentAmount - item.getSplitAmount()));
+                                    });
                                     expenseDB.deleteExpenseById(item.getId());
                                     if(groupBy.equalsIgnoreCase("None")) {
                                         double totalSpendsThisMonth = expenseDB.getMonthlyExpenseSum(ExpenseDB.getMonthFromDate(new Date()), ExpenseDB.getYearFromDate(new Date()));
