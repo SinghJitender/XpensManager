@@ -34,6 +34,7 @@ import com.jitender.xpensmanager.Database.ExpenseData;
 import com.jitender.xpensmanager.ExpenseScreen.Adapters.ExpenseViewAdapter;
 import com.jitender.xpensmanager.ExpenseScreen.Expense;
 import com.jitender.xpensmanager.MainScreen.Adapters.SwipeToDeleteCallback;
+import com.jitender.xpensmanager.MainScreen.Adapters.SwipeToSettleCallback;
 import com.jitender.xpensmanager.MainScreen.MainActivity;
 import com.jitender.xpensmanager.R;
 import com.jitender.xpensmanager.SettingScreen.Settings;
@@ -171,29 +172,6 @@ public class Home extends Fragment {
         return false;
     }
 
-    ItemTouchHelper.SimpleCallback simpleItemTouchCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
-
-        @Override
-        public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
-            Toast.makeText(getActivity(), "on Move", Toast.LENGTH_SHORT).show();
-            return false;
-        }
-
-        @Override
-        public void onSwiped(RecyclerView.ViewHolder viewHolder, int swipeDir) {
-            Toast.makeText(getActivity(), "on Swiped ", Toast.LENGTH_SHORT).show();
-            //Remove swiped item from list and notify the RecyclerView
-            int position = viewHolder.getAdapterPosition();
-            expenseData.remove(position);
-            adapter.notifyDataSetChanged();
-            if(expenseData.size() == 0) {
-                emptyView.setVisibility(View.VISIBLE);
-            }else{
-                emptyView.setVisibility(View.GONE);
-            }
-        }
-    };
-
     private SectionCallback getSectionCallback(final List<ExpenseData> expenseData) {
         return new SectionCallback() {
 
@@ -239,19 +217,25 @@ public class Home extends Fragment {
                                 if (event == Snackbar.Callback.DISMISS_EVENT_TIMEOUT || event == Snackbar.Callback.DISMISS_EVENT_SWIPE ||
                                         event == Snackbar.Callback.DISMISS_EVENT_MANUAL || event == Snackbar.Callback.DISMISS_EVENT_CONSECUTIVE) {
                                     // Snackbar closed on its own or swiped to close
-                                    double netAmount = groupsDB.getNetAmountByTitle(item.getGroup());
-                                    double totalAmount = groupsDB.getTotalAmountByTitle(item.getGroup());
+                                    //double netAmount = groupsDB.getNetAmountByTitle(item.getGroup());
+                                    //double totalAmount = groupsDB.getTotalAmountByTitle(item.getGroup());
                                     double totalCategoryAmount = categoryDB.getTotalAmountByTitle(item.getCategory());
                                     double totalPaymentAmount = paymentsDB.getTotalAmountByMode(item.getModeOfPayment());
-                                    totalAmount = totalAmount - item.getAmount();
-                                    if(item.getPaidBy().equalsIgnoreCase("Me")) {
+                                    //totalAmount = totalAmount - item.getAmount();
+                                   /* if(item.getPaidBy().equalsIgnoreCase("Me")) {
                                         netAmount = netAmount - (item.getAmount()-item.getSplitAmount());
                                     }else{
                                         netAmount = netAmount + item.getSplitAmount();
-                                    }
-                                    groupsDB.updateGroupAmountByTitle(item.getGroup(),netAmount,totalAmount);
-                                    categoryDB.updateCategoryAmountByTitle(item.getCategory(),(totalCategoryAmount-item.getSplitAmount()));
-                                    paymentsDB.updatePaymentLimitByModeName(item.getModeOfPayment(),(totalPaymentAmount - item.getSplitAmount()));
+                                    }*/
+                                    mExecutor.execute(()->{
+                                        double totalSettleAmount = expenseDB.getExpenseSettledAmountByGroup(item.getGroup());
+                                        double groupTotalAmount = expenseDB.getAllExpenseTotalSumByGroup(item.getGroup());
+                                        groupsDB.updateGroupAmountByTitle(item.getGroup(),totalSettleAmount,groupTotalAmount);
+
+                                        categoryDB.updateCategoryAmountByTitle(item.getCategory(),(totalCategoryAmount-item.getSplitAmount()));
+                                        paymentsDB.updatePaymentAmountByMode(item.getModeOfPayment(),(totalPaymentAmount - item.getSplitAmount()));
+                                    });
+
                                     expenseDB.deleteExpenseById(item.getId());
                                     totalSpentThisMonth = expenseDB.getMonthlyExpenseSum(ExpenseDB.getMonthFromDate(new Date()), ExpenseDB.getYearFromDate(new Date()));
                                     currentMonthTotalSpends.setText(SplashScreenActivity.cSymbol+ " "+ new DecimalFormat("00.00").format(totalSpentThisMonth));
@@ -273,8 +257,59 @@ public class Home extends Fragment {
             }
         };
 
+        SwipeToSettleCallback swipeToSettleCallback = new SwipeToSettleCallback(getActivity()) {
+            @Override
+            public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int i) {
+                final int position = viewHolder.getAdapterPosition();
+                final ExpenseData item = adapter.getData().get(position);
+                String text = ""; boolean setUndo = true;
+                if(item.getSettled().equalsIgnoreCase("true")){
+                    text = "Expense already settled";
+                    setUndo = false;
+                }else{
+                    adapter.getData().get(position).setSettled("true");
+                    text = "Expense settled";
+                }
+                adapter.notifyDataSetChanged();
+                Snackbar snackbar = Snackbar
+                        .make(framelayout, text,5000)
+                        .addCallback(new Snackbar.Callback(){
+
+                            @Override
+                            public void onShown(Snackbar sb) {
+                                super.onShown(sb);
+                                //Toast.makeText(getActivity(),"Snack bar shown",Toast.LENGTH_SHORT).show();
+                            }
+
+                            @Override
+                            public void onDismissed(Snackbar transientBottomBar, int event) {
+                                super.onDismissed(transientBottomBar, event);
+                                if (event == Snackbar.Callback.DISMISS_EVENT_TIMEOUT || event == Snackbar.Callback.DISMISS_EVENT_SWIPE ||
+                                        event == Snackbar.Callback.DISMISS_EVENT_MANUAL || event == Snackbar.Callback.DISMISS_EVENT_CONSECUTIVE) {
+                                    // Snackbar closed on its own or swiped to close
+                                    //Expense Settled Updates
+                                }
+                            }
+                        });
+                if(setUndo) {
+                    snackbar.setAction("UNDO", new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            adapter.getData().get(position).setSettled("false");
+                            adapter.notifyDataSetChanged();
+                        }
+                    });
+                }
+                snackbar.setActionTextColor(getActivity().getResources().getColor(R.color.theme_yellow));
+                snackbar.show();
+            }
+        };
+        ItemTouchHelper itemTouchhelper2 = new ItemTouchHelper(swipeToSettleCallback);
+        itemTouchhelper2.attachToRecyclerView(recyclerView);
         ItemTouchHelper itemTouchhelper = new ItemTouchHelper(swipeToDeleteCallback);
         itemTouchhelper.attachToRecyclerView(recyclerView);
+
+
     }
 
     public static void updateRecyclerView(ArrayList<ExpenseData> data,double updatedTotalSpentThisMonth,double updatedTotalCategorySum){
