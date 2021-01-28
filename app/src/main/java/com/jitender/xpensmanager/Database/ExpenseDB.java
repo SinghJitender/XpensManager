@@ -616,6 +616,18 @@ public class ExpenseDB extends SQLiteOpenHelper {
         }
     }
 
+    public double getAllExpenseTotalSumByGroup(String group){
+        SQLiteDatabase db = this.getReadableDatabase();
+        try {
+            Cursor cursor = db.rawQuery("select sum("+expenseamount+") from " + tableName+" where "+expensegroup+" = '"+group+"'", null);
+            cursor.moveToNext();
+            return cursor.getDouble(0);
+        }catch (SQLException e){
+            Log.d("GenericExpenseDB","Exception : "+e.toString());
+            return 0.0;
+        }
+    }
+
     public double getMonthTotalForGroup(String groupName, int month, int year){
         SQLiteDatabase db = this.getReadableDatabase();
         try {
@@ -776,6 +788,20 @@ public class ExpenseDB extends SQLiteOpenHelper {
         }catch (SQLException e){
             Log.d("GenericExpenseDB","Exception : "+e.toString());
             return 0;
+        }
+    }
+
+    public double getExpenseSettledAmountByGroup(String group){
+        SQLiteDatabase db = this.getReadableDatabase();
+        try {
+            Cursor cursor = db.rawQuery("select sum("+expensesettleamount+") from " + tableName+" where "+expensegroup+" = '"+group+"' and paidBy = 'Me' and expenseSettled = 'false' ", null);
+            Cursor cursor2 = db.rawQuery("select sum("+expensesettleamount+") from " + tableName+" where "+expensegroup+" = '"+group+"' and paidBy = 'Others' and expenseSettled = 'false' ", null);
+            cursor.moveToNext();
+            cursor2.moveToNext();
+            return (cursor.getDouble(0)-cursor2.getDouble(0));
+        }catch (SQLException e){
+            Log.d("GenericExpenseDB","Exception : "+e.toString());
+            return 0.0;
         }
     }
 
