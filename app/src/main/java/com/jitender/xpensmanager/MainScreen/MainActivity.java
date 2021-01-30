@@ -207,81 +207,85 @@ public class MainActivity extends AppCompatActivity {
             if(newExpenseTotalAmount.getText().toString().equalsIgnoreCase("") || newExpenseTotalAmount.getText() == null) {
                 newExpenseTotalAmount.setError("Amount cannot be blank");
             }else{
-                if(Double.parseDouble(newExpenseTotalAmount.getText().toString()) <= 0) {
-                    newExpenseTotalAmount.setError("Amount cannot be 0 or less");
-                }else{
-                    if(newExpenseDescription.getText().toString().equalsIgnoreCase("") || newExpenseDescription.getText() == null){
-                        newExpenseDescription.setError("Description cannot be blank");
-                    }else {
-                        if(newExpenseSelectCategory.getText().toString().equalsIgnoreCase("Category") || newExpenseSelectCategory.getText() == null) {
-                            newExpenseSelectCategory.setError("Select Category");
-                        }else{
-                            if(!categoryList.contains(newExpenseSelectCategory.getText().toString().trim()) ){
-                                newExpenseSelectCategory.setError("Category must be from dropdown-list");
+                if(newExpenseTotalAmount.getText().toString().equalsIgnoreCase(".")){
+                    newExpenseTotalAmount.setError("Enter valid amount");
+                }else {
+                    if(Double.parseDouble(newExpenseTotalAmount.getText().toString()) <= 0  ) {
+                        newExpenseTotalAmount.setError("Amount cannot be 0 or less");
+                    }else{
+                        if(newExpenseDescription.getText().toString().equalsIgnoreCase("") || newExpenseDescription.getText() == null){
+                            newExpenseDescription.setError("Description cannot be blank");
+                        }else {
+                            if(newExpenseSelectCategory.getText().toString().equalsIgnoreCase("Category") || newExpenseSelectCategory.getText() == null) {
+                                newExpenseSelectCategory.setError("Select Category");
                             }else{
-                                if(newExpenseSelectGroup.getText().toString().equalsIgnoreCase("Group") || newExpenseSelectGroup.getText() == null) {
-                                    newExpenseSelectGroup.setError("Select Group");
+                                if(!categoryList.contains(newExpenseSelectCategory.getText().toString().trim()) ){
+                                    newExpenseSelectCategory.setError("Category must be from dropdown-list");
                                 }else{
-                                    if(!groupList.contains(newExpenseSelectGroup.getText().toString().trim()) ){
-                                        newExpenseSelectGroup.setError("Group must be from dropdown-list");
-                                    }
-                                    else{
-                                        if(newExpenseSelectMode.getText().toString().equalsIgnoreCase("Payment Mode") || newExpenseSelectMode.getText() == null) {
-                                            newExpenseSelectMode.setError("Select Payment Mode");
-                                        }else {
-                                            if (!paymentList.contains(newExpenseSelectMode.getText().toString().trim())) {
-                                                newExpenseSelectMode.setError("Payment Mode must be from dropdown-list");
-                                            } else {
-                                                //All Checks Done
-                                                if (newExpensePaidBy.isChecked() || newExpensePaidBy.isSelected() || newExpensePaidBy.isActivated()) {
-                                                    paidBy = "Me";
+                                    if(newExpenseSelectGroup.getText().toString().equalsIgnoreCase("Group") || newExpenseSelectGroup.getText() == null) {
+                                        newExpenseSelectGroup.setError("Select Group");
+                                    }else{
+                                        if(!groupList.contains(newExpenseSelectGroup.getText().toString().trim()) ){
+                                            newExpenseSelectGroup.setError("Group must be from dropdown-list");
+                                        }
+                                        else{
+                                            if(newExpenseSelectMode.getText().toString().equalsIgnoreCase("Payment Mode") || newExpenseSelectMode.getText() == null) {
+                                                newExpenseSelectMode.setError("Select Payment Mode");
+                                            }else {
+                                                if (!paymentList.contains(newExpenseSelectMode.getText().toString().trim())) {
+                                                    newExpenseSelectMode.setError("Payment Mode must be from dropdown-list");
                                                 } else {
-                                                    paidBy = "Others";
-                                                }
-                                                try {
-                                                    Date date = new SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH).parse(newExpenseDate.getText().toString());
-                                                    double tempAmount = Double.parseDouble(newExpenseTotalAmount.getText().toString());
-                                                    int splitBetween = groupsDB.findSplitBetween(newExpenseSelectGroup.getText().toString().trim());
-                                                    double netAmount = groupsDB.getNetAmountByTitle(newExpenseSelectGroup.getText().toString().trim());
-                                                    double totalAmount = groupsDB.getTotalAmountByTitle(newExpenseSelectGroup.getText().toString().trim());
-                                                    double totalCategoryAmount = categoryDB.getTotalAmountByTitle(newExpenseSelectCategory.getText().toString().trim());
-                                                    double totalModeAmount = paymentsDB.getTotalAmountByMode(newExpenseSelectMode.getText().toString().trim());
-                                                    double settlementAmount = 0;
-                                                    String settled = "false";
-                                                    totalAmount = totalAmount + tempAmount;
-                                                    if (paidBy.equalsIgnoreCase("Me")) {
-                                                        netAmount = netAmount + (tempAmount - ((tempAmount) / splitBetween));
-                                                        settlementAmount = (tempAmount - ((tempAmount) / splitBetween));
+                                                    //All Checks Done
+                                                    if (newExpensePaidBy.isChecked() || newExpensePaidBy.isSelected() || newExpensePaidBy.isActivated()) {
+                                                        paidBy = "Me";
                                                     } else {
-                                                        netAmount = netAmount - ((tempAmount) / splitBetween);
-                                                        settlementAmount = ((tempAmount) / splitBetween);
+                                                        paidBy = "Others";
                                                     }
-                                                    if(newExpenseSelectGroup.getText().toString().trim().equalsIgnoreCase("Personal")){
-                                                        settled = "true";
-                                                    }
-                                                    paymentsDB.updatePaymentAmountByMode(newExpenseSelectMode.getText().toString().trim(),(totalModeAmount + (tempAmount / splitBetween)));
-                                                    groupsDB.updateGroupAmountByTitle(newExpenseSelectGroup.getText().toString().trim(), netAmount, totalAmount);
-                                                    categoryDB.updateCategoryAmountByTitle(newExpenseSelectCategory.getText().toString().trim(), (totalCategoryAmount + (tempAmount / splitBetween)));
-                                                    String result = expenseDB.insertNewExpense(date, Double.parseDouble(newExpenseTotalAmount.getText().toString()), newExpenseDescription.getText().toString(),
-                                                            newExpenseSelectCategory.getText().toString().trim(), paidBy, splitBetween, newExpenseSelectGroup.getText().toString().trim(),
-                                                            newExpenseSelectMode.getText().toString().trim(),settled,settlementAmount);
-                                                    Toast.makeText(getApplicationContext(),result,Toast.LENGTH_SHORT).show();
-                                                    if(result.contains("Created")) {
-                                                        newExpenseTotalAmount.setText("");
-                                                        newExpenseSelectCategory.setText("Category");
-                                                        newExpenseDescription.setText("");
-                                                        newExpenseTotalAmount.requestFocus();
-                                                        newExpenseSelectGroup.setText("Group");
-                                                        newExpenseSelectMode.setText("Payment Mode");
-                                                        newExpensePaidBy.setEnabled(true);
-                                                        updateHomePageData();
-                                                        updateGroupFragmentData();
-                                                        updateCategoryFragmentData();
-                                                        updatePaymentFragmentData();
-                                                    }
+                                                    try {
+                                                        Date date = new SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH).parse(newExpenseDate.getText().toString());
+                                                        double tempAmount = Double.parseDouble(newExpenseTotalAmount.getText().toString());
+                                                        int splitBetween = groupsDB.findSplitBetween(newExpenseSelectGroup.getText().toString().trim());
+                                                        double netAmount = groupsDB.getNetAmountByTitle(newExpenseSelectGroup.getText().toString().trim());
+                                                        double totalAmount = groupsDB.getTotalAmountByTitle(newExpenseSelectGroup.getText().toString().trim());
+                                                        double totalCategoryAmount = categoryDB.getTotalAmountByTitle(newExpenseSelectCategory.getText().toString().trim());
+                                                        double totalModeAmount = paymentsDB.getTotalAmountByMode(newExpenseSelectMode.getText().toString().trim());
+                                                        double settlementAmount = 0;
+                                                        String settled = "false";
+                                                        totalAmount = totalAmount + tempAmount;
+                                                        if (paidBy.equalsIgnoreCase("Me")) {
+                                                            netAmount = netAmount + (tempAmount - ((tempAmount) / splitBetween));
+                                                            settlementAmount = (tempAmount - ((tempAmount) / splitBetween));
+                                                        } else {
+                                                            netAmount = netAmount - ((tempAmount) / splitBetween);
+                                                            settlementAmount = ((tempAmount) / splitBetween);
+                                                        }
+                                                        if(newExpenseSelectGroup.getText().toString().trim().equalsIgnoreCase("Personal")){
+                                                            settled = "true";
+                                                        }
+                                                        paymentsDB.updatePaymentAmountByMode(newExpenseSelectMode.getText().toString().trim(),(totalModeAmount + (tempAmount / splitBetween)));
+                                                        groupsDB.updateGroupAmountByTitle(newExpenseSelectGroup.getText().toString().trim(), netAmount, totalAmount);
+                                                        categoryDB.updateCategoryAmountByTitle(newExpenseSelectCategory.getText().toString().trim(), (totalCategoryAmount + (tempAmount / splitBetween)));
+                                                        String result = expenseDB.insertNewExpense(date, Double.parseDouble(newExpenseTotalAmount.getText().toString()), newExpenseDescription.getText().toString(),
+                                                                newExpenseSelectCategory.getText().toString().trim(), paidBy, splitBetween, newExpenseSelectGroup.getText().toString().trim(),
+                                                                newExpenseSelectMode.getText().toString().trim(),settled,settlementAmount);
+                                                        Toast.makeText(getApplicationContext(),result,Toast.LENGTH_SHORT).show();
+                                                        if(result.contains("Created")) {
+                                                            newExpenseTotalAmount.setText("");
+                                                            newExpenseSelectCategory.setText("Category");
+                                                            newExpenseDescription.setText("");
+                                                            newExpenseTotalAmount.requestFocus();
+                                                            newExpenseSelectGroup.setText("Group");
+                                                            newExpenseSelectMode.setText("Payment Mode");
+                                                            newExpensePaidBy.setEnabled(true);
+                                                            updateHomePageData();
+                                                            updateGroupFragmentData();
+                                                            updateCategoryFragmentData();
+                                                            updatePaymentFragmentData();
+                                                        }
 
-                                                } catch (ParseException e) {
-                                                    Toast.makeText(getApplicationContext(), "Error in parsing date", Toast.LENGTH_SHORT).show();
+                                                    } catch (ParseException e) {
+                                                        Toast.makeText(getApplicationContext(), "Error in parsing date", Toast.LENGTH_SHORT).show();
+                                                    }
                                                 }
                                             }
                                         }
