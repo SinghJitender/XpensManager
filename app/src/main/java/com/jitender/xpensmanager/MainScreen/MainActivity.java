@@ -444,12 +444,18 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        if(totalTimes == 0){
-            totalTimes++;
-            Toast.makeText(getApplicationContext(),"Press again to exit",Toast.LENGTH_SHORT).show();
+        if(!isFABOpen) {
+            toggleFabMenu();
+            totalTimes = 0;
             return;
+        }else {
+            if (totalTimes == 0) {
+                totalTimes++;
+                Toast.makeText(getApplicationContext(), "Press again to exit", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            finish();
         }
-        finish();
         super.onBackPressed();
     }
 
