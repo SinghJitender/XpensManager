@@ -252,10 +252,12 @@ public class MainActivity extends AppCompatActivity {
                                                     if (paidBy.equalsIgnoreCase("Me")) {
                                                         netAmount = netAmount + (tempAmount - ((tempAmount) / splitBetween));
                                                         settlementAmount = (tempAmount - ((tempAmount) / splitBetween));
-                                                        settled = "true";
                                                     } else {
                                                         netAmount = netAmount - ((tempAmount) / splitBetween);
                                                         settlementAmount = ((tempAmount) / splitBetween);
+                                                    }
+                                                    if(newExpenseSelectGroup.getText().toString().trim().equalsIgnoreCase("Personal")){
+                                                        settled = "true";
                                                     }
                                                     paymentsDB.updatePaymentAmountByMode(newExpenseSelectMode.getText().toString().trim(),(totalModeAmount + (tempAmount / splitBetween)));
                                                     groupsDB.updateGroupAmountByTitle(newExpenseSelectGroup.getText().toString().trim(), netAmount, totalAmount);
