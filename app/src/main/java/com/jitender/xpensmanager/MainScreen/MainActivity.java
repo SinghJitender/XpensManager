@@ -331,7 +331,7 @@ public class MainActivity extends AppCompatActivity {
                             }else {
                                 //All Checks Completed
                                 String result = groupsDB.insertNewGroup(titleValue,Integer.parseInt(noOfPersons),Double.parseDouble(limit));
-                                //Toast.makeText(getApplicationContext(), result, Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getApplicationContext(), result, Toast.LENGTH_SHORT).show();
                                 if(result.contains("Created")) {
                                     newGroupTitle.setText("");
                                     newGroupLimit.setText("");
