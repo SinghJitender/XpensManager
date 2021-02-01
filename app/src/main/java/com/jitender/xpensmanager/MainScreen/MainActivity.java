@@ -262,20 +262,23 @@ public class MainActivity extends AppCompatActivity {
                                                     paymentsDB.updatePaymentAmountByMode(newExpenseSelectMode.getText().toString().trim(),(totalModeAmount + (tempAmount / splitBetween)));
                                                     groupsDB.updateGroupAmountByTitle(newExpenseSelectGroup.getText().toString().trim(), netAmount, totalAmount);
                                                     categoryDB.updateCategoryAmountByTitle(newExpenseSelectCategory.getText().toString().trim(), (totalCategoryAmount + (tempAmount / splitBetween)));
-                                                    expenseDB.insertNewExpense(date, Double.parseDouble(newExpenseTotalAmount.getText().toString()), newExpenseDescription.getText().toString(),
+                                                    String result = expenseDB.insertNewExpense(date, Double.parseDouble(newExpenseTotalAmount.getText().toString()), newExpenseDescription.getText().toString(),
                                                             newExpenseSelectCategory.getText().toString().trim(), paidBy, splitBetween, newExpenseSelectGroup.getText().toString().trim(),
                                                             newExpenseSelectMode.getText().toString().trim(),settled,settlementAmount);
-                                                    newExpenseTotalAmount.setText("");
-                                                    newExpenseSelectCategory.setText("Category");
-                                                    newExpenseDescription.setText("");
-                                                    newExpenseTotalAmount.requestFocus();
-                                                    newExpenseSelectGroup.setText("Group");
-                                                    newExpenseSelectMode.setText("Payment Mode");
-                                                    newExpensePaidBy.setEnabled(true);
-                                                    updateHomePageData();
-                                                    updateGroupFragmentData();
-                                                    updateCategoryFragmentData();
-                                                    updatePaymentFragmentData();
+                                                    Toast.makeText(getApplicationContext(),result,Toast.LENGTH_SHORT).show();
+                                                    if(result.contains("Created")) {
+                                                        newExpenseTotalAmount.setText("");
+                                                        newExpenseSelectCategory.setText("Category");
+                                                        newExpenseDescription.setText("");
+                                                        newExpenseTotalAmount.requestFocus();
+                                                        newExpenseSelectGroup.setText("Group");
+                                                        newExpenseSelectMode.setText("Payment Mode");
+                                                        newExpensePaidBy.setEnabled(true);
+                                                        updateHomePageData();
+                                                        updateGroupFragmentData();
+                                                        updateCategoryFragmentData();
+                                                        updatePaymentFragmentData();
+                                                    }
 
                                                 } catch (ParseException e) {
                                                     Toast.makeText(getApplicationContext(), "Error in parsing date", Toast.LENGTH_SHORT).show();
