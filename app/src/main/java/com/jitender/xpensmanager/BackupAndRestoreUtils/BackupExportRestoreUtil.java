@@ -6,6 +6,9 @@ import android.net.Uri;
 import android.os.Environment;
 import android.util.Log;
 import android.widget.Toast;
+
+import com.jitender.xpensmanager.Database.PaymentsDB;
+import com.jitender.xpensmanager.Database.PaymentsData;
 import com.jitender.xpensmanager.R;
 
 import androidx.core.content.FileProvider;
@@ -44,9 +47,11 @@ public class BackupExportRestoreUtil {
     private ExpenseDB expenseDB;
     private CategoryDB categoryDB;
     private GroupDB groupDB;
+    private PaymentsDB paymentsDB;
     private ArrayList<ExpenseData> expenseData = new ArrayList<>();
     private ArrayList<CategoryData> categoryData = new ArrayList<>();
     private ArrayList<GroupData> groupData = new ArrayList<>();
+    private ArrayList<PaymentsData> paymentsData = new ArrayList<>();
     private Context context;
     private SharedPreferences sharedPreferences;
     private SharedPreferences.Editor editor;
@@ -61,9 +66,11 @@ public class BackupExportRestoreUtil {
         expenseDB = new ExpenseDB(context);
         categoryDB = new CategoryDB(context);
         groupDB = new GroupDB(context);
+        paymentsDB = new PaymentsDB(context);
         expenseData.addAll(expenseDB.findAll());
         categoryData.addAll(categoryDB.findAll());
         groupData.addAll(groupDB.findAll());
+        paymentsData.addAll(paymentsDB.findAll());
         sharedPreferences = context.getSharedPreferences(context.getString(R.string.preference_file_key),Context.MODE_PRIVATE);
         editor = sharedPreferences.edit();
         encrypt = Encryption.getDefault(key,salt,iv);
@@ -252,6 +259,34 @@ public class BackupExportRestoreUtil {
 
         }
 
+        HSSFSheet paymentSheet = workbook.createSheet("Mode Of Payments");
+
+        row = paymentSheet.createRow(0);
+        cell = row.createCell(0);
+        cell.setCellValue("ID");
+        cell = row.createCell(1);
+        cell.setCellValue("Mode name");
+        cell = row.createCell(2);
+        cell.setCellValue("Total Spend");
+        cell = row.createCell(3);
+        cell.setCellValue("Mode Limit");
+
+        for(int i=0;i<paymentsData.size();i++){
+            row = paymentSheet.createRow(i+1);
+            cell = row.createCell(0);
+            cell.setCellValue(paymentsData.get(i).getId());
+
+            cell = row.createCell(1);
+            cell.setCellValue(paymentsData.get(i).getMode());
+
+            cell = row.createCell(2);
+            cell.setCellValue(paymentsData.get(i).getTotalmodeSpend());
+
+            cell = row.createCell(3);
+            cell.setCellValue(paymentsData.get(i).getLimit());
+
+        }
+
         try{
             if (isExternalStorageWritable() && isExternalStorageReadable()) {
                 File dir = new File(context.getExternalFilesDir(null).getAbsolutePath(), "/XpensManager/ExcelExports/");
@@ -404,9 +439,12 @@ public class BackupExportRestoreUtil {
                         } else if (tablename.equals(CategoryDB.categorydb_table)) {
                             flag = 2;
                             categoryDB.deleteAll();
+                        } else if (tablename.equals(PaymentsDB.paymentsdb_table)) {
+                            flag = 3;
+                            paymentsDB.deleteAll();
                         } else if (tablename.equals("Shared-Preferences")) {
                             Log.d("Restore Data", "Shared Preferences");
-                            flag = 3;
+                            flag = 4;
                         } else {
                             Log.d("Restore Data", "Some Issue in data");
                         }
@@ -420,7 +458,9 @@ public class BackupExportRestoreUtil {
                             groupDB.insertNewGroupFromBackup(actualData[1], Integer.parseInt(actualData[2]), Double.parseDouble(actualData[3]), Double.parseDouble(actualData[4]), Double.parseDouble(actualData[5]));
                         else if (flag == 2)
                             categoryDB.insertNewCategoryFromBackup(actualData[1], Double.parseDouble(actualData[2]), Double.parseDouble(actualData[3]));
-                        else if (flag == 3) {
+                        else if (flag == 3)
+                            paymentsDB.insertNewPaymentFromBackup(actualData[1], Double.parseDouble(actualData[2]), Double.parseDouble(actualData[3]));
+                        else if (flag == 4) {
                             //shared preferences
                             if (actualData[2].contains("Boolean")) {
                                 editor.putBoolean(actualData[0], Boolean.parseBoolean(actualData[1]));
@@ -467,7 +507,10 @@ public class BackupExportRestoreUtil {
                     expenseData.get(i).getPaidBy() + "||" +
                     expenseData.get(i).getCategory() + "||" +
                     expenseData.get(i).getSplitAmount() + "||" +
-                    expenseData.get(i).getGroup() + "\n");
+                    expenseData.get(i).getGroup() + "||" +
+                    expenseData.get(i).getModeOfPayment() + "||" +
+                    expenseData.get(i).getSettled() + "||" +
+                    expenseData.get(i).getSettledAmount() + "\n");
         }
         data.append("***END***\n");
         data.append("Tablename -:- " + GroupDB.groupdb_table);
@@ -488,6 +531,15 @@ public class BackupExportRestoreUtil {
                     categoryData.get(i).getCategory() + "||" +
                     categoryData.get(i).getLimit() + "||" +
                     categoryData.get(i).getTotalCategorySpend() + "\n");
+        }
+        data.append("***END***\n");
+        data.append("Tablename -:- " + PaymentsDB.paymentsdb_table);
+        data.append("\n***START***\n");
+        for (int i = 0; i < paymentsData.size(); i++) {
+            data.append(paymentsData.get(i).getId() + "||" +
+                    paymentsData.get(i).getMode() + "||" +
+                    paymentsData.get(i).getLimit() + "||" +
+                    paymentsData.get(i).getTotalmodeSpend() + "\n");
         }
         data.append("***END***\n");
         Map<String,?> sharedPref = sharedPreferences.getAll();
