@@ -805,6 +805,14 @@ public class ExpenseDB extends SQLiteOpenHelper {
         }
     }
 
+    public boolean updateExpenseSettled(int id,String value) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(expensesettled, value);
+        db.update(tableName, contentValues, "id = ? ", new String[] { id+"" } );
+        return true;
+    }
+
     public static String getDayOfWeek(Date date, Locale locale) {
         DateFormat formatter = new SimpleDateFormat("EEEE", locale);
         return formatter.format(date);
