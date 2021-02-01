@@ -173,7 +173,7 @@ public class Stats extends Fragment {
                     int i = 0;
                     for(String key:categoryList.keySet()){
                         if(i<5) {
-                            categoryTextViewList.get(i).setText("#"+(i+1)+"  "+key+"  - " + SplashScreenActivity.cSymbol+ " "+ categoryList.get(key));
+                            categoryTextViewList.get(i).setText("#"+(i+1)+"  "+key+"  - " + SplashScreenActivity.cSymbol+ " "+ new DecimalFormat("00.00").format(categoryList.get(key)));
                         }else{
                             break;
                         }
@@ -217,7 +217,7 @@ public class Stats extends Fragment {
                     dayName.setText("Average Spends On Day "+currentDay+" Of Month");
                     if(weekCount>0 && weekList.containsKey(currentDayOfWeek)){
                         //Log.d("Stats - Week Day Avg",(weekList.get(currentDayOfWeek)/weekCount)+"");
-                        currentWeekAverage.setText(SplashScreenActivity.cSymbol+" "+(weekList.get(currentDayOfWeek)/weekCount)+"");
+                        currentWeekAverage.setText(SplashScreenActivity.cSymbol+" "+new DecimalFormat("00.00").format(weekList.get(currentDayOfWeek)/weekCount)+"");
                     }else{
                         // No Value Present in db
                         currentWeekAverage.setText("Not enough data to calculate");
@@ -226,7 +226,7 @@ public class Stats extends Fragment {
 
                     if(monthCount>0 && yearList.containsKey(currentMonth)){
                         //Log.d("Stats - Month Avg",(yearList.get(currentMonth)/monthCount)+"");
-                        currentMonthAverage.setText(SplashScreenActivity.cSymbol+" "+(yearList.get(currentMonth)/monthCount)+"");
+                        currentMonthAverage.setText(SplashScreenActivity.cSymbol+" "+new DecimalFormat("00.00").format(yearList.get(currentMonth)/monthCount)+"");
                     }else{
                         // No Value Present in db
                         currentMonthAverage.setText("Not enough data to calculate");
@@ -235,7 +235,7 @@ public class Stats extends Fragment {
 
                     if(dayCount>0 && dayList.containsKey(currentDay)){
                         //Log.d("Stats - Day Avg",(dayList.get(currentDay)/dayCount)+"");
-                        currentDayAverage.setText(SplashScreenActivity.cSymbol+" "+(dayList.get(currentDay)/dayCount)+"");
+                        currentDayAverage.setText(SplashScreenActivity.cSymbol+" "+new DecimalFormat("00.00").format(dayList.get(currentDay)/dayCount)+"");
                     }else{
                         // No Value Present in db
                         currentDayAverage.setText("Not enough data to calculate");
@@ -245,7 +245,7 @@ public class Stats extends Fragment {
                     if(totalDistinctMonthCount>0){
                         Log.d("All Time Monthly Avg", (totalSpends/totalDistinctMonthCount)+"");
                         double monthlyAverageCal = (totalSpends/totalDistinctMonthCount);
-                        overallMonthlyExpense.setText(SplashScreenActivity.cSymbol+" "+monthlyAverageCal+"");
+                        overallMonthlyExpense.setText(SplashScreenActivity.cSymbol+" "+new DecimalFormat("00.00").format(monthlyAverageCal));
                         if(SplashScreenActivity.salary>0){
                             percentageOfMonthlySalary.setVisibility(View.VISIBLE);
                             percentageOfMonthlySalaryText.setVisibility(View.VISIBLE);
