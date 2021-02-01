@@ -395,7 +395,7 @@ public class MainActivity extends AppCompatActivity {
                     }
                     else{
                         String result = paymentsDB.insertNewPaymentMode(modeValue,Double.parseDouble(modeLimitVal));
-                        //Toast.makeText(getApplicationContext(),result,Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(),result,Toast.LENGTH_SHORT).show();
                         if(result.contains("Created")) {
                             modeName.setText("");
                             modeName.requestFocus();
