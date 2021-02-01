@@ -365,7 +365,7 @@ public class MainActivity extends AppCompatActivity {
                     }
                     else{
                         String result = categoryDB.insertNewCategory(categoryValue,Double.parseDouble(categoryLimitVal));
-                        //Toast.makeText(getApplicationContext(),result,Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(),result,Toast.LENGTH_SHORT).show();
                         if(result.contains("Created")) {
                             categoryName.setText("");
                             categoryName.requestFocus();
