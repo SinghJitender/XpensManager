@@ -261,8 +261,10 @@ public class Home extends Fragment {
             @Override
             public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int i) {
                 final int position = viewHolder.getAdapterPosition();
+                Log.d("Item Position",position+"");
                 final ExpenseData item = adapter.getData().get(position);
-                String text = ""; boolean setUndo = true;
+                final String isSettled = item.getSettled();
+                String text; boolean setUndo = true;
                 if(item.getSettled().equalsIgnoreCase("true")){
                     text = "Expense already settled";
                     setUndo = false;
@@ -286,8 +288,15 @@ public class Home extends Fragment {
                                 super.onDismissed(transientBottomBar, event);
                                 if (event == Snackbar.Callback.DISMISS_EVENT_TIMEOUT || event == Snackbar.Callback.DISMISS_EVENT_SWIPE ||
                                         event == Snackbar.Callback.DISMISS_EVENT_MANUAL || event == Snackbar.Callback.DISMISS_EVENT_CONSECUTIVE) {
-                                    // Snackbar closed on its own or swiped to close
-                                    //Expense Settled Updates
+                                    Log.d("Settling Expense","Amount : "+item.getSettledAmount() + " ID : "+ item.getId());
+                                    if(isSettled.equalsIgnoreCase("false")) {
+                                        Log.d("Settled Expense",item.getSettledAmount() + " Settled");
+                                        mExecutor.execute(() -> {
+                                            expenseDB.updateExpenseSettled(item.getId(), "true");
+                                            double totalSettleAmount = expenseDB.getExpenseSettledAmountByGroup(item.getGroup());
+                                            groupsDB.updateGroupNetAmountByTitle(item.getGroup(), totalSettleAmount);
+                                        });
+                                    }
                                 }
                             }
                         });
