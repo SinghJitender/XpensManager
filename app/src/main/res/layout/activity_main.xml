@@ -223,7 +223,7 @@
                         android:background="@null"
                         android:imeOptions="actionDone"
                         android:hint="Spend Limit"
-                        android:inputType="numberDecimal"
+                        android:inputType="numberg"
                         android:nextFocusForward="@id/createnewgroup"
                         android:paddingLeft="10dp"
                         android:singleLine="true"
