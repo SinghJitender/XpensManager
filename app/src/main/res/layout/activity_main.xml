@@ -87,7 +87,7 @@
                         android:layout_marginBottom="3dp"
                         android:layout_weight="6"
                         android:background="@null"
-                        android:inputType="numberDecimal"
+                        android:inputType="number"
                         android:hint="Limit"
                         android:layout_gravity="center"
                         android:paddingLeft="10dp"
