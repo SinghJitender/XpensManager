@@ -4,587 +4,1069 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_gravity="center"
-    android:gravity="center"
-    android:background="@xml/repeatshattered"
+    android:background="@color/white"
+    android:id="@+id/mainLayout"
     tools:context="com.jitender.xpensmanager.SetupScreen.Setup">
 
+    <!-- Main Holder -->
     <LinearLayout
+        android:id="@+id/setupLayoutHolder"
         android:layout_width="match_parent"
+        android:layout_centerInParent="true"
+        android:visibility="gone"
         android:layout_height="wrap_content"
-        android:gravity="center"
         android:orientation="vertical">
-        <!--<TextView
+        <LinearLayout
+            android:id="@+id/icons"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
-            android:layout_marginBottom="10dp"
-            android:background="@null"
-            android:paddingLeft="20dp"
-            android:text="Setup"
-            android:textColor="@color/theme_blue_variant"
-            android:textSize="25sp"
-            android:textStyle="bold"/>
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="0.5dp"
-            android:elevation="2dp"
-            android:layout_marginRight="3dp"
-            android:background="@color/theme_grey"/>-->
-        <ScrollView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-            <LinearLayout
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/profile_image"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:src="@drawable/xpensmanagericon"
+                app:civ_border_color="#FF000000"
+                app:civ_border_width="0dp"
+                android:elevation="10dp"
+                tools:layout_editor_absoluteX="137dp"
+                tools:layout_editor_absoluteY="-7dp" />
+            <ImageView
+                android:layout_marginTop="10dp"
                 android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:src="@drawable/icontext4"
+                android:scaleType="fitCenter"
+                android:elevation="10dp"
+                android:layout_below="@+id/profile_image"/>
+            <TextView
+                android:gravity="center"
+                android:layout_marginTop="10dp"
+                android:textSize="15sp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Select One Option"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:weightSum="10"
+            android:visibility="visible"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:orientation="horizontal">
+            <LinearLayout
+                android:id="@+id/restore"
+                android:clickable="true"
+                android:layout_width="0dp"
+                android:layout_weight="5"
                 android:layout_height="match_parent"
-                android:orientation="vertical">
-               <!-- <androidx.cardview.widget.CardView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:visibility="visible"
-                    android:elevation="5dp"
-                    app:cardUseCompatPadding="true"
-                    android:layout_margin="5dp"
-                    app:cardBackgroundColor="@color/white">-->
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="5dp"
-                        android:orientation="vertical">
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginBottom="5dp"
-                            android:orientation="horizontal"
-                            android:weightSum="20">
-                            <TextView
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="5dp"
-                                android:layout_weight="20"
-                                android:background="@null"
-                                android:paddingLeft="20dp"
-                                android:paddingRight="20dp"
-                                android:layout_marginBottom="5dp"
-                                android:text="Restore"
-                                android:layout_gravity="center"
-                                android:gravity="center"
-                                android:textColor="@color/theme_blue_variant"
-                                android:textSize="25sp"
-                                android:textStyle="normal"/>
-                        </LinearLayout>
-
-                        <TextView
-                            android:id="@+id/restoreInfo"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="3dp"
-                            android:layout_marginBottom="3dp"
-                            android:background="@null"
-                            android:focusedByDefault="true"
-                            android:paddingLeft="20dp"
-                            android:text="This info is only stored on your device offline and used for doing expense analysis or providing suggestions."
-                            android:textSize="12sp"
-                            android:textStyle="italic" />
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginBottom="5dp"
-                            android:orientation="vertical"
-                            android:layout_gravity="center"
-                            android:gravity="center">
-                            <Button
-                                android:id="@+id/restoreFromBackup"
-                                android:gravity="center"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="Restore From Backup"
-                                android:layout_marginTop="10dp"
-                                android:layout_marginRight="10dp"
-                                android:layout_marginLeft="10dp"
-                                android:textColor="@color/white"
-                                android:backgroundTint="@color/theme_blue_variant"
-                                android:textSize="12sp" />
-
-                            <Button
-                                android:id="@+id/restoreFromFile"
-                                android:gravity="center"
-                                android:clickable="true"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="Select Restore File"
-                                android:layout_marginRight="10dp"
-                                android:layout_marginLeft="10dp"
-                                android:textColor="@color/white"
-                                android:backgroundTint="@color/theme_blue_variant"
-                                android:textSize="12sp" />
-                        </LinearLayout>
-
-                    </LinearLayout>
-               <!-- </androidx.cardview.widget.CardView>-->
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:weightSum="23"
-                    android:layout_gravity="center"
-                    android:layout_marginTop="5dp"
-                    android:layout_marginBottom="5dp"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginRight="10dp"
-                    android:gravity="center"
-                    android:orientation="horizontal">
-                    <View
-                        android:layout_width="0dp"
-                        android:layout_weight="10"
-                        android:layout_height="1dp"
-                        android:layout_marginRight="3dp"
-                        android:background="@color/theme_grey"/>
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_weight="3"
-                        android:layout_height="wrap_content"
-                        android:text="OR"
-                        android:textStyle="bold"
-                        android:alpha="0.8"
-                        android:textSize="20sp"
-                        android:layout_gravity="center"
-                        android:gravity="center"/>
-
-                    <View
-                        android:layout_width="0dp"
-                        android:layout_weight="10"
-                        android:layout_height="1dp"
-                        android:layout_marginLeft="3dp"
-                        android:background="@color/theme_grey"/>
-
-                </LinearLayout>
-              <!--  <View
-                    android:layout_width="match_parent"
-                    android:layout_height="0.5dp"
-                    android:layout_marginTop="5dp"
-                    android:layout_marginBottom="5dp"
-                    android:background="@color/theme_grey"/>-->
-
-             <!--   <androidx.cardview.widget.CardView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:visibility="visible"
-                    android:elevation="5dp"
-                    app:cardUseCompatPadding="true"
-                    android:layout_margin="5dp"
-                    app:cardBackgroundColor="@color/white">-->
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="5dp"
-                        android:orientation="vertical">
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginBottom="5dp"
-                            android:orientation="horizontal"
-                            android:weightSum="20">
-                            <TextView
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="5dp"
-                                android:layout_weight="20"
-                                android:background="@null"
-                                android:paddingLeft="20dp"
-                                android:paddingRight="20dp"
-                                android:layout_marginBottom="5dp"
-                                android:text="Quick Setup"
-                                android:layout_gravity="center"
-                                android:gravity="center"
-                                android:textColor="@color/theme_blue_variant"
-                                android:textSize="25sp"
-                                android:textStyle="normal"/>
-                        </LinearLayout>
-                        <TextView
-                            android:id="@+id/quickQuestionText"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="3dp"
-                            android:layout_marginBottom="3dp"
-                            android:background="@null"
-                            android:textStyle="italic"
-                            android:focusedByDefault="true"
-                            android:text="This info is only stored on your device offline and used for doing expense analysis or providing suggestions."
-                            android:paddingLeft="20dp"
-                            android:textSize="12sp"/>
-                        <TextView
-                            android:id="@+id/currency"
-                            android:gravity="center"
-                            android:clickable="true"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="10dp"
-                            android:layout_marginBottom="10dp"
-                            android:hint="Select Currency*"
-                            android:visibility="visible"
-                            android:textSize="18sp" />
-                        <View
-                            android:layout_width="match_parent"
-                            android:layout_height="0.5dp"
-                            android:background="@color/theme_grey"/>
-
-                            <TextView
-                                android:id="@+id/age"
-                                android:gravity="center"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="10dp"
-                                android:layout_marginBottom="10dp"
-                                android:hint="Select DOB"
-                                android:background="@null"
-                                android:clickable="true"
-                                android:inputType="number"
-                                android:textSize="18sp" />
-
-
-                        <View
-                            android:layout_width="match_parent"
-                            android:layout_height="0.5dp"
-                            android:layout_marginTop="2dp"
-                            android:layout_marginBottom="2dp"
-                            android:background="@color/theme_grey"/>
-
-                        <EditText
-                            android:id="@+id/salary"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="10dp"
-                            android:layout_marginBottom="10dp"
-                            android:background="@null"
-                            android:gravity="center"
-                            android:hint="Monthly Earnings?"
-                            android:inputType="number"
-                            android:textSize="18sp"
-                            android:visibility="visible" />
-                        <Button
-                            android:id="@+id/completeSetup"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:gravity="center"
-                            android:layout_gravity="right"
-                            android:layout_marginRight="10dp"
-                            android:layout_marginTop="10dp"
-                            android:layout_marginBottom="5dp"
-                            android:elevation="5dp"
-                            android:backgroundTint="@color/theme_blue_variant"
-                            android:text="Next"/>
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="3dp"
-                            android:background="@null"
-                            android:textStyle="italic"
-                            android:focusedByDefault="true"
-                            android:text="*Mandatory Fields "
-                            android:paddingLeft="20dp"
-                            android:textSize="12sp"/>
-                    </LinearLayout>
-
-              <!--  </androidx.cardview.widget.CardView>-->
-
-              <!--  <androidx.cardview.widget.CardView
-                    xmlns:android="http://schemas.android.com/apk/res/android"
-                    xmlns:app="http://schemas.android.com/apk/res-auto"
-                    android:id="@+id/createnewcategory"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:visibility="gone"
-                    android:elevation="5dp"
-                    app:cardUseCompatPadding="true"
-                    android:layout_margin="5dp"
-                    app:cardBackgroundColor="@color/white">-->
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:gravity="center"
-                        android:layout_margin="5dp"
-                        android:visibility="gone"
-                        android:orientation="vertical">
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginBottom="5dp"
-                            android:orientation="horizontal"
-                            android:weightSum="20">
-                            <TextView
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="5dp"
-                                android:layout_weight="20"
-                                android:background="@null"
-                                android:paddingLeft="20dp"
-                                android:text="Add Category (Optional)"
-                                android:textColor="@color/theme_blue_variant"
-                                android:textSize="20sp"
-                                android:textStyle="normal"/>
-                        </LinearLayout>
-                        <TextView
-                            android:id="@+id/categoryText"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="3dp"
-                            android:layout_marginBottom="3dp"
-                            android:textStyle="italic"
-                            android:background="@null"
-                            android:focusedByDefault="true"
-                            android:text="This will help you analyze where you spend the most. Category should be unique. You can be more generic while specifying, for example - Food, Travel, Fuel or you be more specific like Fruits, Vegetables, Metro, Bus, Petrol, Diesel. "
-                            android:paddingLeft="20dp"
-                            android:paddingRight="20dp"
-                            android:textSize="12sp"/>
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="horizontal"
-                            android:layout_marginTop="5dp"
-                            android:weightSum="20">
-                            <EditText
-                                android:id="@+id/categoryName"
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="3dp"
-                                android:layout_marginBottom="3dp"
-                                android:layout_weight="14"
-                                android:background="@null"
-                                android:focusedByDefault="true"
-                                android:hint="Category"
-                                android:paddingLeft="20dp"
-                                android:singleLine="true"
-                                android:textSize="18sp"
-                                android:textStyle="bold"/>
-                            <View
-                                android:layout_width="0.5dp"
-                                android:layout_height="match_parent"
-                                android:background="@color/theme_grey"/>
-                            <EditText
-                                android:id="@+id/categoryLimit"
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="3dp"
-                                android:layout_marginBottom="3dp"
-                                android:layout_weight="6"
-                                android:background="@null"
-                                android:inputType="numberDecimal"
-                                android:hint="Limit"
-                                android:layout_gravity="center"
-                                android:paddingLeft="10dp"
-                                android:singleLine="true"
-                                android:textSize="18sp"
-                                android:textStyle="normal"/>
-                        </LinearLayout>
-                        <View
-                            android:layout_width="match_parent"
-                            android:layout_height="0.5dp"
-                            android:layout_marginTop="2dp"
-                            android:layout_marginBottom="2dp"
-                            android:background="@color/theme_grey"/>
-                        <Button
-                            android:id="@+id/createCategory"
-                            android:layout_width="100dp"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="right"
-                            android:layout_marginTop="10dp"
-                            android:backgroundTint="@color/theme_blue_variant"
-                            android:text="Add"
-                            />
-
-                    </LinearLayout>
-<!--
-                </androidx.cardview.widget.CardView>-->
-
+                android:padding="5dp"
+                android:layout_gravity="center"
+                android:gravity="center">
                 <androidx.cardview.widget.CardView
-                    xmlns:android="http://schemas.android.com/apk/res/android"
-                    xmlns:app="http://schemas.android.com/apk/res-auto"
-                    android:id="@+id/createnewgroup"
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
+                    android:layout_weight="5"
+                    android:clickable="false"
                     android:layout_height="wrap_content"
-                    android:visibility="gone"
                     app:cardUseCompatPadding="true"
-                    android:layout_margin="5dp"
                     android:elevation="5dp"
-                    app:cardBackgroundColor="@color/white">
+                    android:backgroundTint="@color/theme_blue_variant"
+                    app:cardCornerRadius="10dp">
                     <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_margin="5dp"
-                        android:gravity="center"
-                        android:orientation="vertical">
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginBottom="2dp"
-                            android:orientation="horizontal"
-                            android:weightSum="20">
-                            <TextView
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="20"
-                                android:background="@null"
-                                android:paddingLeft="20dp"
-                                android:text="Create Group (Optional)"
-                                android:textColor="@color/theme_blue_variant"
-                                android:textSize="20sp"
-                                android:textStyle="normal"/>
-                        </LinearLayout>
+                        android:orientation="vertical"
+                        android:clickable="false"
+                        android:padding="10dp"
+                        android:layout_height="match_parent">
+                        <ImageView
+                            android:layout_gravity="center"
+                            android:layout_width="50dp"
+                            android:clickable="false"
+                            android:layout_height="50dp"
+                            android:padding="5dp"
+                            android:src="@drawable/setup_restore"/>
                         <TextView
-                            android:id="@+id/groupText"
                             android:layout_width="match_parent"
+                            android:clickable="false"
                             android:layout_height="wrap_content"
-                            android:layout_marginBottom="3dp"
-                            android:background="@null"
-                            android:focusedByDefault="true"
-                            android:text="If you share your expenses, Sepcifying a group will help in segregating them. Group Name should be unique. We have already created one group for your personal expenses named 'Personal'  "
-                            android:paddingLeft="20dp"
-                            android:paddingRight="20dp"
-                            android:textStyle="italic"
-                            android:textSize="12sp"/>
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="horizontal"
-                            android:weightSum="20">
-                            <EditText
-                                android:id="@+id/title"
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="3dp"
-                                android:layout_marginBottom="3dp"
-                                android:layout_weight="20"
-                                android:background="@null"
-                                android:focusedByDefault="true"
-                                android:hint="Group Name"
-                                android:nextFocusForward="@id/noofpeps"
-                                android:paddingLeft="20dp"
-                                android:singleLine="true"
-                                android:textSize="18sp"
-                                android:textStyle="bold"/>
-                        </LinearLayout>
-                        <View
-                            android:layout_width="match_parent"
-                            android:layout_height="0.5dp"
-                            android:layout_marginTop="2dp"
-                            android:layout_marginBottom="2dp"
-                            android:background="@color/theme_grey"/>
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="horizontal"
-                            android:weightSum="20">
-                            <EditText
-                                android:id="@+id/noofpeps"
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="5dp"
-                                android:layout_marginEnd="5dp"
-                                android:layout_marginBottom="5dp"
-                                android:layout_weight="10"
-                                android:background="@null"
-                                android:hint="No of persons"
-                                android:inputType="number"
-                                android:nextFocusForward="@id/limit"
-                                android:paddingLeft="20sp"
-                                android:singleLine="true"
-                                android:textSize="18sp"/>
-                            <View
-                                android:layout_width="0.5dp"
-                                android:layout_height="match_parent"
-                                android:background="@color/theme_grey"/>
-                            <EditText
-                                android:id="@+id/limit"
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_marginStart="5dp"
-                                android:layout_marginTop="5dp"
-                                android:layout_marginEnd="5dp"
-                                android:layout_marginBottom="5dp"
-                                android:layout_weight="10"
-                                android:background="@null"
-                                android:hint="Monthly Limit"
-                                android:inputType="numberDecimal"
-                                android:nextFocusForward="@id/createnewgroup"
-                                android:paddingLeft="10dp"
-                                android:singleLine="true"
-                                android:textSize="18sp"/>
-                        </LinearLayout>
-                        <View
-                            android:layout_width="match_parent"
-                            android:layout_height="0.5dp"
-                            android:layout_marginTop="2dp"
-                            android:layout_marginBottom="2dp"
-                            android:background="@color/theme_grey"/>
-                        <Button
-                            android:id="@+id/create"
-                            android:layout_width="100dp"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="right"
-                            android:layout_marginTop="3dp"
-                            android:backgroundTint="@color/theme_blue_variant"
-                            android:text="Add"
-                            />
-
+                            android:text="Restore"
+                            android:textColor="@color/white"
+                            android:layout_gravity="center"
+                            android:padding="5dp"
+                            android:gravity="center"
+                            android:textSize="18sp"/>
                     </LinearLayout>
 
                 </androidx.cardview.widget.CardView>
-
-
             </LinearLayout>
-        </ScrollView>
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_weight="5"
+                android:layout_height="match_parent"
+                android:padding="5dp"
+                android:layout_gravity="center"
+                android:gravity="center">
+                <androidx.cardview.widget.CardView
+                    android:layout_width="0dp"
+                    android:layout_weight="5"
+                    android:layout_height="wrap_content"
+                    app:cardUseCompatPadding="true"
+                    android:elevation="5dp"
+                    android:backgroundTint="@color/theme_yellow"
+                    app:cardCornerRadius="10dp">
+                    <LinearLayout
+                        android:id="@+id/quickSetup"
+                        android:layout_width="match_parent"
+                        android:orientation="vertical"
+                        android:padding="10dp"
+                        android:clickable="true"
+                        android:layout_height="match_parent">
+                        <ImageView
+                            android:clickable="false"
+                            android:layout_gravity="center"
+                            android:layout_width="50dp"
+                            android:layout_height="50dp"
+                            android:padding="5dp"
+                            android:src="@drawable/setup_quicksetup"/>
+                        <TextView
+                            android:clickable="false"
+                            android:duplicateParentState="true"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:padding="5dp"
+                            android:text="Quick Setup"
+                            android:textColor="@color/white"
+                            android:layout_gravity="center"
+                            android:gravity="center"
+                            android:textSize="18sp"/>
+                    </LinearLayout>
+
+                </androidx.cardview.widget.CardView>
+            </LinearLayout>
+
+        </LinearLayout>
     </LinearLayout>
 
 
+    <!-- Restore Page Holder -->
     <LinearLayout
-        android:id="@+id/restoringLayout"
-        android:visibility="gone"
-        android:orientation="vertical"
+        android:id="@+id/restorelayout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_gravity="center"
-        android:gravity="center"
-        android:clickable="true"
-        android:elevation="30dp"
-        android:background="#B3000000">
-        <TextView
-            android:textColor="@color/white"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:textSize="23sp"
-            android:text="Restoring Data"/>
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/white"
-            android:gravity="center"
-            android:paddingBottom="5dp"
-            android:paddingTop="3dp"
-            android:textSize="16sp"
-            android:text="This might take a few minutes" />
-        <ProgressBar
-            style="?android:attr/progressBarStyleHorizontal"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        android:layout_centerInParent="true"
+        android:visibility="visible"
+        android:orientation="vertical">
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginRight="10dp"
-            android:layout_marginLeft="10dp"
-            android:id="@+id/progress"
-            android:layout_centerHorizontal="true"
-            android:layout_centerVertical="true"
-            android:indeterminate="true"
-            />
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="2dp"
+            android:orientation="vertical"
+            android:weightSum="20">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:layout_weight="20"
+                android:background="@null"
+                android:paddingLeft="20dp"
+                android:paddingRight="20dp"
+                android:text="Welcome Back!"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:textColor="@color/theme_blue_variant"
+                android:textSize="25sp"
+                android:textStyle="normal"/>
+        </LinearLayout>
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="@color/white"
+            android:layout_marginBottom="7dp"
+            android:background="@null"
+            android:focusedByDefault="true"
+            android:layout_gravity="center"
             android:gravity="center"
-            android:paddingBottom="3dp"
-            android:paddingTop="3dp"
+            android:paddingLeft="20dp"
+            android:text="Let's get things back to where they were. "
+            android:textSize="14sp"
+            android:textStyle="normal" />
+        <TextView
+            android:id="@+id/restoreInfo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:background="@null"
+            android:focusedByDefault="true"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:paddingLeft="20dp"
+            android:text="Let's get things back to where they were. "
             android:textSize="12sp"
-            android:text="Do not close the app or switch tabs" />
+            android:textStyle="italic" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
+            android:layout_marginTop="10dp"
+            android:orientation="vertical"
+            android:layout_gravity="center"
+            android:gravity="center">
+            <androidx.cardview.widget.CardView
+                xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:layout_width="280dp"
+                android:layout_height="wrap_content"
+                android:visibility="visible"
+                app:cardCornerRadius="10dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
+                app:cardBackgroundColor="@color/theme_orange">
+                <LinearLayout
+                    android:id="@+id/restoreFromBackup"
+                    android:clickable="true"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginRight="20dp"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginBottom="5dp"
+                    android:gravity="center"
+                    android:orientation="horizontal">
+                    <ImageView
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:padding="5dp"
+                        android:scaleType="fitXY"
+                        android:layout_marginRight="10dp"
+                        android:src="@drawable/restore_backup"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Restore From Backup"
+                        android:textColor="@color/white"/>
+                </LinearLayout>
+
+            </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
+                xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:layout_width="280dp"
+                android:layout_height="wrap_content"
+                android:visibility="visible"
+                app:cardCornerRadius="10dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
+                app:cardBackgroundColor="@color/theme_yellow">
+                <LinearLayout
+                    android:id="@+id/restoreFromFile"
+                    android:clickable="true"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginRight="20dp"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginBottom="5dp"
+                    android:gravity="center"
+                    android:orientation="horizontal">
+                    <ImageView
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:padding="5dp"
+                        android:scaleType="fitXY"
+                        android:layout_marginRight="10dp"
+                        android:src="@drawable/restore_file"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Select Restore File"
+                        android:textColor="@color/white"/>
+                </LinearLayout>
+
+            </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
+                xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:layout_width="280dp"
+                android:layout_height="wrap_content"
+                android:visibility="visible"
+                app:cardCornerRadius="10dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="5dp"
+                app:cardBackgroundColor="@color/theme_red_variant">
+                <LinearLayout
+                    android:id="@+id/backFromRestore"
+                    android:clickable="true"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginRight="20dp"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginBottom="5dp"
+                    android:gravity="center"
+                    android:orientation="horizontal">
+                    <ImageView
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:padding="5dp"
+                        android:scaleType="fitXY"
+                        android:layout_marginRight="10dp"
+                        android:src="@drawable/back"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Go to previous menu"
+                        android:textColor="@color/white"/>
+                </LinearLayout>
+
+            </androidx.cardview.widget.CardView>
+
+
+        </LinearLayout>
     </LinearLayout>
+
+    <!-- Setup Page Holder -->
+    <ScrollView
+        android:id="@+id/setuplayout"
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <!-- Setup Page holder -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:orientation="vertical">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:orientation="vertical">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="5dp"
+                    android:orientation="vertical"
+                    android:weightSum="20">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="5dp"
+                        android:layout_weight="20"
+                        android:background="@null"
+                        android:paddingLeft="20dp"
+                        android:paddingRight="20dp"
+                        android:layout_marginBottom="5dp"
+                        android:text="Let's Finish This Quickly!"
+                        android:layout_gravity="center"
+                        android:gravity="center"
+                        android:textColor="@color/theme_blue_variant"
+                        android:textSize="25sp"
+                        android:textStyle="normal"/>
+                </LinearLayout>
+                <TextView
+                    android:id="@+id/quickQuestionText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="3dp"
+                    android:layout_marginBottom="3dp"
+                    android:background="@null"
+                    android:textStyle="italic"
+                    android:focusedByDefault="true"
+                    android:text="This info is only stored on your device offline and used for doing expense analysis or providing suggestions. \nFields marked with (*) are mandatory"
+                    android:paddingLeft="20dp"
+                    android:textSize="12sp"/>
+                <TextView
+                    android:id="@+id/currency"
+                    android:gravity="center"
+                    android:clickable="true"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:hint="Select Currency*"
+                    android:visibility="visible"
+                    android:textSize="18sp" />
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.5dp"
+                    android:background="@color/theme_grey"/>
+
+                <TextView
+                    android:id="@+id/age"
+                    android:gravity="center"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:hint="Select DOB"
+                    android:background="@null"
+                    android:clickable="true"
+                    android:inputType="number"
+                    android:textSize="18sp" />
+
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.5dp"
+                    android:layout_marginTop="2dp"
+                    android:layout_marginBottom="2dp"
+                    android:background="@color/theme_grey"/>
+
+                <EditText
+                    android:id="@+id/salary"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:background="@null"
+                    android:gravity="center"
+                    android:hint="Monthly Earnings?"
+                    android:inputType="number"
+                    android:textSize="18sp"
+                    android:visibility="visible" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:weightSum="27"
+                android:layout_gravity="center"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:gravity="center"
+                android:orientation="horizontal">
+                <View
+                    android:layout_width="0dp"
+                    android:layout_weight="10"
+                    android:layout_height="0.5dp"
+                    android:layout_marginRight="3dp"
+                    android:background="@color/theme_blue"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:paddingLeft="8dp"
+                    android:paddingRight="8dp"
+                    android:layout_height="wrap_content"
+                    android:text="Optional"
+                    android:textStyle="bold"
+                    android:alpha="0.8"
+                    android:textSize="20sp"
+                    android:layout_gravity="center"
+                    android:gravity="center"/>
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_weight="10"
+                    android:layout_height="0.5dp"
+                    android:layout_marginLeft="3dp"
+                    android:background="@color/theme_blue"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/optionalitemslayoutholder"
+                android:layout_width="match_parent"
+                android:weightSum="15"
+                android:visibility="visible"
+                android:layout_centerInParent="true"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:orientation="horizontal">
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_weight="5"
+                    android:layout_height="match_parent"
+                    android:padding="2dp"
+                    android:layout_gravity="center"
+                    android:gravity="center">
+                    <androidx.cardview.widget.CardView
+                        android:id="@+id/addgroupholder"
+                        android:layout_width="0dp"
+                        android:layout_weight="5"
+                        android:clickable="true"
+                        android:layout_height="wrap_content"
+                        app:cardUseCompatPadding="true"
+                        android:elevation="5dp"
+                        android:backgroundTint="@color/theme_orange"
+                        app:cardCornerRadius="10dp">
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:orientation="vertical"
+                            android:padding="10dp"
+                            android:layout_height="match_parent">
+                            <ImageView
+                                android:layout_gravity="center"
+                                android:layout_width="40dp"
+                                android:layout_height="40dp"
+                                android:padding="5dp"
+                                android:src="@drawable/group"/>
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="Add Group"
+                                android:textColor="@color/white"
+                                android:layout_gravity="center"
+                                android:gravity="center"
+                                android:textSize="12sp"/>
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="Click for more details"
+                                android:textColor="@color/white"
+                                android:layout_gravity="center"
+                                android:padding="5dp"
+                                android:gravity="center"
+                                android:textSize="9sp"/>
+                        </LinearLayout>
+
+                    </androidx.cardview.widget.CardView>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_weight="5"
+                    android:layout_height="match_parent"
+                    android:padding="2dp"
+                    android:layout_gravity="center"
+                    android:gravity="center">
+                    <androidx.cardview.widget.CardView
+                        android:id="@+id/addcategoryholder"
+                        android:layout_width="0dp"
+                        android:layout_weight="5"
+                        android:layout_height="wrap_content"
+                        app:cardUseCompatPadding="true"
+                        android:clickable="true"
+                        android:elevation="5dp"
+                        android:backgroundTint="@color/theme_yellow"
+                        app:cardCornerRadius="10dp">
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:orientation="vertical"
+                            android:padding="10dp"
+                            android:layout_height="match_parent">
+                            <ImageView
+                                android:layout_gravity="center"
+                                android:layout_width="40dp"
+                                android:layout_height="40dp"
+                                android:padding="5dp"
+                                android:src="@drawable/category1"/>
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="Add Category"
+                                android:textColor="@color/white"
+                                android:layout_gravity="center"
+                                android:gravity="center"
+                                android:textSize="12sp"/>
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="Click for more details"
+                                android:textColor="@color/white"
+                                android:layout_gravity="center"
+                                android:padding="5dp"
+                                android:gravity="center"
+                                android:textSize="9sp"/>
+                        </LinearLayout>
+
+                    </androidx.cardview.widget.CardView>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_weight="5"
+                    android:layout_height="match_parent"
+                    android:padding="2dp"
+                    android:layout_gravity="center"
+                    android:gravity="center">
+                    <androidx.cardview.widget.CardView
+                        android:id="@+id/addpaymentholder"
+                        android:layout_width="0dp"
+                        android:layout_weight="5"
+                        android:layout_height="wrap_content"
+                        app:cardUseCompatPadding="true"
+                        android:clickable="true"
+                        android:elevation="5dp"
+                        android:backgroundTint="@color/theme_cyan"
+                        app:cardCornerRadius="10dp">
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:orientation="vertical"
+                            android:padding="10dp"
+                            android:layout_height="match_parent">
+                            <ImageView
+                                android:layout_gravity="center"
+                                android:layout_width="40dp"
+                                android:layout_height="40dp"
+                                android:padding="5dp"
+                                android:src="@drawable/card"/>
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="Add Payment"
+                                android:textColor="@color/white"
+                                android:layout_gravity="center"
+                                android:gravity="center"
+                                android:textSize="12sp"/>
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="Click for more details"
+                                android:textColor="@color/white"
+                                android:layout_gravity="center"
+                                android:padding="5dp"
+                                android:gravity="center"
+                                android:textSize="9sp"/>
+                        </LinearLayout>
+
+                    </androidx.cardview.widget.CardView>
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <!-- Add Category -->
+            <LinearLayout
+                android:id="@+id/categorylayout"
+                android:layout_width="match_parent"
+                android:layout_height="250dp"
+                android:gravity="center"
+                android:layout_margin="8dp"
+                android:visibility="gone"
+                android:orientation="vertical">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="5dp"
+                    android:orientation="horizontal"
+                    android:weightSum="20">
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="5dp"
+                        android:layout_weight="20"
+                        android:background="@null"
+                        android:paddingLeft="20dp"
+                        android:text="Add Category (Optional)"
+                        android:textColor="@color/theme_blue_variant"
+                        android:textSize="20sp"
+                        android:textStyle="normal"/>
+                </LinearLayout>
+                <TextView
+                    android:id="@+id/categoryText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="3dp"
+                    android:layout_marginBottom="3dp"
+                    android:textStyle="italic"
+                    android:background="@null"
+                    android:focusedByDefault="true"
+                    android:text="This will help you analyze where you spend the most. Category should be unique. You can be more generic while specifying, for example - Food, Travel, Fuel or you be more specific like Fruits, Vegetables, Metro, Bus, Petrol, Diesel. "
+                    android:paddingLeft="20dp"
+                    android:paddingRight="20dp"
+                    android:textSize="12sp"/>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="5dp"
+                    android:weightSum="20">
+                    <EditText
+                        android:id="@+id/categoryName"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="3dp"
+                        android:layout_marginBottom="3dp"
+                        android:layout_weight="14"
+                        android:background="@null"
+                        android:focusedByDefault="true"
+                        android:hint="Category"
+                        android:paddingLeft="20dp"
+                        android:singleLine="true"
+                        android:textSize="18sp"
+                        android:textStyle="bold"/>
+                    <View
+                        android:layout_width="0.5dp"
+                        android:layout_height="match_parent"
+                        android:background="@color/theme_grey"/>
+                    <EditText
+                        android:id="@+id/categoryLimit"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="3dp"
+                        android:layout_marginBottom="3dp"
+                        android:layout_weight="6"
+                        android:background="@null"
+                        android:inputType="numberDecimal"
+                        android:hint="Limit"
+                        android:layout_gravity="center"
+                        android:paddingLeft="10dp"
+                        android:singleLine="true"
+                        android:textSize="18sp"
+                        android:textStyle="normal"/>
+                </LinearLayout>
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.5dp"
+                    android:layout_marginTop="2dp"
+                    android:layout_marginBottom="2dp"
+                    android:background="@color/theme_grey"/>
+                <Button
+                    android:id="@+id/createCategory"
+                    android:layout_width="100dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="right"
+                    android:layout_marginTop="10dp"
+                    android:backgroundTint="@color/theme_blue_variant"
+                    android:text="Add"
+                    />
+
+            </LinearLayout>
+
+            <!-- Add Group -->
+            <LinearLayout
+                android:id="@+id/grouplayout"
+                android:layout_width="match_parent"
+                android:layout_height="250dp"
+                android:layout_margin="8dp"
+                android:gravity="center"
+                android:visibility="gone"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="2dp"
+                    android:orientation="horizontal"
+                    android:weightSum="20">
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="20"
+                        android:background="@null"
+                        android:paddingLeft="20dp"
+                        android:text="Create Group (Optional)"
+                        android:textColor="@color/theme_blue_variant"
+                        android:textSize="20sp"
+                        android:textStyle="normal"/>
+                </LinearLayout>
+                <TextView
+                    android:id="@+id/groupText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="3dp"
+                    android:background="@null"
+                    android:focusedByDefault="true"
+                    android:text="If you share your expenses, Sepcifying a group will help in segregating them. Group Name should be unique. We have already created one group for your personal expenses named 'Personal'  "
+                    android:paddingLeft="20dp"
+                    android:paddingRight="20dp"
+                    android:textStyle="italic"
+                    android:textSize="12sp"/>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:weightSum="20">
+                    <EditText
+                        android:id="@+id/title"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="3dp"
+                        android:layout_marginBottom="3dp"
+                        android:layout_weight="20"
+                        android:background="@null"
+                        android:focusedByDefault="true"
+                        android:hint="Group Name"
+                        android:nextFocusForward="@id/noofpeps"
+                        android:paddingLeft="20dp"
+                        android:singleLine="true"
+                        android:textSize="18sp"
+                        android:textStyle="bold"/>
+                </LinearLayout>
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.5dp"
+                    android:layout_marginTop="2dp"
+                    android:layout_marginBottom="2dp"
+                    android:background="@color/theme_grey"/>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:weightSum="20">
+                    <EditText
+                        android:id="@+id/noofpeps"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginEnd="5dp"
+                        android:layout_marginBottom="5dp"
+                        android:layout_weight="10"
+                        android:background="@null"
+                        android:hint="No of persons"
+                        android:inputType="number"
+                        android:nextFocusForward="@id/limit"
+                        android:paddingLeft="20sp"
+                        android:singleLine="true"
+                        android:textSize="18sp"/>
+                    <View
+                        android:layout_width="0.5dp"
+                        android:layout_height="match_parent"
+                        android:background="@color/theme_grey"/>
+                    <EditText
+                        android:id="@+id/limit"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="5dp"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginEnd="5dp"
+                        android:layout_marginBottom="5dp"
+                        android:layout_weight="10"
+                        android:background="@null"
+                        android:hint="Monthly Limit"
+                        android:inputType="numberDecimal"
+                        android:nextFocusForward="@id/createnewgroup"
+                        android:paddingLeft="10dp"
+                        android:singleLine="true"
+                        android:textSize="18sp"/>
+                </LinearLayout>
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.5dp"
+                    android:layout_marginTop="2dp"
+                    android:layout_marginBottom="2dp"
+                    android:background="@color/theme_grey"/>
+                <Button
+                    android:id="@+id/create"
+                    android:layout_width="100dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="right"
+                    android:layout_marginTop="3dp"
+                    android:backgroundTint="@color/theme_blue_variant"
+                    android:text="Add"
+                    />
+
+            </LinearLayout>
+
+            <!-- Add Payment -->
+            <LinearLayout
+                android:id="@+id/paymentlayout"
+                android:layout_width="match_parent"
+                android:layout_height="250dp"
+                android:gravity="center"
+                android:visibility="gone"
+                android:layout_margin="5dp"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="5dp"
+                    android:orientation="horizontal"
+                    android:weightSum="20">
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="5dp"
+                        android:layout_weight="20"
+                        android:background="@null"
+                        android:paddingLeft="20dp"
+                        android:text="Add Payment Mode (Optional)"
+                        android:textColor="@color/theme_blue_variant"
+                        android:textSize="20sp"
+                        android:textStyle="normal"/>
+                </LinearLayout>
+                <TextView
+                    android:id="@+id/modeText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="3dp"
+                    android:layout_marginBottom="3dp"
+                    android:background="@null"
+                    android:focusedByDefault="true"
+                    android:text="This will help you analyze the mode of payment you usually pay through. Payment mode should be unique. Things you can add here - Cash, Debit Card, Credit Card, Net Banking, etc "
+                    android:paddingLeft="20dp"
+                    android:textStyle="italic"
+                    android:textSize="12sp"/>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="5dp"
+                    android:weightSum="20">
+                    <EditText
+                        android:id="@+id/modeName"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="3dp"
+                        android:layout_marginBottom="3dp"
+                        android:layout_weight="14"
+                        android:background="@null"
+                        android:focusedByDefault="true"
+                        android:hint="Payment Mode"
+                        android:paddingLeft="20dp"
+                        android:imeOptions="actionNext"
+                        android:singleLine="true"
+                        android:textSize="18sp"
+                        android:textStyle="bold"/>
+                    <EditText
+                        android:id="@+id/modeLimit"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="3dp"
+                        android:layout_marginBottom="3dp"
+                        android:layout_weight="6"
+                        android:background="@null"
+                        android:inputType="numberDecimal"
+                        android:hint="Limit"
+                        android:layout_gravity="center"
+                        android:paddingLeft="10dp"
+                        android:imeOptions="actionDone"
+                        android:singleLine="true"
+                        android:textSize="18sp"
+                        android:textStyle="normal"/>
+                </LinearLayout>
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.5dp"
+                    android:layout_marginTop="2dp"
+                    android:layout_marginBottom="2dp"
+                    android:background="@color/theme_grey"/>
+                <Button
+                    android:id="@+id/createPaymentMode"
+                    android:layout_width="100dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="right"
+                    android:layout_marginTop="10dp"
+                    android:backgroundTint="@color/theme_blue_variant"
+                    android:text="Add"
+                    />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right"
+                android:gravity="right"
+                android:visibility="visible"
+                android:orientation="horizontal">
+                <androidx.cardview.widget.CardView
+                    xmlns:android="http://schemas.android.com/apk/res/android"
+                    xmlns:app="http://schemas.android.com/apk/res-auto"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:visibility="visible"
+                    app:cardCornerRadius="4dp"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginBottom="5dp"
+                    android:layout_marginRight="10dp"
+                    app:cardBackgroundColor="@color/theme_red_variant">
+                    <LinearLayout
+                        android:id="@+id/back"
+                        android:clickable="true"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginRight="20dp"
+                        android:layout_marginLeft="20dp"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginBottom="5dp"
+                        android:gravity="center"
+                        android:orientation="horizontal">
+                        <ImageView
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            android:padding="5dp"
+                            android:scaleType="fitXY"
+                            android:layout_marginRight="10dp"
+                            android:src="@drawable/back"/>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Back"
+                            android:textColor="@color/white"/>
+                    </LinearLayout>
+
+                </androidx.cardview.widget.CardView>
+                <androidx.cardview.widget.CardView
+                    xmlns:android="http://schemas.android.com/apk/res/android"
+                    xmlns:app="http://schemas.android.com/apk/res-auto"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:visibility="visible"
+                    app:cardCornerRadius="4dp"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginBottom="5dp"
+                    android:layout_marginRight="10dp"
+                    app:cardBackgroundColor="@color/theme_green">
+                    <LinearLayout
+                        android:id="@+id/completeSetup"
+                        android:clickable="true"
+                        android:layout_width="match_parent"
+                        android:layout_height="30dp"
+                        android:layout_gravity="center"
+                        android:layout_marginRight="20dp"
+                        android:layout_marginLeft="20dp"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginBottom="5dp"
+                        android:gravity="center"
+                        android:orientation="horizontal">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Finish Setup"
+                            android:textColor="@color/white"/>
+                    </LinearLayout>
+
+                </androidx.cardview.widget.CardView>
+               <!-- <Button
+                    android:id="@+id/back"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="5dp"
+                    android:layout_marginRight="8dp"
+                    android:layout_marginLeft="2dp"
+                    android:elevation="5dp"
+                    android:backgroundTint="@color/theme_blue_variant"
+                    android:text="Back"/>
+                <Button
+                    android:id="@+id/completeSetup"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginRight="8dp"
+                    android:layout_marginLeft="2dp"
+                    android:layout_marginBottom="5dp"
+                    android:elevation="5dp"
+                    android:backgroundTint="@color/theme_blue_variant"
+                    android:text="Complete Setup"/>-->
+            </LinearLayout>
+
+
+
+        </LinearLayout>
+    </ScrollView>
 
 </RelativeLayout>
