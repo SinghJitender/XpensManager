@@ -71,7 +71,7 @@ public class SplashScreenActivity extends AppCompatActivity {
                 finish();
             }
             //new LoadTesting(getApplicationContext()).populateData();
-        },300);
+        },400);
     }
 
     public void moveToMainActivity(){
