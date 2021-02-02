@@ -30,25 +30,47 @@
             android:layout_weight="15"
             android:text="Amount"/>
 
-        <TextView
-            android:id="@+id/date"
+        <LinearLayout
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="5"
+            android:layout_height="20dp"
+            android:orientation="horizontal"
+            android:layout_gravity="right|center"
             android:gravity="right"
-            android:layout_marginRight="10dp"
-            android:text="12/20/2020"/>
+            android:layout_weight="5">
+            <TextView
+                android:id="@+id/remainingamount"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="right"
+                android:textSize="13sp"
+                android:layout_marginRight="10dp"
+                android:text="-10000.00"/>
+
+            <ImageView
+                android:id="@+id/expenseSettled"
+                android:layout_width="15dp"
+                android:layout_height="15dp"
+                android:layout_gravity="center"
+                android:layout_marginRight="10dp"
+                android:src="@drawable/check"/>
+        </LinearLayout>
 
     </LinearLayout>
-
-        <TextView
-            android:id="@+id/description"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="16sp"
-            android:text="Title"/>
+            android:weightSum="20"
+            android:orientation="horizontal">
+            <TextView
+                android:id="@+id/description"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="20"
+                android:textSize="16sp"
+                android:text="Title"/>
 
-
+        </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -87,9 +109,17 @@
                 android:id="@+id/amount"
                 android:text="Original Amount"
                 android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="20"/>
-
+                android:layout_height="wrap_content"
+                android:layout_weight="16"/>
+            <TextView
+                android:id="@+id/date"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="4"
+                android:gravity="right|center"
+                android:textSize="10sp"
+                android:layout_marginRight="10dp"
+                android:text="12/20/2020"/>
         </LinearLayout>
 
     </LinearLayout>
