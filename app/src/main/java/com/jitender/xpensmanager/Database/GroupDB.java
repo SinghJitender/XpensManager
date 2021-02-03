@@ -143,6 +143,14 @@ public class GroupDB extends SQLiteOpenHelper {
         return true;
     }
 
+    public boolean updateGroupNetAmountByTitle(String title, double netAmount) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put("netAmount", netAmount);
+        db.update("groups", contentValues, "title = ? ", new String[] { title } );
+        return true;
+    }
+
     public boolean updateGroupLimitAndPersons(String title, int noOfPersons, double maxLimit) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
