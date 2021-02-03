@@ -14,6 +14,7 @@ import com.jitender.xpensmanager.Enums.ViewType;
 import com.jitender.xpensmanager.R;
 import com.jitender.xpensmanager.SplashScreen.SplashScreenActivity;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 public class ExpenseViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
@@ -38,7 +39,7 @@ public class ExpenseViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         ((ViewHolder) holder).description.setText(list.get(position).getDescription());
-        ((ViewHolder) holder).splitamount.setText(SplashScreenActivity.cSymbol+ " "+list.get(position).getSplitAmount());
+        ((ViewHolder) holder).splitamount.setText(SplashScreenActivity.cSymbol+ " "+new DecimalFormat("00.00").format(list.get(position).getSplitAmount()));
         if(viewType == ViewType.MONTHLY){
             ((ViewHolder) holder).date.setVisibility(View.GONE);
         }else if (viewType == ViewType.YEARLY){
@@ -50,18 +51,18 @@ public class ExpenseViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             ((ViewHolder) holder).date.setText(list.get(position).getTextMonth());
         }
         if(list.get(position).getGroup().equalsIgnoreCase("OWN")) {
-            ((ViewHolder) holder).amount.setText(SplashScreenActivity.cSymbol+ " "+list.get(position).getAmount() + " paid by "+list.get(position).getPaidBy());
+            ((ViewHolder) holder).amount.setText(SplashScreenActivity.cSymbol+ " "+new DecimalFormat("00.00").format(list.get(position).getAmount()) + " paid by "+list.get(position).getPaidBy());
         }
         else{
-            ((ViewHolder) holder).amount.setText(SplashScreenActivity.cSymbol+ " "+list.get(position).getAmount()+ " split with "+list.get(position).getGroup()+ " paid by "+list.get(position).getPaidBy());
+            ((ViewHolder) holder).amount.setText(SplashScreenActivity.cSymbol+ " "+new DecimalFormat("00.00").format(list.get(position).getAmount())+ " split with "+list.get(position).getGroup()+ " paid by "+list.get(position).getPaidBy());
         }
         if(list.get(position).getSettled().equalsIgnoreCase("false")){
             if(list.get(position).getPaidBy().equalsIgnoreCase("Me")){
                 ((ViewHolder) holder).remainingamount.setTextColor(context.getResources().getColor(R.color.theme_green));
-                ((ViewHolder) holder).remainingamount.setText("+"+list.get(position).getSettledAmount()+"");
+                ((ViewHolder) holder).remainingamount.setText("+"+new DecimalFormat("00.00").format(list.get(position).getSettledAmount()));
             }else{
                 ((ViewHolder) holder).remainingamount.setTextColor(context.getResources().getColor(R.color.theme_red));
-                ((ViewHolder) holder).remainingamount.setText("-"+list.get(position).getSettledAmount()+"");
+                ((ViewHolder) holder).remainingamount.setText("-"+new DecimalFormat("00.00").format(list.get(position).getSettledAmount()));
             }
             ((ViewHolder) holder).remainingamount.setVisibility(View.VISIBLE);
             ((ViewHolder) holder).expenseSettled.setVisibility(View.GONE);
