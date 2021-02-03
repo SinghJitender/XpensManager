@@ -28,6 +28,7 @@ import com.jitender.xpensmanager.Enums.ViewType;
 import com.jitender.xpensmanager.Database.ExpenseData;
 import com.jitender.xpensmanager.ExpenseScreen.Adapters.ExpenseViewAdapter;
 import com.jitender.xpensmanager.MainScreen.Adapters.SwipeToDeleteCallback;
+import com.jitender.xpensmanager.MainScreen.Adapters.SwipeToSettleCallback;
 import com.jitender.xpensmanager.R;
 import com.jitender.xpensmanager.SplashScreen.SplashScreenActivity;
 import com.google.android.material.snackbar.Snackbar;
@@ -125,7 +126,7 @@ public class MonthlyViewFragment extends Fragment {
         if(groupBy.equalsIgnoreCase("None")) {
             expenseData = expenseDB.findByMonth(filterValue, today.get(Calendar.YEAR));
             double totalSpendsThisMonth = expenseDB.getMonthlyExpenseSum(ExpenseDB.getMonthFromDate(new Date()), ExpenseDB.getYearFromDate(new Date()));
-            currentMonthTotalSpends.setText(SplashScreenActivity.cSymbol+ " "+ totalSpendsThisMonth);
+            currentMonthTotalSpends.setText(SplashScreenActivity.cSymbol+ " "+ new DecimalFormat("00.00").format(totalSpendsThisMonth));
             progressBar.setProgress((int) ((totalSpendsThisMonth / totalCategorySum) * 100));
             limit.setText(new DecimalFormat("00.00").format(totalSpendsThisMonth) + "/" + new DecimalFormat("00.00").format(totalCategorySum));
         }
@@ -133,21 +134,21 @@ public class MonthlyViewFragment extends Fragment {
             if(filterType.equalsIgnoreCase("category")) {
                 expenseData = expenseDB.findByMonthAndCategory(groupBy,filterValue,today.get(Calendar.YEAR));
                 double totalSpendsThisMonth = expenseDB.getMonthlyExpenseSumByCategory(ExpenseDB.getMonthFromDate(new Date()), ExpenseDB.getYearFromDate(new Date()),groupBy);
-                currentMonthTotalSpends.setText(SplashScreenActivity.cSymbol+ " "+ totalSpendsThisMonth);
+                currentMonthTotalSpends.setText(SplashScreenActivity.cSymbol+ " "+ new DecimalFormat("00.00").format(totalSpendsThisMonth));
                 categoryLimit = categoryDB.getCategoryLimitByTitle(groupBy);
                 progressBar.setProgress((int) ((totalSpendsThisMonth / categoryLimit) * 100));
                 limit.setText(new DecimalFormat("00.00").format(totalSpendsThisMonth) + "/" + new DecimalFormat("00.00").format(categoryLimit));
             }else if(filterType.equalsIgnoreCase("payment")) {
                 expenseData = expenseDB.findByMonthAndPayments(groupBy,filterValue,today.get(Calendar.YEAR));
                 double totalSpendsThisMonth = expenseDB.getMonthlyExpenseSumByPayments(ExpenseDB.getMonthFromDate(new Date()), ExpenseDB.getYearFromDate(new Date()),groupBy);
-                currentMonthTotalSpends.setText(SplashScreenActivity.cSymbol+ " "+ totalSpendsThisMonth);
+                currentMonthTotalSpends.setText(SplashScreenActivity.cSymbol+ " "+ new DecimalFormat("00.00").format(totalSpendsThisMonth));
                 paymentLimit = paymentsDB.getPaymentLimitByTitle(groupBy);
                 progressBar.setProgress((int) ((totalSpendsThisMonth / paymentLimit) * 100));
                 limit.setText(new DecimalFormat("00.00").format(totalSpendsThisMonth) + "/" + new DecimalFormat("00.00").format(paymentLimit));
             }else{
                 expenseData = expenseDB.findByMonthAndGroup(groupBy,filterValue,today.get(Calendar.YEAR));
                 double totalSpendsThisMonth = expenseDB.getMonthlyExpenseSumByGroup(ExpenseDB.getMonthFromDate(new Date()), ExpenseDB.getYearFromDate(new Date()),groupBy);
-                currentMonthTotalSpends.setText(SplashScreenActivity.cSymbol+ " "+ totalSpendsThisMonth);
+                currentMonthTotalSpends.setText(SplashScreenActivity.cSymbol+ " "+ new DecimalFormat("00.00").format(totalSpendsThisMonth));
                 groupLimit = groupDB.getGroupLimitByTitle(groupBy);
                 progressBar.setProgress((int) ((totalSpendsThisMonth / groupLimit) * 100));
                 limit.setText(new DecimalFormat("00.00").format(totalSpendsThisMonth) + "/" + new DecimalFormat("00.00").format(groupLimit));
@@ -221,26 +222,26 @@ public class MonthlyViewFragment extends Fragment {
                                     expenseDB.deleteExpenseById(item.getId());
                                     if(groupBy.equalsIgnoreCase("None")) {
                                         double totalSpendsThisMonth = expenseDB.getMonthlyExpenseSum(ExpenseDB.getMonthFromDate(new Date()), ExpenseDB.getYearFromDate(new Date()));
-                                        currentMonthTotalSpends.setText(SplashScreenActivity.cSymbol+ " "+ totalSpendsThisMonth);
+                                        currentMonthTotalSpends.setText(SplashScreenActivity.cSymbol+ " "+ new DecimalFormat("00.00").format(totalSpendsThisMonth));
                                         progressBar.setProgress((int) ((totalSpendsThisMonth / totalCategorySum) * 100));
                                         limit.setText(new DecimalFormat("00.00").format(totalSpendsThisMonth) + "/" + new DecimalFormat("00.00").format(totalCategorySum));
                                     }
                                     else{
                                         if(filterType.equalsIgnoreCase("category")) {
                                             double totalSpendsThisMonth = expenseDB.getMonthlyExpenseSumByCategory(ExpenseDB.getMonthFromDate(new Date()), ExpenseDB.getYearFromDate(new Date()),groupBy);
-                                            currentMonthTotalSpends.setText(SplashScreenActivity.cSymbol+ " "+ totalSpendsThisMonth);
+                                            currentMonthTotalSpends.setText(SplashScreenActivity.cSymbol+ " "+ new DecimalFormat("00.00").format(totalSpendsThisMonth));
                                             categoryLimit = categoryDB.getCategoryLimitByTitle(groupBy);
                                             progressBar.setProgress((int) ((totalSpendsThisMonth / categoryLimit) * 100));
                                             limit.setText(new DecimalFormat("00.00").format(totalSpendsThisMonth) + "/" + new DecimalFormat("00.00").format(categoryLimit));
                                         }else if(filterType.equalsIgnoreCase("payment")) {
                                             double totalSpendsThisMonth = expenseDB.getMonthlyExpenseSumByPayments(ExpenseDB.getMonthFromDate(new Date()), ExpenseDB.getYearFromDate(new Date()),groupBy);
-                                            currentMonthTotalSpends.setText(SplashScreenActivity.cSymbol+ " "+ totalSpendsThisMonth);
+                                            currentMonthTotalSpends.setText(SplashScreenActivity.cSymbol+ " "+ new DecimalFormat("00.00").format(totalSpendsThisMonth));
                                             paymentLimit = paymentsDB.getPaymentLimitByTitle(groupBy);
                                             progressBar.setProgress((int) ((totalSpendsThisMonth / paymentLimit) * 100));
                                             limit.setText(new DecimalFormat("00.00").format(totalSpendsThisMonth) + "/" + new DecimalFormat("00.00").format(paymentLimit));
                                         }else{
                                             double totalSpendsThisMonth = expenseDB.getMonthlyExpenseSumByGroup(ExpenseDB.getMonthFromDate(new Date()), ExpenseDB.getYearFromDate(new Date()),groupBy);
-                                            currentMonthTotalSpends.setText(SplashScreenActivity.cSymbol+ " "+ totalSpendsThisMonth);
+                                            currentMonthTotalSpends.setText(SplashScreenActivity.cSymbol+ " "+ new DecimalFormat("00.00").format(totalSpendsThisMonth));
                                             groupLimit = groupDB.getGroupLimitByTitle(groupBy);
                                             progressBar.setProgress((int) ((totalSpendsThisMonth / groupLimit) * 100));
                                             limit.setText(new DecimalFormat("00.00").format(totalSpendsThisMonth) + "/" + new DecimalFormat("00.00").format(groupLimit));
@@ -263,7 +264,64 @@ public class MonthlyViewFragment extends Fragment {
                 snackbar.show();
             }
         };
+        SwipeToSettleCallback swipeToSettleCallback = new SwipeToSettleCallback(getActivity()) {
+            @Override
+            public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int i) {
+                final int position = viewHolder.getAdapterPosition();
+                Log.d("Item Position",position+"");
+                final ExpenseData item = adapter.getData().get(position);
+                final String isSettled = item.getSettled();
+                String text; boolean setUndo = true;
+                if(item.getSettled().equalsIgnoreCase("true")){
+                    text = "Expense already settled";
+                    setUndo = false;
+                }else{
+                    adapter.getData().get(position).setSettled("true");
+                    text = "Expense settled";
+                }
+                adapter.notifyDataSetChanged();
+                Snackbar snackbar = Snackbar
+                        .make(monthlyContainer, text,5000)
+                        .addCallback(new Snackbar.Callback(){
 
+                            @Override
+                            public void onShown(Snackbar sb) {
+                                super.onShown(sb);
+                                //Toast.makeText(getActivity(),"Snack bar shown",Toast.LENGTH_SHORT).show();
+                            }
+
+                            @Override
+                            public void onDismissed(Snackbar transientBottomBar, int event) {
+                                super.onDismissed(transientBottomBar, event);
+                                if (event == Snackbar.Callback.DISMISS_EVENT_TIMEOUT || event == Snackbar.Callback.DISMISS_EVENT_SWIPE ||
+                                        event == Snackbar.Callback.DISMISS_EVENT_MANUAL || event == Snackbar.Callback.DISMISS_EVENT_CONSECUTIVE) {
+                                    Log.d("Settling Expense","Amount : "+item.getSettledAmount() + " ID : "+ item.getId());
+                                    if(isSettled.equalsIgnoreCase("false")) {
+                                        Log.d("Settled Expense",item.getSettledAmount() + " Settled");
+                                        Executors.newSingleThreadExecutor().execute(() -> {
+                                            expenseDB.updateExpenseSettled(item.getId(), "true");
+                                            double totalSettleAmount = expenseDB.getExpenseSettledAmountByGroup(item.getGroup());
+                                            groupDB.updateGroupNetAmountByTitle(item.getGroup(), totalSettleAmount);
+                                        });
+                                    }
+                                }
+                            }
+                        });
+                if(setUndo) {
+                    snackbar.setAction("UNDO", new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            adapter.getData().get(position).setSettled("false");
+                            adapter.notifyDataSetChanged();
+                        }
+                    });
+                }
+                snackbar.setActionTextColor(getActivity().getResources().getColor(R.color.theme_yellow));
+                snackbar.show();
+            }
+        };
+        ItemTouchHelper itemTouchhelper2 = new ItemTouchHelper(swipeToSettleCallback);
+        itemTouchhelper2.attachToRecyclerView(recyclerView);
         ItemTouchHelper itemTouchhelper = new ItemTouchHelper(swipeToDeleteCallback);
         itemTouchhelper.attachToRecyclerView(recyclerView);
     }
@@ -278,26 +336,26 @@ public class MonthlyViewFragment extends Fragment {
                             if (groupBy.equalsIgnoreCase("None")) {
                                 expenseData.addAll(expenseDB.findByMonth(selectedMonth + 1, selectedYear));
                                 double totalSpendsThisMonth = expenseDB.getMonthlyExpenseSum(selectedMonth+1,selectedYear);
-                                currentMonthTotalSpends.setText(SplashScreenActivity.cSymbol+ " "+ totalSpendsThisMonth);
+                                currentMonthTotalSpends.setText(SplashScreenActivity.cSymbol+ " "+ new DecimalFormat("00.00").format(totalSpendsThisMonth));
                                 progressBar.setProgress((int) ((totalSpendsThisMonth / totalCategorySum) * 100));
                                 limit.setText(new DecimalFormat("00.00").format(totalSpendsThisMonth) + "/" + new DecimalFormat("00.00").format(totalCategorySum));
                             } else {
                                 if (filterType.equalsIgnoreCase("category")) {
                                     expenseData.addAll(expenseDB.findByMonthAndCategory(groupBy, selectedMonth + 1, selectedYear));
                                     double totalSpendsThisMonth = expenseDB.getMonthlyExpenseSumByCategory(selectedMonth+1,selectedYear,groupBy);
-                                    currentMonthTotalSpends.setText(SplashScreenActivity.cSymbol+ " "+totalSpendsThisMonth);
+                                    currentMonthTotalSpends.setText(SplashScreenActivity.cSymbol+ " "+new DecimalFormat("00.00").format(totalSpendsThisMonth));
                                     progressBar.setProgress((int) ((totalSpendsThisMonth / categoryLimit) * 100));
                                     limit.setText(new DecimalFormat("00.00").format(totalSpendsThisMonth) + "/" + new DecimalFormat("00.00").format(categoryLimit));
                                 }else if(filterType.equalsIgnoreCase("payment")) {
                                     expenseData.addAll(expenseDB.findByMonthAndPayments(groupBy,selectedMonth + 1, selectedYear));
                                     double totalSpendsThisMonth = expenseDB.getMonthlyExpenseSumByPayments(selectedMonth + 1, selectedYear,groupBy);
-                                    currentMonthTotalSpends.setText(SplashScreenActivity.cSymbol+ " "+ totalSpendsThisMonth);
+                                    currentMonthTotalSpends.setText(SplashScreenActivity.cSymbol+ " "+ new DecimalFormat("00.00").format(totalSpendsThisMonth));
                                     progressBar.setProgress((int) ((totalSpendsThisMonth / paymentLimit) * 100));
                                     limit.setText(new DecimalFormat("00.00").format(totalSpendsThisMonth) + "/" + new DecimalFormat("00.00").format(paymentLimit));
                                 } else {
                                     expenseData.addAll(expenseDB.findByMonthAndGroup(groupBy, selectedMonth + 1, selectedYear));
                                     double totalSpendsThisMonth = expenseDB.getMonthlyExpenseSumByGroup(selectedMonth+1,selectedYear,groupBy);
-                                    currentMonthTotalSpends.setText(SplashScreenActivity.cSymbol+ " "+ totalSpendsThisMonth);
+                                    currentMonthTotalSpends.setText(SplashScreenActivity.cSymbol+ " "+ new DecimalFormat("00.00").format(totalSpendsThisMonth));
                                     progressBar.setProgress((int) ((totalSpendsThisMonth / groupLimit) * 100));
                                     limit.setText(new DecimalFormat("00.00").format(totalSpendsThisMonth) + "/" + new DecimalFormat("00.00").format(groupLimit));
                                 }
