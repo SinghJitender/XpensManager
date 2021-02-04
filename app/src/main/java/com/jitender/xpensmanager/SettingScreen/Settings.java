@@ -23,6 +23,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.google.android.material.snackbar.Snackbar;
+import com.jitender.xpensmanager.BackupAndRestoreUtils.AutomaticBackupManager;
 import com.jitender.xpensmanager.BackupAndRestoreUtils.BackupExportRestoreUtil;
 import com.jitender.xpensmanager.BackupAndRestoreUtils.BackupService;
 import com.jitender.xpensmanager.BackupAndRestoreUtils.ExportToExcelService;
@@ -298,6 +299,7 @@ public class Settings extends AppCompatActivity {
             backUpfrequency.setText(list[which]);
             editor.putString("frequency",list[which]);
             editor.apply();
+            new AutomaticBackupManager().setAutomaticBackup(this);
         });
         AlertDialog dialog = builder.create();
         dialog.show();
