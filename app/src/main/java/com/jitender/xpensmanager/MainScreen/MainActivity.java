@@ -266,10 +266,12 @@ public class MainActivity extends AppCompatActivity {
                                                             newExpenseSelectCategory.getText().toString().trim(), paidBy, splitBetween, newExpenseSelectGroup.getText().toString().trim(),
                                                             newExpenseSelectMode.getText().toString().trim(),settled,settlementAmount);
                                                     newExpenseTotalAmount.setText("");
-                                                    newExpenseSelectCategory.setText("Select Category");
+                                                    newExpenseSelectCategory.setText("Category");
                                                     newExpenseDescription.setText("");
                                                     newExpenseTotalAmount.requestFocus();
-                                                    newExpenseSelectGroup.setText("Select Group");
+                                                    newExpenseSelectGroup.setText("Group");
+                                                    newExpenseSelectMode.setText("Payment Mode");
+                                                    newExpensePaidBy.setEnabled(true);
                                                     updateHomePageData();
                                                     updateGroupFragmentData();
                                                     updateCategoryFragmentData();
