@@ -228,7 +228,7 @@ public class Setup extends AppCompatActivity {
                     }
                     else{
                         String result = categoryDB.insertNewCategory(categoryValue,Double.parseDouble(categoryLimitVal));
-                        //Toast.makeText(getApplicationContext(),result,Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(),result,Toast.LENGTH_SHORT).show();
                         if(result.contains("Created")) {
                             categoryName.setText("");
                             categoryName.requestFocus();
@@ -262,7 +262,7 @@ public class Setup extends AppCompatActivity {
                             }else {
                                 //All Checks Completed
                                 String result = groupsDB.insertNewGroup(titleValue,Integer.parseInt(noOfPersons),Double.parseDouble(limit));
-                                //Toast.makeText(getApplicationContext(), result, Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getApplicationContext(), result, Toast.LENGTH_SHORT).show();
                                 if(result.contains("Created")) {
                                     newGroupTitle.setText("");
                                     newGroupLimit.setText("");
@@ -293,7 +293,7 @@ public class Setup extends AppCompatActivity {
                     }
                     else{
                         String result = paymentsDB.insertNewPaymentMode(modeValue,Double.parseDouble(modeLimitVal));
-                        //Toast.makeText(getApplicationContext(),result,Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(),result,Toast.LENGTH_SHORT).show();
                         if(result.contains("Created")) {
                             modeName.setText("");
                             modeName.requestFocus();
