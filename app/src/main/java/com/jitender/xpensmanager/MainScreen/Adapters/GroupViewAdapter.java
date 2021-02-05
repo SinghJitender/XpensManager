@@ -92,12 +92,18 @@ public class GroupViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             ((ViewHolder) holder).warningIcon.setVisibility(View.GONE);
             ((ViewHolder) holder).warning.setVisibility(View.GONE);
         }else if(percentageLimit>50 && percentageLimit <=75){
+            ((ViewHolder) holder).warningIcon.setVisibility(View.VISIBLE);
+            ((ViewHolder) holder).warning.setVisibility(View.VISIBLE);
             ((ViewHolder) holder).warning.setText(String.format("You have used %s%% of your limit (%s)", new DecimalFormat("00.00").format(percentageLimit),new DecimalFormat("00.00").format(limit)));
             ((ViewHolder) holder).warningIcon.setImageDrawable(context.getDrawable(R.drawable.warning));
         }else if (percentageLimit>75 && percentageLimit <=100){
+            ((ViewHolder) holder).warningIcon.setVisibility(View.VISIBLE);
+            ((ViewHolder) holder).warning.setVisibility(View.VISIBLE);
             ((ViewHolder) holder).warning.setText(String.format("You have used %s%% of your limit (%s)", new DecimalFormat("00.00").format(percentageLimit),new DecimalFormat("00.00").format(limit)));
             ((ViewHolder) holder).warningIcon.setImageDrawable(context.getDrawable(R.drawable.danger));
-        }else{
+        }else if(percentageLimit>100){
+            ((ViewHolder) holder).warningIcon.setVisibility(View.VISIBLE);
+            ((ViewHolder) holder).warning.setVisibility(View.VISIBLE);
             ((ViewHolder) holder).warning.setText(String.format("You have exceed this month's limit (%s)",new DecimalFormat("00.00").format(limit)));
             ((ViewHolder) holder).warningIcon.setImageDrawable(context.getDrawable(R.drawable.forbidden));
         }
@@ -210,12 +216,13 @@ public class GroupViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             ((ViewHolder) holder).settleXpens.setOnClickListener((v) -> {
                 new AlertDialog.Builder(context)
                         .setTitle("Settle Expense")
-                        .setMessage("This will reset the dues. Proceed if you have settled the dues.")
+                        .setMessage("This will reset all the dues. Proceed if you want to settled all the dues.")
                         // Specifying a listener allows you to take an action before dismissing the dialog.
                         // The dialog is automatically dismissed when a dialog button is clicked.
                         .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
                                 groupDB.updateNetAmountByTitle(results.get(position).getTitle());
+                                expenseDB.updateExpenseSettledByGroup(results.get(position).getTitle(),"true");
                                 results.get(position).setNetAmount(00.00);
                                 notifyItemChanged(position);
                             }
