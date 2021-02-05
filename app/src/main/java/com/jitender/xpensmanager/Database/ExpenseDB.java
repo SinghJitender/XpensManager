@@ -592,6 +592,21 @@ public class ExpenseDB extends SQLiteOpenHelper {
         }
     }
 
+    public double getExpenseSumForDate(Date date){
+        int year = getYearFromDate(date);
+        int month = getMonthFromDate(date);
+        int day = getDayFromDate(date);
+        SQLiteDatabase db = this.getReadableDatabase();
+        try {
+            Cursor cursor = db.rawQuery("select sum(splitAmount) from " + tableName +" where (" + expensemonth + " = " + month + " and " + expenseyear + " = " + year + " and " + expenseday + " = " + day + ");", null);
+            cursor.moveToNext();
+            return cursor.getDouble(0);
+        }catch (SQLException e){
+            Log.d("GenericExpenseDB","Exception : "+e.toString());
+            return 0.0;
+        }
+    }
+
     public double getAllExpenseSumByCategory(String category){
         SQLiteDatabase db = this.getReadableDatabase();
         try {
@@ -739,6 +754,21 @@ public class ExpenseDB extends SQLiteOpenHelper {
         }
     }
 
+    public HashMap<String,Double> getSumByPayment(){
+        HashMap<String,Double> results = new HashMap<>();
+        SQLiteDatabase db = this.getReadableDatabase();
+        try {
+            Cursor cursor = db.rawQuery("select "+expensemodeofpayment+",sum(splitAmount) from " + tableName + " group by " + expensemodeofpayment + ";", null);
+            while(cursor.moveToNext()){
+                results.put(cursor.getString(0),cursor.getDouble(1));
+            }
+            return results;
+        }catch (SQLException e){
+            Log.d("GenericExpenseDB","Exception : "+e.toString());
+            return null;
+        }
+    }
+
     public int getCountOfAllMonthRecords(){
         SQLiteDatabase db = this.getReadableDatabase();
         try {
@@ -812,6 +842,16 @@ public class ExpenseDB extends SQLiteOpenHelper {
         db.update(tableName, contentValues, "id = ? ", new String[] { id+"" } );
         return true;
     }
+
+    public boolean updateExpenseSettledByGroup(String group,String value) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(expensesettled, value);
+        db.update(tableName, contentValues, expensegroup+" = ? ", new String[] { group } );
+        return true;
+    }
+
+
 
     public static String getDayOfWeek(Date date, Locale locale) {
         DateFormat formatter = new SimpleDateFormat("EEEE", locale);
