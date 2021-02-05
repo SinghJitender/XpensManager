@@ -10,10 +10,10 @@
 
     <application
         android:allowBackup="true"
-        android:icon="@drawable/xpensmanagericon"
+        android:icon="@drawable/xpensmanagericonfinal"
         android:label="@string/app_name"
         android:requestLegacyExternalStorage="true"
-        android:roundIcon="@drawable/xpensmanagericon"
+        android:roundIcon="@drawable/xpensmanagericonfinal"
         android:supportsRtl="true"
         android:theme="@style/Theme.XpensManager"
         tools:replace="android:icon">
@@ -45,10 +45,17 @@
 
         <receiver
             android:name="com.jitender.xpensmanager.BackupAndRestoreUtils.AutomaticBackup"
-            android:enabled="true">
+            android:enabled="true"
+            android:process=":remote">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
                 <action android:name="com.example.xpensmanager.START_ALARM" />
+            </intent-filter>
+        </receiver>
+
+        <receiver android:name="com.jitender.xpensmanager.BackupAndRestoreUtils.AutomaticBackupManager">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED"></action>
             </intent-filter>
         </receiver>
         <provider
