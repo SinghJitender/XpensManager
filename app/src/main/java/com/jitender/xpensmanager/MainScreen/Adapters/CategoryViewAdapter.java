@@ -77,12 +77,18 @@ public class CategoryViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             ((ViewHolder) holder).warningIcon.setVisibility(View.GONE);
             ((ViewHolder) holder).warning.setVisibility(View.GONE);
         }else if(percentageLimit>50 && percentageLimit <=75){
+            ((ViewHolder) holder).warningIcon.setVisibility(View.VISIBLE);
+            ((ViewHolder) holder).warning.setVisibility(View.VISIBLE);
             ((ViewHolder) holder).warning.setText(String.format("You have used %s%% of your limit (%s)", new DecimalFormat("00.00").format(percentageLimit),new DecimalFormat("00.00").format(limit)));
             ((ViewHolder) holder).warningIcon.setImageDrawable(context.getDrawable(R.drawable.warning));
         }else if (percentageLimit>75 && percentageLimit <=100){
+            ((ViewHolder) holder).warningIcon.setVisibility(View.VISIBLE);
+            ((ViewHolder) holder).warning.setVisibility(View.VISIBLE);
             ((ViewHolder) holder).warning.setText(String.format("You have used %s%% of your limit (%s)", new DecimalFormat("00.00").format(percentageLimit),new DecimalFormat("00.00").format(limit)));
             ((ViewHolder) holder).warningIcon.setImageDrawable(context.getDrawable(R.drawable.danger));
-        }else{
+        }else if (percentageLimit>100){
+            ((ViewHolder) holder).warningIcon.setVisibility(View.VISIBLE);
+            ((ViewHolder) holder).warning.setVisibility(View.VISIBLE);
             ((ViewHolder) holder).warning.setText(String.format("You have exceed this month's limit (%s)",new DecimalFormat("00.00").format(limit)));
             ((ViewHolder) holder).warningIcon.setImageDrawable(context.getDrawable(R.drawable.forbidden));
         }
