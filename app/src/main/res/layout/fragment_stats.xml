@@ -57,6 +57,68 @@
 
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:elevation="5dp"
+                app:cardBackgroundColor="@color/white"
+                app:cardCornerRadius="5dp"
+                app:cardUseCompatPadding="true">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:weightSum="10"
+                    android:orientation="horizontal">
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="4"
+                        android:layout_gravity="left"
+                        android:gravity="left|center"
+                        android:orientation="vertical">
+                        <TextView
+                            android:textSize="10sp"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Total Spent On"/>
+                        <TextView
+                            android:id="@+id/selectdate"
+                            android:textStyle="bold"
+                            android:textSize="20sp"
+                            android:gravity="center"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Date"/>
+                        <TextView
+                            android:textSize="8sp"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Tap above to change date"/>
+                    </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="6"
+                        android:layout_gravity="center"
+                        android:gravity="right|center"
+                        android:orientation="vertical">
+                        <TextView
+                            android:id="@+id/todaysExpense"
+                            android:textStyle="bold"
+                            android:textSize="25sp"
+                            android:gravity="center"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="₹ 0.0"/>
+                    </LinearLayout>
+
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
                 android:layout_height="310dp"
                 android:elevation="5dp"
                 app:cardCornerRadius="5dp"
@@ -579,6 +641,38 @@
                     android:paddingTop="8dp"
                     android:textStyle="italic"
                     android:text="*Pie chart indicates group wise breakup"
+                    android:textSize="10sp" />
+            </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/paymentChartView"
+                android:layout_width="match_parent"
+                app:cardUseCompatPadding="true"
+                android:elevation="5dp"
+                app:cardCornerRadius="5dp"
+                android:layout_height="350dp">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="18dp"
+                    android:paddingTop="5dp"
+                    android:text="Payment Modes Breakup"
+                    android:textSize="18sp" />
+                <com.github.mikephil.charting.charts.PieChart
+                    android:id="@+id/pieChartPayment"
+                    android:layout_marginTop="22dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="300dp"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom|end"
+                    android:layout_marginRight="18dp"
+                    android:layout_marginBottom="5dp"
+                    android:gravity="bottom"
+                    android:paddingTop="8dp"
+                    android:textStyle="italic"
+                    android:text="*Pie chart indicates payment wise breakup"
                     android:textSize="10sp" />
             </androidx.cardview.widget.CardView>
 
