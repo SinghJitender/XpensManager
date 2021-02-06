@@ -26,8 +26,8 @@
                 android:padding="10dp"
                 android:layout_height="wrap_content">
                 <TextView
-                    android:id="@+id/categoryTitle"
-                    android:text="Shopping"
+                    android:id="@+id/paymentTitle"
+                    android:text="Credit card"
                     android:gravity="left"
                     android:layout_width="match_parent"
                     android:textSize="22sp"
