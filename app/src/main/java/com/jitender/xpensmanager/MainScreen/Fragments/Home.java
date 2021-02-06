@@ -334,5 +334,4 @@ public class Home extends Fragment {
             emptyView.setVisibility(View.GONE);
         }
     }
-
 }
