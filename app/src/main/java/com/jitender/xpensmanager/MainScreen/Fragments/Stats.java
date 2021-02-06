@@ -1,5 +1,6 @@
 package com.jitender.xpensmanager.MainScreen.Fragments;
 
+import android.app.DatePickerDialog;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
@@ -14,6 +15,7 @@ import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.fragment.app.Fragment;
 
 import com.jitender.xpensmanager.Database.ExpenseDB;
+import com.jitender.xpensmanager.MainScreen.MainActivity;
 import com.jitender.xpensmanager.R;
 import com.jitender.xpensmanager.SplashScreen.SplashScreenActivity;
 import com.github.mikephil.charting.animation.Easing;
@@ -29,7 +31,9 @@ import com.hadiidbouk.charts.ChartProgressBar;
 
 
 import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -38,20 +42,21 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class Stats extends Fragment {
-    private PieChart pchart,pieChartGroup;
+    private PieChart pchart,pieChartGroup,pieChartPayment;
     private ExpenseDB expenseDB;
-    private HashMap<String,Double> weekList,yearList,groupList;
+    private HashMap<String,Double> weekList,yearList,groupList,paymentList;
     private LinkedHashMap<String,Double> categoryList;
     private int monthCount, weekCount, dayCount, totalDistinctMonthCount;
     private HashMap<Integer,Double> dayList;
     private ExecutorService mExecutor;
-    private double totalSpends;
+    private double totalSpends,todaysTotalExpense;
     private ChartProgressBar mChart, yChart, dChart;
-    private TextView overallMonthlyExpense,monthName,currentMonthAverage,weekDayName,currentWeekAverage,dayName,currentDayAverage,percentageOfMonthlySalary,percentageOfMonthlySalaryText;
+    private TextView overallMonthlyExpense,monthName,currentMonthAverage,weekDayName,currentWeekAverage,dayName,currentDayAverage,percentageOfMonthlySalary,percentageOfMonthlySalaryText,selectdate,todaysExpense;
     private TextView category1,category2,category3,category4,category5;
-    private CardView categoryChartView,groupChartView;
+    private CardView categoryChartView,groupChartView,paymentChartView;
     private LinearLayout mainLinearLayout;
     private CoordinatorLayout emptyView;
+    private Calendar myCalendar;
 
     public Stats() {
         // Required empty public constructor
@@ -65,6 +70,7 @@ public class Stats extends Fragment {
         dayList =  new HashMap<>();
         categoryList =  new LinkedHashMap<>();
         groupList =  new HashMap<>();
+        paymentList = new HashMap<>();
         mExecutor = Executors.newFixedThreadPool(4);
         expenseDB = new ExpenseDB(getActivity());
         totalSpends = expenseDB.getAllExpenseSum();
@@ -82,6 +88,7 @@ public class Stats extends Fragment {
        // LineView lineView = view.findViewById(R.id.line_view);
         pchart = view.findViewById(R.id.chart1);
         pieChartGroup = view.findViewById(R.id.pieChartGroup);
+        pieChartPayment = view.findViewById(R.id.pieChartPayment);
         overallMonthlyExpense= view.findViewById(R.id.overallMonthlyExpense);
         monthName = view.findViewById(R.id.monthName);
         weekDayName = view.findViewById(R.id.weekDayName);
@@ -96,11 +103,15 @@ public class Stats extends Fragment {
         category5 = view.findViewById(R.id.category5);
         categoryChartView = view.findViewById(R.id.categoryChartView);
         groupChartView = view.findViewById(R.id.groupChartView);
+        paymentChartView = view.findViewById(R.id.paymentChartView);
         percentageOfMonthlySalary = view.findViewById(R.id.percentageOfMonthlySalary);
         percentageOfMonthlySalaryText =  view.findViewById(R.id.percentageOfMonthlySalaryText);
         mainLinearLayout = view.findViewById(R.id.mainLinearLayout);
         emptyView = view.findViewById(R.id.frameLayout);
+        todaysExpense = view.findViewById(R.id.todaysExpense);
+        selectdate = view.findViewById(R.id.selectdate);
 
+        myCalendar = Calendar.getInstance();
         if(expenseDB.getExpenseCount()<=0){
             mainLinearLayout.setVisibility(View.GONE);
             emptyView.setVisibility(View.VISIBLE);
@@ -200,6 +211,32 @@ public class Stats extends Fragment {
                 });
             });
 
+            //Sum of all payments
+            mExecutor.execute(()->{
+                if(paymentList.size()>0){
+                    paymentList.clear();
+                }
+                paymentList = expenseDB.getSumByPayment();
+                Log.d("Stats",paymentList+"");
+                getActivity().runOnUiThread(()->{
+                    //Set Group Data
+                    if(paymentList.size()>0){
+                        paymentChartView.setVisibility(View.VISIBLE);
+                    }else{
+                        paymentChartView.setVisibility(View.GONE);
+                    }
+                    setPaymentData(paymentList,totalSpends);
+                });
+            });
+
+            selectdate.setOnClickListener((v) -> {
+                DatePickerDialog mDatePickerDialogue = new DatePickerDialog(getContext(), datePickerDialogue, myCalendar
+                        .get(Calendar.YEAR), myCalendar.get(Calendar.MONTH),
+                        myCalendar.get(Calendar.DAY_OF_MONTH));
+                mDatePickerDialogue.getDatePicker().setMaxDate(System.currentTimeMillis());
+                mDatePickerDialogue.show();
+            });
+
             //Text Stats
             mExecutor.execute(()->{
                 Date date = new Date();
@@ -210,11 +247,14 @@ public class Stats extends Fragment {
                 weekCount = expenseDB.getCountOfDistinctWeekDaysRecords(currentDayOfWeek);
                 monthCount = expenseDB.getCountOfDistinctMonthRecords(currentMonth);
                 dayCount = expenseDB.getCountOfDistinctDayRecords(currentDay);
+                todaysTotalExpense = expenseDB.getExpenseSumForDate(date);
                 totalDistinctMonthCount = expenseDB.getCountOfAllMonthRecords();
                 getActivity().runOnUiThread(()->{
+                    selectdate.setText(new SimpleDateFormat("dd/MM/yyyy").format(new Date()));
                     monthName.setText("Average Spending In "+currentMonth);
                     weekDayName.setText("Average Expenditure On "+currentDayOfWeek+"");
                     dayName.setText("Average Spends On Day "+currentDay+" Of Month");
+                    todaysExpense.setText(SplashScreenActivity.cSymbol+" "+todaysTotalExpense);
                     if(weekCount>0 && weekList.containsKey(currentDayOfWeek)){
                         //Log.d("Stats - Week Day Avg",(weekList.get(currentDayOfWeek)/weekCount)+"");
                         currentWeekAverage.setText(SplashScreenActivity.cSymbol+" "+new DecimalFormat("00.00").format(weekList.get(currentDayOfWeek)/weekCount)+"");
@@ -278,6 +318,22 @@ public class Stats extends Fragment {
         lineView.setDataList(lis); //or lineView.setFloatDataList(floatDataLists)*/
 
         return view;
+    }
+
+    DatePickerDialog.OnDateSetListener datePickerDialogue = (view1, year, monthOfYear, dayOfMonth) -> {
+        // TODO Auto-generated method stub
+        myCalendar.set(Calendar.YEAR, year);
+        myCalendar.set(Calendar.MONTH, monthOfYear);
+        myCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+        updateLabel();
+    };
+
+    void updateLabel(){
+        String myFormat = "dd/MM/yyyy"; //In which you need put here
+        SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.ENGLISH);
+        selectdate.setText(sdf.format(myCalendar.getTime()));
+        todaysTotalExpense = expenseDB.getExpenseSumForDate(myCalendar.getTime());
+        todaysExpense.setText(SplashScreenActivity.cSymbol+" "+todaysTotalExpense);
     }
 
     private ArrayList<BarData> setWeeklyChart(HashMap<String,Double> weekList,double totalSpends){
@@ -476,4 +532,74 @@ public class Stats extends Fragment {
         pieChartGroup.invalidate();
     }
 
+    private void setPaymentData(HashMap<String,Double> paymentList,double totalSpends) {
+        ArrayList<PieEntry> entries = new ArrayList<>();
+
+        for(String key : paymentList.keySet()){
+            entries.add(new PieEntry((float) ((paymentList.get(key)/totalSpends)*100),
+                    key,
+                    getResources().getDrawable(R.drawable.dot)));
+        }
+
+
+        PieDataSet dataSet = new PieDataSet(entries, "");
+        dataSet.setDrawIcons(false);
+        dataSet.setSliceSpace(3f);
+        dataSet.setIconsOffset(new MPPointF(0, 40));
+        dataSet.setSelectionShift(5f);
+
+        // add a lot of colors
+
+        ArrayList<Integer> colors = new ArrayList<>();
+
+        colors.add(getActivity().getResources().getColor(R.color.theme_blue_variant));
+        colors.add(getActivity().getResources().getColor(R.color.theme_red));
+        colors.add(getActivity().getResources().getColor(R.color.theme_yellow));
+        colors.add(getActivity().getResources().getColor(R.color.theme_blue));
+        colors.add(getActivity().getResources().getColor(R.color.theme_cyan));
+        colors.add(getActivity().getResources().getColor(R.color.theme_orange));
+        colors.add(getActivity().getResources().getColor(R.color.black));
+        colors.add(getActivity().getResources().getColor(R.color.theme_orange_variant));
+        colors.add(getActivity().getResources().getColor(R.color.theme_green));
+
+        dataSet.setColors(colors);
+        //dataSet.setSelectionShift(0f);
+
+        PieData data = new PieData(dataSet);
+        data.setValueFormatter(new PercentFormatter());
+        data.setValueTextSize(11f);
+        data.setValueTextColor(Color.WHITE);
+        //data.setDrawValues(false);
+        pieChartPayment.setUsePercentValues(true);
+        pieChartPayment.getDescription().setEnabled(false);
+        pieChartPayment.setExtraOffsets(5, 10, 5, 5);
+        pieChartPayment.setDragDecelerationFrictionCoef(0.95f);
+        pieChartPayment.setDrawHoleEnabled(true);
+        pieChartPayment.setHoleColor(Color.WHITE);
+        pieChartPayment.setTransparentCircleColor(Color.WHITE);
+        pieChartPayment.setTransparentCircleAlpha(110);
+        pieChartPayment.setHoleRadius(44f);
+        pieChartPayment.setTransparentCircleRadius(48f);
+        pieChartPayment.setDrawCenterText(true);
+        pieChartPayment.setRotationAngle(0);
+        // enable rotation of the chart by touch
+        pieChartPayment.setRotationEnabled(false);
+        pieChartPayment.setHighlightPerTapEnabled(true);
+        pieChartPayment.animateY(500, Easing.EaseInOutQuad);
+        Legend l = pieChartPayment.getLegend();
+        l.setVerticalAlignment(Legend.LegendVerticalAlignment.CENTER);
+        l.setHorizontalAlignment(Legend.LegendHorizontalAlignment.LEFT);
+        l.setOrientation(Legend.LegendOrientation.VERTICAL);
+        l.setDrawInside(false);
+        l.setXEntrySpace(5f);
+        l.setYEntrySpace(2f);
+        l.setYOffset(3f);
+        pieChartPayment.setData(data);
+        pieChartPayment.setEntryLabelColor(Color.WHITE);
+        pieChartPayment.setEntryLabelTextSize(11f);
+        // undo all highlights
+        //chart.highlightValues(null);
+        pieChartPayment.setDrawEntryLabels(false);
+        pieChartPayment.invalidate();
+    }
 }
