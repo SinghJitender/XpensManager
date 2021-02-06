@@ -70,7 +70,6 @@ public class SplashScreenActivity extends AppCompatActivity {
                 overridePendingTransition(R.xml.slide_in, R.xml.slide_out);
                 finish();
             }
-            //new LoadTesting(getApplicationContext()).populateData();
         },400);
     }
 
