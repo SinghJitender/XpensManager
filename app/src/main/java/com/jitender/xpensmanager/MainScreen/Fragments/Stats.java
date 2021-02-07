@@ -289,7 +289,7 @@ public class Stats extends Fragment {
                         if(SplashScreenActivity.salary>0){
                             percentageOfMonthlySalary.setVisibility(View.VISIBLE);
                             percentageOfMonthlySalaryText.setVisibility(View.VISIBLE);
-                            percentageOfMonthlySalary.setText(new DecimalFormat("##.00").format((monthlyAverageCal/SplashScreenActivity.salary*100))+"%");
+                            percentageOfMonthlySalary.setText(new DecimalFormat("00.00").format((monthlyAverageCal/SplashScreenActivity.salary*100))+"%");
                         }
                     }else{
                         // No Value Present in db
