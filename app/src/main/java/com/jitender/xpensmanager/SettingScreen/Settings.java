@@ -21,6 +21,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.material.snackbar.Snackbar;
 import com.jitender.xpensmanager.BackupAndRestoreUtils.AutomaticBackupManager;
@@ -160,6 +161,7 @@ public class Settings extends AppCompatActivity {
                             editor.apply();
                             SplashScreenActivity.salary = tempLimit;
                             salary.setText(SplashScreenActivity.cSymbol+" "+tempLimit);
+                            Toast.makeText(getApplicationContext(),"Earnings Updated",Toast.LENGTH_SHORT).show();
                             dialog.dismiss();
                         }
                     }
