@@ -10,6 +10,7 @@ import android.os.Bundle;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -55,6 +56,7 @@ public class Settings extends AppCompatActivity {
     private LinearLayout restoringLayout;
     private Calendar today;
     private CoordinatorLayout framelayout;
+    private CardView currencyUpdate,yearOfBirth,earnings,backupFrequencyUpdate;
     public Settings() {}
 
 
@@ -90,6 +92,10 @@ public class Settings extends AppCompatActivity {
         backupLocation = findViewById(R.id.backupLocation);
         exportLocation = findViewById(R.id.exportLocation);
         framelayout = findViewById(R.id.frameLayout);
+        currencyUpdate = findViewById(R.id.currencyUpdate);
+        yearOfBirth = findViewById(R.id.yearOfBirth);
+        earnings = findViewById(R.id.earnings);
+        backupFrequencyUpdate = findViewById(R.id.backupFrequencyUpdate);
 
         checkBackupButtonEnable();
 
@@ -118,7 +124,7 @@ public class Settings extends AppCompatActivity {
         }
 
         backUpfrequency.setText(currentBackupFrequency);
-        backUpfrequency.setOnClickListener((v)->{
+        backupFrequencyUpdate.setOnClickListener((v)->{
             displayFrequencyDialogBox(new String[]{"None","Daily","Weekly","Monthly"});
         });
 
@@ -132,12 +138,12 @@ public class Settings extends AppCompatActivity {
         }
 
         age.setText(currentAge+"");
-        age.setOnClickListener((v)->{
+        yearOfBirth.setOnClickListener((v)->{
             displayGroupDialogBox();
         });
 
         salary.setText(currentCurrencySymbol+" "+currentSalary);
-        salary.setOnClickListener((v)->{
+        earnings.setOnClickListener((v)->{
             LayoutInflater factory = LayoutInflater.from(this);
             final View dialogView = factory.inflate(R.layout.update_details_dialog, null);
             final AlertDialog dialog = new AlertDialog.Builder(this).create();
@@ -174,10 +180,8 @@ public class Settings extends AppCompatActivity {
 
         currencyName.setText(currentCurrencyName);
         currencySymbol.setText(currentCurrencySymbol);
-        currencySymbol.setOnClickListener((v)-> {
-            displayCurrencyDialogBox();
-        });
-        currencyName.setOnClickListener((v)-> {
+
+        currencyUpdate.setOnClickListener((v)->{
             displayCurrencyDialogBox();
         });
 
