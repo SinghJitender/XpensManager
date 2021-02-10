@@ -17,16 +17,17 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.XpensManager"
         tools:replace="android:icon">
-        <activity android:name="com.jitender.xpensmanager.SetupScreen.Setup"></activity>
-        <activity android:name="com.jitender.xpensmanager.SettingScreen.Settings"></activity>
-        <activity android:name="com.jitender.xpensmanager.ExpenseScreen.Expense" />
+        <activity android:name=".SettingScreen.UserGuide"></activity>
+        <activity android:name=".SetupScreen.Setup" />
+        <activity android:name=".SettingScreen.Settings" />
+        <activity android:name=".ExpenseScreen.Expense" />
         <activity
-            android:name="com.jitender.xpensmanager.MainScreen.MainActivity"
-            android:windowSoftInputMode="adjustPan"
+            android:name=".MainScreen.MainActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
-            android:label="@string/title_activity_main"></activity>
+            android:label="@string/title_activity_main"
+            android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name="com.jitender.xpensmanager.SplashScreen.SplashScreenActivity"
+            android:name=".SplashScreen.SplashScreenActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/title_activity_splash_screen"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar">
@@ -38,13 +39,13 @@
         </activity>
 
         <service
-            android:name="com.jitender.xpensmanager.BackupAndRestoreUtils.BackupService"
+            android:name=".BackupAndRestoreUtils.BackupService"
             android:exported="true" />
-        <service android:name="com.jitender.xpensmanager.BackupAndRestoreUtils.ExportToExcelService" />
-        <service android:name="com.jitender.xpensmanager.BackupAndRestoreUtils.RestoreService" />
+        <service android:name=".BackupAndRestoreUtils.ExportToExcelService" />
+        <service android:name=".BackupAndRestoreUtils.RestoreService" />
 
         <receiver
-            android:name="com.jitender.xpensmanager.BackupAndRestoreUtils.AutomaticBackup"
+            android:name=".BackupAndRestoreUtils.AutomaticBackup"
             android:enabled="true"
             android:process=":remote">
             <intent-filter>
@@ -52,12 +53,12 @@
                 <action android:name="com.example.xpensmanager.START_ALARM" />
             </intent-filter>
         </receiver>
-
-        <receiver android:name="com.jitender.xpensmanager.BackupAndRestoreUtils.AutomaticBackupManager">
+        <receiver android:name=".BackupAndRestoreUtils.AutomaticBackupManager">
             <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED"></action>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
+
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="${applicationId}.provider"
