@@ -65,7 +65,7 @@ public class BackupService extends Service {
             }else{
                 builder.setContentTitle("Failed to create backup");
             }
-            builder.setContentText(message);
+            builder.setContentText(message.replace("/storage/emulated/0","/storage"));
             builder.setProgress(0,0,false);
             manager.notify(1,builder.build());
             //getApplicationContext().stopService(new Intent(getApplicationContext(),BackupService.class));
