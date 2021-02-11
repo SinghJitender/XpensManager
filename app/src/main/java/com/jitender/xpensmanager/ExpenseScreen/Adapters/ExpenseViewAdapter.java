@@ -50,11 +50,11 @@ public class ExpenseViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             ((ViewHolder) holder).date.setVisibility(View.VISIBLE);
             ((ViewHolder) holder).date.setText(list.get(position).getTextMonth());
         }
-        if(list.get(position).getGroup().equalsIgnoreCase("OWN")) {
-            ((ViewHolder) holder).amount.setText(SplashScreenActivity.cSymbol+ " "+new DecimalFormat("00.00").format(list.get(position).getAmount()) + " paid by "+list.get(position).getPaidBy());
+        if(list.get(position).getGroup().equalsIgnoreCase("Personal")) {
+            ((ViewHolder) holder).amount.setText(SplashScreenActivity.cSymbol+ " "+new DecimalFormat("00.00").format(list.get(position).getAmount()) + " paid by you");
         }
         else{
-            ((ViewHolder) holder).amount.setText(SplashScreenActivity.cSymbol+ " "+new DecimalFormat("00.00").format(list.get(position).getAmount())+ " split with "+list.get(position).getGroup()+ " paid by "+list.get(position).getPaidBy());
+            ((ViewHolder) holder).amount.setText(SplashScreenActivity.cSymbol+ " "+new DecimalFormat("00.00").format(list.get(position).getAmount())+ " paid by "+(list.get(position).getPaidBy().equalsIgnoreCase("Me")?"you":"others"));
         }
         if(list.get(position).getSettled().equalsIgnoreCase("false")){
             if(list.get(position).getPaidBy().equalsIgnoreCase("Me")){
@@ -72,11 +72,12 @@ public class ExpenseViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         }
         ((ViewHolder) holder).category.setText(list.get(position).getCategory());
         ((ViewHolder) holder).payment.setText(list.get(position).getModeOfPayment());
+        ((ViewHolder) holder).group.setText(list.get(position).getGroup());
 
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        TextView description, splitamount, date,amount,category,payment, remainingamount;
+        TextView description, splitamount, date,amount,category,payment, remainingamount,group;
         ImageView expenseSettled;
 
         ViewHolder(View itemView) {
@@ -89,6 +90,7 @@ public class ExpenseViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             payment = itemView.findViewById(R.id.payment);
             remainingamount = itemView.findViewById(R.id.remainingamount);
             expenseSettled = itemView.findViewById(R.id.expenseSettled);
+            group = itemView.findViewById(R.id.group);
         }
 
     }
