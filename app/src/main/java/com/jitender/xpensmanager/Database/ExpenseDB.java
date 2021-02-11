@@ -887,4 +887,9 @@ public class ExpenseDB extends SQLiteOpenHelper {
         String[] months = {"January","February","March","April","May","June","July","August","September","October","November","December"};
         return months[mon%12];
     }
+
+    public static String shortMonthTextFromIntMonth(int mon){
+        String[] months = {"Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"};
+        return months[mon%12];
+    }
 }
