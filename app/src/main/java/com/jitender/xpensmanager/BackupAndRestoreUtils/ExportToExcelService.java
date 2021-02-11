@@ -51,7 +51,7 @@ private ExecutorService executorService;
             }else{
                 builder.setContentTitle("Failed to export");
             }
-            builder.setContentText(message);
+            builder.setContentText(message.replace("/storage/emulated/0","/storage"));
             builder.setProgress(0,0,false);
             managerCompat.notify(2,builder.build());
             getApplication().stopService(new Intent(getApplicationContext(), ExportToExcelService.class));
