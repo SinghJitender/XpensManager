@@ -27,6 +27,7 @@ import com.jitender.xpensmanager.Database.PaymentsDB;
 import com.jitender.xpensmanager.Enums.ViewType;
 import com.jitender.xpensmanager.Database.ExpenseData;
 import com.jitender.xpensmanager.ExpenseScreen.Adapters.ExpenseViewAdapter;
+import com.jitender.xpensmanager.ExpenseScreen.Expense;
 import com.jitender.xpensmanager.MainScreen.Adapters.SwipeToDeleteCallback;
 import com.jitender.xpensmanager.MainScreen.Adapters.SwipeToSettleCallback;
 import com.jitender.xpensmanager.R;
@@ -97,6 +98,7 @@ public class MonthlyViewFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_monthly_view, container, false);
+        ((Expense)getActivity()).getSupportActionBar().setTitle((groupBy.equals("None")?"All Expenses":groupBy));
         recyclerView = view.findViewById(R.id.recycler_view);
         currentMonthName = view.findViewById(R.id.currentMonthName);
         currentMonthTotalSpends = view.findViewById(R.id.currentMonthTotalSpends);
@@ -156,8 +158,10 @@ public class MonthlyViewFragment extends Fragment {
         }
         if(expenseData.size() == 0) {
             emptyView.setVisibility(View.VISIBLE);
+            recyclerView.setVisibility(View.GONE);
         }else{
             emptyView.setVisibility(View.GONE);
+            recyclerView.setVisibility(View.VISIBLE);
         }
         adapter = new ExpenseViewAdapter(expenseData,getActivity(), ViewType.MONTHLY);
         recyclerView.addItemDecoration(getSectionCallback(expenseData));
@@ -191,8 +195,10 @@ public class MonthlyViewFragment extends Fragment {
                 adapter.removeItem(position);
                 if(adapter.getData().size() == 0) {
                     emptyView.setVisibility(View.VISIBLE);
+                    recyclerView.setVisibility(View.GONE);
                 }else{
                     emptyView.setVisibility(View.GONE);
+                    recyclerView.setVisibility(View.VISIBLE);
                 }
                 Snackbar snackbar = Snackbar
                         .make(monthlyContainer, "Item was removed from the list",10000)
@@ -257,6 +263,7 @@ public class MonthlyViewFragment extends Fragment {
                         recyclerView.scrollToPosition(position);
                         if(emptyView.getVisibility() == View.VISIBLE) {
                             emptyView.setVisibility(View.GONE);
+                            recyclerView.setVisibility(View.VISIBLE);
                         }
                     }
                 });
@@ -362,15 +369,17 @@ public class MonthlyViewFragment extends Fragment {
                             }
                             if(expenseData.size() == 0) {
                                 emptyView.setVisibility(View.VISIBLE);
+                                recyclerView.setVisibility(View.GONE);
                             }else{
                                 emptyView.setVisibility(View.GONE);
+                                recyclerView.setVisibility(View.VISIBLE);
                             }
                             adapter.notifyDataSetChanged();
                     }
                 }, today.get(Calendar.YEAR), today.get(Calendar.MONTH));
         builder.setTitle("View Expense For Month-Year")
                 //.setMonthRange(Calendar.FEBRUARY, Calendar.NOVEMBER)
-                 .setYearRange(1890, today.get(Calendar.YEAR))
+                 .setYearRange(2010, today.get(Calendar.YEAR))
                 // .setMonthAndYearRange(Calendar.FEBRUARY, Calendar.OCTOBER, 1890, 1890)
                 //.showMonthOnly()
                 // .showYearOnly()
