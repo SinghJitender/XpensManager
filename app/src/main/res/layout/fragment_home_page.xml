@@ -70,17 +70,16 @@
                                     />
                             </LinearLayout>
                         </LinearLayout>
+
                         <ImageButton
                             android:id="@+id/viewAll"
-                            android:layout_width="0dp"
-                            android:layout_height="40dp"
+                            android:layout_width="40dp"
+                            android:layout_height="50dp"
+                            android:layout_gravity="center|end"
                             android:layout_weight="1"
-                            android:text="Delete"
-                            android:layout_marginRight="5dp"
-                            android:layout_gravity="center_vertical"
                             android:backgroundTint="@color/theme_blue_variant"
-                            android:src="@drawable/expand"
-                            android:scaleType="fitCenter"/>
+                            android:scaleType="centerInside"
+                            android:src="@drawable/history" />
                     </LinearLayout>
 
                     <LinearLayout
