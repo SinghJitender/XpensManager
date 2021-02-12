@@ -381,18 +381,6 @@
                         android:textStyle="normal"/>
                 </LinearLayout>
                 <TextView
-                    android:id="@+id/quickQuestionText"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="3dp"
-                    android:layout_marginBottom="3dp"
-                    android:background="@null"
-                    android:textStyle="italic"
-                    android:focusedByDefault="true"
-                    android:text="This info is only stored on your device offline and used for doing expense analysis or providing suggestions. \nFields marked with (*) are mandatory"
-                    android:paddingLeft="20dp"
-                    android:textSize="12sp"/>
-                <TextView
                     android:id="@+id/currency"
                     android:gravity="center"
                     android:clickable="true"
@@ -442,6 +430,19 @@
                     android:inputType="number"
                     android:textSize="18sp"
                     android:visibility="visible" />
+                <TextView
+                    android:id="@+id/quickQuestionText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="3dp"
+                    android:layout_marginBottom="3dp"
+                    android:background="@null"
+                    android:textStyle="italic"
+                    android:clickable="true"
+                    android:focusedByDefault="true"
+                    android:text="*Tap here to view disclaimer"
+                    android:paddingLeft="20dp"
+                    android:textSize="12sp"/>
 
             </LinearLayout>
 
