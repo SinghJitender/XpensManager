@@ -328,7 +328,7 @@ public class Settings extends AppCompatActivity {
                     editor.putInt("age",selectedYear);
                     editor.apply();
                 }, today.get(Calendar.YEAR), today.get(Calendar.MONTH));
-        builder.setTitle("Select date of birth")
+        builder.setTitle("Select year of birth")
                 .setYearRange(1920, today.get(Calendar.YEAR))
                 .showYearOnly()
                 .setOnMonthChangedListener(selectedMonth -> { /* on month selected*/ })
