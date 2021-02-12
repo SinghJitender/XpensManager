@@ -18,6 +18,7 @@ import android.transition.Fade;
 import android.transition.Slide;
 import android.transition.Transition;
 import android.transition.TransitionManager;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
@@ -492,7 +493,7 @@ public class Setup extends AppCompatActivity {
                 (selectedMonth, selectedYear) -> {
                     age.setText(selectedYear+"");
                 }, today.get(Calendar.YEAR), today.get(Calendar.MONTH));
-        builder.setTitle("Select date of birth")
+        builder.setTitle("Select year of birth")
                 .setYearRange(1920, today.get(Calendar.YEAR))
                 .showYearOnly()
                 .setOnMonthChangedListener(selectedMonth -> { /* on month selected*/ })
