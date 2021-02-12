@@ -1,10 +1,12 @@
 package com.jitender.xpensmanager.BackupAndRestoreUtils;
 
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Environment;
 import android.util.Log;
+import android.webkit.MimeTypeMap;
 import android.widget.Toast;
 
 import com.jitender.xpensmanager.Database.PaymentsDB;
@@ -405,13 +407,21 @@ public class BackupExportRestoreUtil {
 
     public String restoreFromUri(Uri uri) throws IOException,ParseException {
         try {
-            BufferedReader result = new BufferedReader(new InputStreamReader(context.getContentResolver().openInputStream(uri)));
-            String temp = "";
-            String x;
-            while ((x = result.readLine()) != null) {
-                temp += x;
+            ContentResolver cR = context.getContentResolver();
+            MimeTypeMap mime = MimeTypeMap.getSingleton();
+            String type = mime.getExtensionFromMimeType(cR.getType(uri));
+            Log.d("Type of File",type);
+            if(type.equalsIgnoreCase("txt")) {
+                BufferedReader result = new BufferedReader(new InputStreamReader(context.getContentResolver().openInputStream(uri)));
+                String temp = "";
+                String x;
+                while ((x = result.readLine()) != null) {
+                    temp += x;
+                }
+                return restore(temp);
+            }else{
+                return "Please select a text file.";
             }
-            return restore(temp);
         }catch (Exception e) {
             Log.d("Restore Error",e.toString());
             return "Unable to restore. Corrupted File";
