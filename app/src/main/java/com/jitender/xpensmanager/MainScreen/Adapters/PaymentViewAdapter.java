@@ -16,6 +16,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
@@ -146,6 +147,7 @@ public class PaymentViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                                             paymentsDB.updatePaymentLimitByModeName(results.get(position).getMode(),tempLimit);
                                             results.get(position).setLimit(tempLimit);
                                             notifyItemChanged(position);
+                                            Toast.makeText(context,"Update Successful",Toast.LENGTH_SHORT).show();
                                             dialog.dismiss();
                                         }
                                     }
@@ -173,6 +175,7 @@ public class PaymentViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                                 paymentsDB.deletePaymentByTitle(results.get(position).getMode());
                                 results.remove(position);
                                 list.remove(position);
+                                Toast.makeText(context,"Payment Mode Deleted",Toast.LENGTH_SHORT).show();
                                 notifyDataSetChanged();
                                 if(results.size()==0){
                                     Category.emptyView.setVisibility(View.VISIBLE);
