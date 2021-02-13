@@ -149,7 +149,6 @@ public class GroupViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             });
 
             ((ViewHolder) holder).editXpens.setOnClickListener((v) -> {
-                Toast.makeText(context, "Edit Expense", Toast.LENGTH_SHORT).show();
                 LayoutInflater factory = LayoutInflater.from(context);
                 final View dialogView = factory.inflate(R.layout.update_group_details, null);
                 final AlertDialog dialog = new AlertDialog.Builder(context).create();
@@ -196,6 +195,7 @@ public class GroupViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                                             results.get(position).setNoOfPersons(tempNoOfPersons);
                                             notifyItemChanged(position);
                                             dialog.dismiss();
+                                            Toast.makeText(context,"Update Successful",Toast.LENGTH_SHORT).show();
                                         }
                                     }
                                 }
@@ -225,6 +225,7 @@ public class GroupViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                                 expenseDB.updateExpenseSettledByGroup(results.get(position).getTitle(),"true");
                                 results.get(position).setNetAmount(00.00);
                                 notifyItemChanged(position);
+                                Toast.makeText(context,"All Expenses Settled",Toast.LENGTH_SHORT).show();
                             }
                         })
                         .setNegativeButton(android.R.string.no, null)
@@ -243,6 +244,7 @@ public class GroupViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                                 groupDB.deleteGroupByTitle(results.get(position).getTitle());
                                 results.remove(position);
                                 list.remove(position);
+                                Toast.makeText(context,"Group Deleted",Toast.LENGTH_SHORT).show();
                                 notifyDataSetChanged();
                                 if(results.size()==0){
                                     Group.emptyView.setVisibility(View.VISIBLE);
