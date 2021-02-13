@@ -16,6 +16,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
@@ -141,6 +142,7 @@ public class CategoryViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                                             //No change
                                             dialog.dismiss();
                                         }else{
+                                            Toast.makeText(context,"Update Successful",Toast.LENGTH_SHORT).show();
                                             categoryDB.updateCategoryLimitByCategoryName(results.get(position).getCategory(),tempLimit);
                                             results.get(position).setLimit(tempLimit);
                                             notifyItemChanged(position);
@@ -171,6 +173,7 @@ public class CategoryViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                                 categoryDB.deleteCategoryByTitle(results.get(position).getCategory());
                                 results.remove(position);
                                 list.remove(position);
+                                Toast.makeText(context,"Category Deleted",Toast.LENGTH_SHORT).show();
                                 notifyDataSetChanged();
                                 if(results.size()==0){
                                     Category.emptyView.setVisibility(View.VISIBLE);
