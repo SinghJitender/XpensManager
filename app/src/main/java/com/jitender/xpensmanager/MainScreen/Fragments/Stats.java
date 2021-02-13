@@ -28,6 +28,7 @@ import com.github.mikephil.charting.formatter.PercentFormatter;
 import com.github.mikephil.charting.utils.MPPointF;
 import com.hadiidbouk.charts.BarData;
 import com.hadiidbouk.charts.ChartProgressBar;
+import com.whiteelephant.monthpicker.MonthPickerDialog;
 
 
 import java.text.DecimalFormat;
@@ -49,9 +50,10 @@ public class Stats extends Fragment {
     private int monthCount, weekCount, dayCount, totalDistinctMonthCount;
     private HashMap<Integer,Double> dayList;
     private ExecutorService mExecutor;
-    private double totalSpends,todaysTotalExpense;
+    private double totalSpends,todaysTotalExpense, monthsTotalExpense,yearsTotalExpense;
     private ChartProgressBar mChart, yChart, dChart;
-    private TextView overallMonthlyExpense,monthName,currentMonthAverage,weekDayName,currentWeekAverage,dayName,currentDayAverage,percentageOfMonthlySalary,percentageOfMonthlySalaryText,selectdate,todaysExpense;
+    private TextView overallMonthlyExpense,monthName,currentMonthAverage,weekDayName,currentWeekAverage,dayName,currentDayAverage,
+            percentageOfMonthlySalary,percentageOfMonthlySalaryText,selectdate,todaysExpense,selectyear,yearsExpense,selectmonthyear, monthsExpense;
     private TextView category1,category2,category3,category4,category5;
     private CardView categoryChartView,groupChartView,paymentChartView;
     private LinearLayout mainLinearLayout;
@@ -109,7 +111,11 @@ public class Stats extends Fragment {
         mainLinearLayout = view.findViewById(R.id.mainLinearLayout);
         emptyView = view.findViewById(R.id.frameLayout);
         todaysExpense = view.findViewById(R.id.todaysExpense);
+        monthsExpense = view.findViewById(R.id.monthsExpense);
+        yearsExpense = view.findViewById(R.id.yearsExpense);
         selectdate = view.findViewById(R.id.selectdate);
+        selectyear = view.findViewById(R.id.selectyear);
+        selectmonthyear = view.findViewById(R.id.selectmonthyear);
 
         myCalendar = Calendar.getInstance();
         if(expenseDB.getExpenseCount()<=0){
@@ -237,6 +243,14 @@ public class Stats extends Fragment {
                 mDatePickerDialogue.show();
             });
 
+            selectmonthyear.setOnClickListener(v->{
+                displayGroupDialogBox();
+            });
+
+            selectyear.setOnClickListener(v->{
+                displayGroupDialogBoxForYear();
+            });
+
             //Text Stats
             mExecutor.execute(()->{
                 Date date = new Date();
@@ -248,9 +262,15 @@ public class Stats extends Fragment {
                 monthCount = expenseDB.getCountOfDistinctMonthRecords(currentMonth);
                 dayCount = expenseDB.getCountOfDistinctDayRecords(currentDay);
                 todaysTotalExpense = expenseDB.getExpenseSumForDate(date);
+                monthsTotalExpense = expenseDB.getMonthlyExpenseSum(ExpenseDB.getMonthFromDate(new Date()), ExpenseDB.getYearFromDate(new Date()));
+                yearsTotalExpense = expenseDB.getYearlyExpenseSum(ExpenseDB.getYearFromDate(new Date()));
                 totalDistinctMonthCount = expenseDB.getCountOfAllMonthRecords();
                 getActivity().runOnUiThread(()->{
                     selectdate.setText(new SimpleDateFormat("dd/MM/yyyy").format(new Date()));
+                    selectmonthyear.setText(ExpenseDB.shortMonthTextFromIntMonth(ExpenseDB.getMonthFromDate(new Date())-1)+"-"+ExpenseDB.getYearFromDate(new Date()));
+                    selectyear.setText(ExpenseDB.getYearFromDate(new Date())+"");
+                    monthsExpense.setText(SplashScreenActivity.cSymbol+" "+monthsTotalExpense);
+                    yearsExpense.setText(SplashScreenActivity.cSymbol+" "+yearsTotalExpense);
                     monthName.setText("Average Spending In "+currentMonth);
                     weekDayName.setText("Average Expenditure On "+currentDayOfWeek+"");
                     dayName.setText("Average Spends On Day "+currentDay+" Of Month");
@@ -601,5 +621,55 @@ public class Stats extends Fragment {
         //chart.highlightValues(null);
         pieChartPayment.setDrawEntryLabels(false);
         pieChartPayment.invalidate();
+    }
+
+    public void displayGroupDialogBox(){
+        MonthPickerDialog.Builder builder = new MonthPickerDialog.Builder(getContext(),
+                new MonthPickerDialog.OnDateSetListener() {
+                    @Override
+                    public void onDateSet(int selectedMonth, int selectedYear) { // on date set
+                        selectmonthyear.setText(ExpenseDB.shortMonthTextFromIntMonth(selectedMonth) +"-"+ selectedYear);
+                        monthsTotalExpense = expenseDB.getMonthlyExpenseSum(selectedMonth+1,selectedYear);
+                        monthsExpense.setText(SplashScreenActivity.cSymbol+" "+monthsTotalExpense);
+                    }
+                }, myCalendar.get(Calendar.YEAR), myCalendar.get(Calendar.MONTH));
+        builder.setTitle("Select Month-Year")
+                //.setMonthRange(Calendar.FEBRUARY, Calendar.NOVEMBER)
+                .setYearRange(2010, myCalendar.get(Calendar.YEAR))
+                // .setMonthAndYearRange(Calendar.FEBRUARY, Calendar.OCTOBER, 1890, 1890)
+                //.showMonthOnly()
+                // .showYearOnly()
+                .setOnMonthChangedListener(new MonthPickerDialog.OnMonthChangedListener() {
+                    @Override
+                    public void onMonthChanged(int selectedMonth) { /* on month selected*/ } })
+                .setOnYearChangedListener(new MonthPickerDialog.OnYearChangedListener() {
+                    @Override
+                    public void onYearChanged(int selectedYear) { /* on year selected*/ } })
+                .build().show();
+    }
+
+    public void displayGroupDialogBoxForYear(){
+        MonthPickerDialog.Builder builder = new MonthPickerDialog.Builder(getContext(),
+                new MonthPickerDialog.OnDateSetListener() {
+                    @Override
+                    public void onDateSet(int selectedMonth, int selectedYear) { // on date set
+                        selectyear.setText(selectedYear+"");
+                        yearsTotalExpense = expenseDB.getYearlyExpenseSum(selectedYear);
+                        yearsExpense.setText(SplashScreenActivity.cSymbol+" "+yearsTotalExpense);
+                    }
+                }, myCalendar.get(Calendar.YEAR), myCalendar.get(Calendar.MONTH));
+        builder.setTitle("Select Year")
+                //.setMonthRange(Calendar.FEBRUARY, Calendar.NOVEMBER)
+                .setYearRange(2010, myCalendar.get(Calendar.YEAR))
+                // .setMonthAndYearRange(Calendar.FEBRUARY, Calendar.OCTOBER, 1890, 1890)
+                //.showMonthOnly()
+                .showYearOnly()
+                .setOnMonthChangedListener(new MonthPickerDialog.OnMonthChangedListener() {
+                    @Override
+                    public void onMonthChanged(int selectedMonth) { /* on month selected*/ } })
+                .setOnYearChangedListener(new MonthPickerDialog.OnYearChangedListener() {
+                    @Override
+                    public void onYearChanged(int selectedYear) { /* on year selected*/ } })
+                .build().show();
     }
 }
