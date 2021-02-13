@@ -92,8 +92,10 @@ public class Home extends Fragment {
             progressBar.setProgress((int)((totalSpentThisMonth/totalCategorySum)*100));
             if(expenseData.size() == 0) {
                 emptyView.setVisibility(View.VISIBLE);
+                recyclerView.setVisibility(View.GONE);
             }else{
                 emptyView.setVisibility(View.GONE);
+                recyclerView.setVisibility(View.VISIBLE);
             }
         });
     };
@@ -121,7 +123,7 @@ public class Home extends Fragment {
         viewAllButtom = view.findViewById(R.id.viewAll);
         currentMonthTotalSpends = view.findViewById(R.id.currentMonthTotalSpends);
         progressBar = view.findViewById(R.id.progress);
-        limit = view.findViewById(R.id.limit);
+        limit = view.findViewById(R.id.homePageLimit);
         mExecutor.execute(updateData);
         emptyView = view.findViewById(R.id.emptyView);
         framelayout = view.findViewById(R.id.frameLayout);
@@ -138,8 +140,10 @@ public class Home extends Fragment {
         enableSwipeToDeleteAndUndo();
         if(expenseData.size() == 0) {
             emptyView.setVisibility(View.VISIBLE);
+            recyclerView.setVisibility(View.GONE);
         }else{
             emptyView.setVisibility(View.GONE);
+            recyclerView.setVisibility(View.VISIBLE);
         }
         viewAllButtom.setOnClickListener((v) -> {
             Intent intent = new Intent(getActivity(), Expense.class);
@@ -198,8 +202,10 @@ public class Home extends Fragment {
                 adapter.removeItem(position);
                 if(adapter.getData().size() == 0) {
                     emptyView.setVisibility(View.VISIBLE);
+                    recyclerView.setVisibility(View.GONE);
                 }else{
                     emptyView.setVisibility(View.GONE);
+                    recyclerView.setVisibility(View.VISIBLE);
                 }
                 Snackbar snackbar = Snackbar
                         .make(framelayout, "Item was removed from the list",10000)
@@ -249,6 +255,7 @@ public class Home extends Fragment {
                         recyclerView.scrollToPosition(position);
                         if(emptyView.getVisibility() == View.VISIBLE) {
                             emptyView.setVisibility(View.GONE);
+                            recyclerView.setVisibility(View.VISIBLE);
                         }
                     }
                 });
@@ -330,8 +337,10 @@ public class Home extends Fragment {
         progressBar.setProgress((int)((updatedTotalSpentThisMonth/updatedTotalCategorySum)*100));
         if(data.size() == 0) {
             emptyView.setVisibility(View.VISIBLE);
+            recyclerView.setVisibility(View.GONE);
         }else{
             emptyView.setVisibility(View.GONE);
+            recyclerView.setVisibility(View.VISIBLE);
         }
     }
 }
