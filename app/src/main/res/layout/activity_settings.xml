@@ -327,14 +327,32 @@
                             android:textSize="13sp"/>
                     </LinearLayout>
 
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:background="@color/theme_grey"
-                        android:layout_marginTop="5dp"
-                        android:layout_marginBottom="5dp"/>
+                </LinearLayout>
 
+            </androidx.cardview.widget.CardView>
 
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cardUseCompatPadding="true"
+                android:elevation="5dp"
+                app:cardCornerRadius="10dp">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:orientation="vertical"
+                    android:padding="10dp"
+                    android:layout_height="match_parent">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Export"
+                    android:textSize="20sp"/>
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/theme_grey"
+                    android:layout_marginTop="3dp"
+                    android:layout_marginBottom="5dp"/>
                     <LinearLayout
                         android:layout_gravity="left"
                         android:layout_width="match_parent"
@@ -367,14 +385,14 @@
                             android:layout_height="wrap_content"
                             android:backgroundTint="@color/theme_orange"
                             android:text="Export To Excel"/>
-                       <!-- <Button
-                            android:layout_gravity="left"
-                            android:backgroundTint="@color/theme_yellow"
-                            android:id="@+id/uploadExcel"
-                            android:layout_width="wrap_content"
-                            android:layout_weight="3"
-                            android:layout_height="wrap_content"
-                            android:text="Upload Excel"/>-->
+                        <!-- <Button
+                             android:layout_gravity="left"
+                             android:backgroundTint="@color/theme_yellow"
+                             android:id="@+id/uploadExcel"
+                             android:layout_width="wrap_content"
+                             android:layout_weight="3"
+                             android:layout_height="wrap_content"
+                             android:text="Upload Excel"/>-->
                         <TextView
                             android:id="@+id/exportLocation"
                             android:visibility="visible"
@@ -386,14 +404,31 @@
                             android:text="Tap to show export location"
                             android:textSize="13sp"/>
                     </LinearLayout>
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
 
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cardUseCompatPadding="true"
+                android:elevation="5dp"
+                app:cardCornerRadius="10dp">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:orientation="vertical"
+                    android:padding="10dp"
+                    android:layout_height="match_parent">
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Restore"
+                        android:textSize="20sp"/>
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
                         android:background="@color/theme_grey"
-                        android:layout_marginTop="5dp"
+                        android:layout_marginTop="3dp"
                         android:layout_marginBottom="5dp"/>
-
 
                     <LinearLayout
                         android:layout_gravity="left"
@@ -435,30 +470,59 @@
                             android:layout_gravity="left"
                             android:orientation="vertical"
                             android:layout_height="wrap_content">
-                        <Button
-                            android:id="@+id/restoreBackup"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="left"
-                            android:layout_weight="3"
-                            android:backgroundTint="@color/theme_green"
-                            android:text="Restore From Backup" />
+                            <Button
+                                android:id="@+id/restoreBackup"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="left"
+                                android:layout_weight="3"
+                                android:backgroundTint="@color/theme_green"
+                                android:text="Restore From Backup" />
 
-                        <Button
-                            android:id="@+id/restoreFromFile"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="left"
-                            android:layout_weight="3"
-                            android:backgroundTint="@color/theme_green"
-                            android:text="Select File To Restore" />
+                            <Button
+                                android:id="@+id/restoreFromFile"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="left"
+                                android:layout_weight="3"
+                                android:backgroundTint="@color/theme_green"
+                                android:text="Select File To Restore" />
                         </LinearLayout>
                     </LinearLayout>
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
 
+            <androidx.cardview.widget.CardView
+                android:id="@+id/howto"
+                android:clickable="true"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cardUseCompatPadding="true"
+                android:elevation="5dp"
+                app:cardCornerRadius="10dp">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:orientation="vertical"
+                    android:padding="10dp"
+                    android:layout_height="match_parent">
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="FAQ's"
+                        android:textSize="20sp"/>
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="This section covers some important aspects of the app. You may go through this to know more about the app"
+                        android:textSize="14sp"/>
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Tap to view"
+                        android:textSize="12sp"/>
                 </LinearLayout>
 
             </androidx.cardview.widget.CardView>
-
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
