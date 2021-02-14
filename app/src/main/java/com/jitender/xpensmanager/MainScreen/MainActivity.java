@@ -2,6 +2,7 @@ package com.jitender.xpensmanager.MainScreen;
 
 import android.app.DatePickerDialog;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.transition.Slide;
 import android.transition.Transition;
@@ -16,6 +17,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.github.amlcurran.showcaseview.ShowcaseView;
+import com.github.amlcurran.showcaseview.targets.ActionViewTarget;
 import com.jitender.xpensmanager.Database.CategoryDB;
 import com.jitender.xpensmanager.Database.CategoryData;
 import com.jitender.xpensmanager.Database.ExpenseData;
@@ -53,6 +56,11 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+
+import smartdevelop.ir.eram.showcaseviewlib.GuideView;
+import smartdevelop.ir.eram.showcaseviewlib.config.DismissType;
+import smartdevelop.ir.eram.showcaseviewlib.listener.GuideListener;
+import xyz.sangcomz.stickytimelineview.TimeLineRecyclerView;
 
 public class MainActivity extends AppCompatActivity {
     private FloatingActionButton main;
@@ -97,6 +105,9 @@ public class MainActivity extends AppCompatActivity {
     private Button createPaymentMode;
 
     private static ExecutorService mExecutor;
+    private SharedPreferences sharedPreferences;
+    private SharedPreferences.Editor editor;
+    private Boolean isMainPageIntroShown;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -118,6 +129,13 @@ public class MainActivity extends AppCompatActivity {
         createnewcategory = findViewById(R.id.createnewcategory);
         createnewpaymentmode = findViewById(R.id.createnewpaymentmode);
 
+        //Shared Preference Initialization
+        sharedPreferences = getApplicationContext().getSharedPreferences(
+                getString(R.string.preference_file_key), getApplicationContext().MODE_PRIVATE);
+        editor = sharedPreferences.edit();
+        isMainPageIntroShown = sharedPreferences.getBoolean("mainPageIntro",false);
+
+
         //DB initialization
         expenseDB = new ExpenseDB(getApplicationContext());
         groupsDB = new GroupDB(getApplicationContext());
@@ -129,6 +147,9 @@ public class MainActivity extends AppCompatActivity {
             groupList = groupsDB.findAllGroups();
             paymentList = paymentsDB.findAllPaymentModes();
         });
+
+        if(!isMainPageIntroShown)
+            showBottomNavigationIntro("Bottom Navigation View", "Tapping on each item will navigate you to different tabs", R.id.nav_view, 1);
 
         // Add new expense
         expenseTitle= findViewById(R.id.addExpenseTitle);
@@ -644,6 +665,236 @@ public class MainActivity extends AppCompatActivity {
             }
             Payment.updatePaymentAdapter(updatedResults, updateList);
         }
+    }
+
+    private void showBottomNavigationIntro(String title, String text, int viewId, final int type) {
+
+        new GuideView.Builder(this)
+                .setTitle(title)
+                .setContentText(text)
+                .setTargetView((BottomNavigationView)findViewById(viewId))
+                .setContentTextSize(12)//optional
+                .setTitleTextSize(14)//optional
+                .setDismissType(DismissType.outside) //optional - default dismissible by TargetView
+                .setGuideListener((v)->{
+                    showBottomFabIntro("Tap to view all the options","Add new expense or group or category or payment mode from here.",1);
+                })
+                .build()
+                .show();
+    }
+
+    private void showBottomFabIntro(String title,String content, int proceed) {
+
+        new GuideView.Builder(this)
+                .setTitle(title)
+                .setContentText(content)
+                .setTargetView((FloatingActionButton)findViewById(R.id.fab))
+                .setContentTextSize(12)//optional
+                .setTitleTextSize(14)//optional
+                .setDismissType(DismissType.targetView) //optional - default dismissible by TargetView
+                .setGuideListener((v)->{
+                    if(proceed==1)
+                        showFabHolderIntro();
+                    else if(proceed ==2)
+                        showHomePageCardViewIntro();
+                })
+                .build()
+                .show();
+    }
+
+    private void showFabHolderIntro() {
+
+        new GuideView.Builder(this)
+                .setTitle("All Options")
+                .setContentText("Tapping on any option will open the respective page for you to add data.")
+                .setTargetView((LinearLayout)findViewById(R.id.fabHolder))
+                .setContentTextSize(12)//optional
+                .setTitleTextSize(14)//optional
+                .setDismissType(DismissType.outside) //optional - default dismissible by TargetView
+                .setGuideListener((v)->{
+                    showFabHolderExpenseIntro();
+                })
+                .build()
+                .show();
+    }
+
+    private void showFabHolderExpenseIntro() {
+
+        new GuideView.Builder(this)
+                .setTitle("Add Expense")
+                .setContentText("Click here to view more")
+                .setTargetView((ExtendedFloatingActionButton)findViewById(R.id.expense))
+                .setContentTextSize(12)//optional
+                .setTitleTextSize(14)//optional
+                .setDismissType(DismissType.targetView) //optional - default dismissible by TargetView
+                .setGuideListener((v)->{
+                    showAddExpenseIntro();
+                })
+                .build()
+                .show();
+    }
+
+    private void showAddExpenseIntro() {
+
+        new GuideView.Builder(this)
+                .setTitle("Adding an expense")
+                .setContentText("You can add an new expense here. Click anywhere to proceed.")
+                .setTargetView((CardView)findViewById(R.id.addNewExpenseView))
+                .setContentTextSize(12)//optional
+                .setTitleTextSize(14)//optional
+                .setDismissType(DismissType.anywhere) //optional - default dismissible by TargetView
+                .setGuideListener((v)->{
+                    showAddExpenseDateIntro();
+                })
+                .build()
+                .show();
+    }
+
+    private void showAddExpenseDateIntro() {
+
+        new GuideView.Builder(this)
+                .setTitle("Expense Date")
+                .setContentText("Tap on the date to change it.")
+                .setTargetView((TextView)findViewById(R.id.newExpenseDate))
+                .setContentTextSize(12)//optional
+                .setTitleTextSize(14)//optional
+                .setDismissType(DismissType.outside) //optional - default dismissible by TargetView
+                .setGuideListener((v)->{
+                    showAddExpenseAmountIntro();
+                })
+                .build()
+                .show();
+    }
+
+    private void showAddExpenseAmountIntro() {
+
+        new GuideView.Builder(this)
+                .setTitle("Total Expense Amount")
+                .setContentText("Add the total amount of expense here.")
+                .setTargetView((EditText)findViewById(R.id.newExpenseTotalAmount))
+                .setContentTextSize(12)//optional
+                .setTitleTextSize(14)//optional
+                .setDismissType(DismissType.outside) //optional - default dismissible by TargetView
+                .setGuideListener((v)->{
+                    showAddExpenseCheckBoxIntro();
+                })
+                .build()
+                .show();
+    }
+
+    private void showAddExpenseCheckBoxIntro() {
+
+        new GuideView.Builder(this)
+                .setTitle("Who paid the amount?")
+                .setContentText("If you paid the amount then select 'Paid By Me' otherwise don't")
+                .setTargetView((CheckBox)findViewById(R.id.newExpensePaidBy))
+                .setContentTextSize(12)//optional
+                .setTitleTextSize(14)//optional
+                .setDismissType(DismissType.outside) //optional - default dismissible by TargetView
+                .setGuideListener((v)->{
+                    showAddExpenseDescriptionIntro();
+                })
+                .build()
+                .show();
+    }
+
+    private void showAddExpenseDescriptionIntro() {
+
+        new GuideView.Builder(this)
+                .setTitle("A Little Description")
+                .setContentText("Add a small description. Like what you bought")
+                .setTargetView((EditText)findViewById(R.id.newExpenseDescription))
+                .setContentTextSize(12)//optional
+                .setTitleTextSize(14)//optional
+                .setDismissType(DismissType.outside) //optional - default dismissible by TargetView
+                .setGuideListener((v)->{
+                    showAddExpenseItemsIntro();
+                })
+                .build()
+                .show();
+    }
+
+    private void showAddExpenseItemsIntro() {
+
+        new GuideView.Builder(this)
+                .setTitle("Segregation")
+                .setContentText("Select Category, Group and Payment Mode here to segregate expenses further")
+                .setTargetView((LinearLayout)findViewById(R.id.itemsHolder))
+                .setContentTextSize(12)//optional
+                .setTitleTextSize(14)//optional
+                .setDismissType(DismissType.outside) //optional - default dismissible by TargetView
+                .setGuideListener((v)->{
+                    showAddExpenseAddIntro();
+                })
+                .build()
+                .show();
+    }
+
+    private void showAddExpenseAddIntro() {
+
+        new GuideView.Builder(this)
+                .setTitle("Save your expense!")
+                .setContentText("Don't forget to click here to finally save everything")
+                .setTargetView((Button)findViewById(R.id.newExpenseAdd))
+                .setContentTextSize(12)//optional
+                .setTitleTextSize(14)//optional
+                .setDismissType(DismissType.outside) //optional - default dismissible by TargetView
+                .setGuideListener((v)->{
+                    showBottomFabIntro("Click!","Press here to close",2);
+                })
+                .build()
+                .show();
+    }
+
+    private void showHomePageCardViewIntro() {
+
+        new GuideView.Builder(this)
+                .setTitle("Current Month Info")
+                .setContentText("All the important info for current month will be displayed here")
+                .setTargetView((CardView)findViewById(R.id.cardview))
+                .setContentTextSize(12)//optional
+                .setTitleTextSize(14)//optional
+                .setDismissType(DismissType.outside) //optional - default dismissible by TargetView
+                .setGuideListener((v)->{
+                    new GuideView.Builder(this)
+                            .setTitle("Your current month total")
+                            .setContentText("This will show the total expense for the current month")
+                            .setTargetView((TextView)findViewById(R.id.currentMonthTotalSpends))
+                            .setContentTextSize(12)//optional
+                            .setTitleTextSize(14)//optional
+                            .setDismissType(DismissType.outside) //optional - default dismissible by TargetView
+                            .setGuideListener((x)->{
+                                new GuideView.Builder(this)
+                                        .setTitle("Limit Used So Far / Total Month's Limit")
+                                        .setContentText("Month's total limit is calculated as the sum of limits of all the categories")
+                                        .setTargetView((TextView)findViewById(R.id.homePageLimit))
+                                        .setContentTextSize(12)//optional
+                                        .setTitleTextSize(14)//optional
+                                        .setDismissType(DismissType.outside) //optional - default dismissible by TargetView
+                                        .setGuideListener((y)->{
+                                            new GuideView.Builder(this)
+                                                    .setTitle("View Old Expenses")
+                                                    .setContentText("Tapping here will view expense for any other month or year")
+                                                    .setTargetView((ImageButton)findViewById(R.id.viewAll))
+                                                    .setContentTextSize(12)//optional
+                                                    .setTitleTextSize(14)//optional
+                                                    .setDismissType(DismissType.outside) //optional - default dismissible by TargetView
+                                                    .setGuideListener((z)->{
+                                                        //End here and set homeInfo as false in sharedPreferences
+                                                        editor.putBoolean("mainPageIntro",true);
+                                                        editor.apply();
+                                                    })
+                                                    .build()
+                                                    .show();
+                                        })
+                                        .build()
+                                        .show();
+                            })
+                            .build()
+                            .show();
+                })
+                .build()
+                .show();
     }
 
 }
