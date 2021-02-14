@@ -5,9 +5,11 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
@@ -15,6 +17,7 @@ import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
+import android.text.InputFilter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
@@ -56,7 +59,7 @@ public class Settings extends AppCompatActivity {
     private LinearLayout restoringLayout;
     private Calendar today;
     private CoordinatorLayout framelayout;
-    private CardView currencyUpdate,yearOfBirth,earnings,backupFrequencyUpdate;
+    private CardView currencyUpdate,yearOfBirth,earnings,backupFrequencyUpdate,howto;
     public Settings() {}
 
 
@@ -96,6 +99,11 @@ public class Settings extends AppCompatActivity {
         yearOfBirth = findViewById(R.id.yearOfBirth);
         earnings = findViewById(R.id.earnings);
         backupFrequencyUpdate = findViewById(R.id.backupFrequencyUpdate);
+        howto = findViewById(R.id.howto);
+
+        howto.setOnClickListener((v)->{
+            startActivity(new Intent(this,UserGuide.class));
+        });
 
         checkBackupButtonEnable();
 
@@ -149,6 +157,7 @@ public class Settings extends AppCompatActivity {
             final AlertDialog dialog = new AlertDialog.Builder(this).create();
             TextView title = dialogView.findViewById(R.id.title);
             EditText maxLimit = dialogView.findViewById(R.id.categoryLimit);
+            maxLimit.setFilters(new InputFilter[]{new InputFilter.LengthFilter(9)});
             title.setText("Update Salary");
             maxLimit.setText(currentSalary+"");
             maxLimit.setInputType(EditorInfo.TYPE_CLASS_NUMBER);
@@ -306,6 +315,7 @@ public class Settings extends AppCompatActivity {
             editor.putString("frequency",list[which]);
             editor.apply();
             new AutomaticBackupManager().setAutomaticBackup(this);
+            Toast.makeText(getApplicationContext(),"Automatic backup set to : "+list[which],Toast.LENGTH_SHORT).show();
         });
         AlertDialog dialog = builder.create();
         dialog.show();
