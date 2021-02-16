@@ -64,56 +64,168 @@
                 app:cardUseCompatPadding="true">
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginBottom="10dp"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginRight="10dp"
-                    android:weightSum="10"
-                    android:orientation="horizontal">
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="4"
-                        android:layout_gravity="left"
-                        android:gravity="left|center"
-                        android:orientation="vertical">
-                        <TextView
-                            android:textSize="10sp"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Total Spent On"/>
-                        <TextView
-                            android:id="@+id/selectdate"
-                            android:textStyle="bold"
-                            android:textSize="20sp"
-                            android:gravity="center"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Date"/>
-                        <TextView
-                            android:textSize="8sp"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Tap above to change date"/>
-                    </LinearLayout>
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="6"
-                        android:layout_gravity="center"
-                        android:gravity="right|center"
-                        android:orientation="vertical">
-                        <TextView
-                            android:id="@+id/todaysExpense"
-                            android:textStyle="bold"
-                            android:textSize="25sp"
-                            android:gravity="center"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="₹ 0.0"/>
-                    </LinearLayout>
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
 
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginBottom="10dp"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginRight="10dp"
+                        android:weightSum="10"
+                        android:orientation="horizontal">
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="4"
+                            android:layout_gravity="left"
+                            android:gravity="left|center"
+                            android:orientation="vertical">
+                            <TextView
+                                android:textSize="10sp"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Total Spent On"/>
+                            <TextView
+                                android:id="@+id/selectdate"
+                                android:textStyle="bold"
+                                android:textSize="20sp"
+                                android:gravity="center"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Date"/>
+                            <TextView
+                                android:textSize="8sp"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Tap above to change date"/>
+                        </LinearLayout>
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="6"
+                            android:layout_gravity="center"
+                            android:gravity="right|center"
+                            android:orientation="vertical">
+                            <TextView
+                                android:id="@+id/todaysExpense"
+                                android:textStyle="bold"
+                                android:textSize="22sp"
+                                android:gravity="center"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="₹ 0.0"/>
+                        </LinearLayout>
+
+                    </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginBottom="10dp"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginRight="10dp"
+                        android:weightSum="10"
+                        android:orientation="horizontal">
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="4"
+                            android:layout_gravity="left"
+                            android:gravity="left|center"
+                            android:orientation="vertical">
+                            <TextView
+                                android:textSize="10sp"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Total Spent On"/>
+                            <TextView
+                                android:id="@+id/selectmonthyear"
+                                android:textStyle="bold"
+                                android:textSize="20sp"
+                                android:gravity="center"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Month - Year"/>
+                            <TextView
+                                android:textSize="8sp"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Tap above to change month - year"/>
+                        </LinearLayout>
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="6"
+                            android:layout_gravity="center"
+                            android:gravity="right|center"
+                            android:orientation="vertical">
+                            <TextView
+                                android:id="@+id/monthsExpense"
+                                android:textStyle="bold"
+                                android:textSize="22sp"
+                                android:gravity="center"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="₹ 0.0"/>
+                        </LinearLayout>
+
+                    </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginBottom="10dp"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginRight="10dp"
+                        android:weightSum="10"
+                        android:orientation="horizontal">
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="4"
+                            android:layout_gravity="left"
+                            android:gravity="left|center"
+                            android:orientation="vertical">
+                            <TextView
+                                android:textSize="10sp"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Total Spent On"/>
+                            <TextView
+                                android:id="@+id/selectyear"
+                                android:textStyle="bold"
+                                android:textSize="20sp"
+                                android:gravity="center"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Year"/>
+                            <TextView
+                                android:textSize="8sp"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Tap above to change year"/>
+                        </LinearLayout>
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="6"
+                            android:layout_gravity="center"
+                            android:gravity="right|center"
+                            android:orientation="vertical">
+                            <TextView
+                                android:id="@+id/yearsExpense"
+                                android:textStyle="bold"
+                                android:textSize="22sp"
+                                android:gravity="center"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="₹ 0.0"/>
+                        </LinearLayout>
+
+                    </LinearLayout>
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
 
@@ -179,13 +291,13 @@
                 android:scrollbars="none"
                 android:layout_width="match_parent"
                 android:layout_height="220dp">
-                    <LinearLayout
-                        android:background="@color/theme_light_grey"
-                        android:orientation="horizontal"
-                        android:paddingTop="10dp"
-                        android:paddingBottom="10dp"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
+                <LinearLayout
+                    android:background="@color/theme_light_grey"
+                    android:orientation="horizontal"
+                    android:paddingTop="10dp"
+                    android:paddingBottom="10dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
 
                     <androidx.cardview.widget.CardView
                         android:layout_width="290dp"
@@ -435,13 +547,13 @@
                         </LinearLayout>
                     </androidx.cardview.widget.CardView>
 
-                   <!-- <androidx.cardview.widget.CardView
-                        android:layout_width="300dp"
-                        app:cardUseCompatPadding="true"
-                        android:elevation="5dp"
-                        app:cardCornerRadius="5dp"
-                        app:cardBackgroundColor="@color/theme_grey"
-                        android:layout_height="200dp"/>-->
+                    <!-- <androidx.cardview.widget.CardView
+                         android:layout_width="300dp"
+                         app:cardUseCompatPadding="true"
+                         android:elevation="5dp"
+                         app:cardCornerRadius="5dp"
+                         app:cardBackgroundColor="@color/theme_grey"
+                         android:layout_height="200dp"/>-->
                 </LinearLayout>
             </HorizontalScrollView>
 
@@ -558,27 +670,27 @@
                     android:text="*Chart indicates how much you spend each day"
                     android:textSize="10sp" />
             </androidx.cardview.widget.CardView>
-           <!-- <androidx.cardview.widget.CardView
-                android:layout_width="match_parent"
-                app:cardUseCompatPadding="true"
-                android:elevation="5dp"
-                app:cardCornerRadius="5dp"
-                android:layout_height="350dp">
+            <!-- <androidx.cardview.widget.CardView
+                 android:layout_width="match_parent"
+                 app:cardUseCompatPadding="true"
+                 android:elevation="5dp"
+                 app:cardCornerRadius="5dp"
+                 android:layout_height="350dp">
 
-                <HorizontalScrollView
-                    android:layout_gravity="center"
-                    android:scrollbars="none"
-                    android:paddingRight="10dp"
-                    android:layout_height="wrap_content"
-                    android:layout_width="match_parent">
-                    <view
-                        android:layout_width="match_parent"
-                        android:layout_height="300dp"
-                        class="im.dacer.androidcharts.LineView"
-                        android:id="@+id/line_view" />
-                </HorizontalScrollView>
+                 <HorizontalScrollView
+                     android:layout_gravity="center"
+                     android:scrollbars="none"
+                     android:paddingRight="10dp"
+                     android:layout_height="wrap_content"
+                     android:layout_width="match_parent">
+                     <view
+                         android:layout_width="match_parent"
+                         android:layout_height="300dp"
+                         class="im.dacer.androidcharts.LineView"
+                         android:id="@+id/line_view" />
+                 </HorizontalScrollView>
 
-            </androidx.cardview.widget.CardView>-->
+             </androidx.cardview.widget.CardView>-->
 
             <androidx.cardview.widget.CardView
                 android:id="@+id/categoryChartView"
