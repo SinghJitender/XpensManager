@@ -102,7 +102,7 @@
                             android:textSize="10sp"
                             />
                         <TextView
-                            android:id="@+id/limit"
+                            android:id="@+id/homePageLimit"
                             android:layout_width="0dp"
                             android:layout_weight="4"
                             android:layout_height="match_parent"
