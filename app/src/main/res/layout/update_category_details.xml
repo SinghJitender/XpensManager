@@ -53,6 +53,7 @@
                     android:paddingLeft="20dp"
                     android:singleLine="true"
                     android:textSize="20sp"
+                    android:maxLength="25"
                     android:textStyle="bold"/>
                 <EditText
                     android:id="@+id/categoryLimit"
@@ -62,6 +63,7 @@
                     android:layout_marginBottom="3dp"
                     android:background="@null"
                     android:hint="Limit"
+                    android:maxLength="9"
                     android:inputType="numberDecimal"
                     android:layout_gravity="center"
                     android:paddingLeft="20dp"
