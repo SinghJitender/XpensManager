@@ -849,8 +849,8 @@ public class MainActivity extends AppCompatActivity {
     private void showHomePageCardViewIntro() {
 
         new GuideView.Builder(this)
-                .setTitle("Current Month Info")
-                .setContentText("All the important info for current month will be displayed here")
+                .setTitle("Current Month Information")
+                .setContentText("All the important information for current month will be displayed here")
                 .setTargetView((CardView)findViewById(R.id.cardview))
                 .setContentTextSize(12)//optional
                 .setTitleTextSize(14)//optional
