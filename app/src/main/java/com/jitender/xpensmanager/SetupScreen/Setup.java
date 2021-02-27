@@ -49,7 +49,7 @@ public class Setup extends AppCompatActivity {
     private static String[] combinedList = {"Rupee - ₹","Yen - ¥","Ruble - ₽","Korean Won - ₩","Dollar - $","Pound - £","Euro - €","Other - #"};
     private EditText salary,categoryLimit,categoryName,newGroupTitle,newGroupNoOfPersons,newGroupLimit;
     private Button createCategory,create;
-    private TextView currency, restoreInfo,age;
+    private TextView currency, restoreInfo,age,quickQuestionText;
     private static GroupDB groupsDB;
     private static CategoryDB categoryDB;
     private static PaymentsDB paymentsDB;
@@ -97,6 +97,11 @@ public class Setup extends AppCompatActivity {
         addpaymentholder = findViewById(R.id.addpaymentholder);
         addcategoryholder = findViewById(R.id.addcategoryholder);
         addgroupholder = findViewById(R.id.addgroupholder);
+        quickQuestionText = findViewById(R.id.quickQuestionText);
+
+        quickQuestionText.setOnClickListener((v)->{
+            quickQuestionText.setText("This info is only stored on your device offline and used for doing expense analysis or providing suggestions. \nFields marked with (*) are mandatory");
+        });
 
 
         restore.setOnClickListener((v)->{
