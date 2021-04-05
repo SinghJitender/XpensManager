@@ -37,26 +37,34 @@ public class AutomaticBackupManager extends BroadcastReceiver {
 
         if(preference.equalsIgnoreCase("Daily")){
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                am.setAndAllowWhileIdle(AlarmManager.RTC,System.currentTimeMillis()+(1000 * 60 * 60 * 24),pendingIntent);
+                //am.setAndAllowWhileIdle(AlarmManager.RTC,AlarmManager.INTERVAL_DAY,pendingIntent);
+                am.setAndAllowWhileIdle(AlarmManager.RTC,System.currentTimeMillis()+(1000 * 60),pendingIntent);
+                Toast.makeText(context,"Alarm Set - Daily",Toast.LENGTH_SHORT).show();
             }else{
-                am.set(AlarmManager.RTC,System.currentTimeMillis(),pendingIntent);
+                am.set(AlarmManager.RTC,AlarmManager.INTERVAL_DAY,pendingIntent);
             }
         }
         else if(preference.equalsIgnoreCase("Weekly")) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                am.setAndAllowWhileIdle(AlarmManager.RTC, System.currentTimeMillis()+(1000 * 60 * 60 * 24 * 7), pendingIntent);
+                //am.setAndAllowWhileIdle(AlarmManager.RTC, AlarmManager.INTERVAL_DAY*7, pendingIntent);
+                am.setAndAllowWhileIdle(AlarmManager.RTC,System.currentTimeMillis()+(1000 * 60* 3),pendingIntent);
+                Toast.makeText(context,"Alarm Set - Weekly",Toast.LENGTH_SHORT).show();
             }else{
-                am.set(AlarmManager.RTC,System.currentTimeMillis()+(1000 * 60 * 60 * 24 * 7),pendingIntent);
+                am.set(AlarmManager.RTC,AlarmManager.INTERVAL_DAY*7,pendingIntent);
             }
         }
         else if(preference.equalsIgnoreCase("Monthly")) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                am.setAndAllowWhileIdle(AlarmManager.RTC, System.currentTimeMillis()+(1000 * 60 * 60 * 24 * 30), pendingIntent);
+                //am.setAndAllowWhileIdle(AlarmManager.RTC, AlarmManager.INTERVAL_DAY*30, pendingIntent);
+                am.setAndAllowWhileIdle(AlarmManager.RTC,System.currentTimeMillis()+(1000 * 60 * 6),pendingIntent);
+                Toast.makeText(context,"Alarm Set - Monthly",Toast.LENGTH_SHORT).show();
+
             }else{
-                am.set(AlarmManager.RTC,System.currentTimeMillis()+(1000 * 60 * 60 * 24 * 30),pendingIntent);
+                am.set(AlarmManager.RTC,AlarmManager.INTERVAL_DAY*30,pendingIntent);
             }
         }
         else {
+            Toast.makeText(context,"Cancelling Alarm",Toast.LENGTH_SHORT).show();
             if(am != null)
                 am.cancel(pendingIntent);
         }
